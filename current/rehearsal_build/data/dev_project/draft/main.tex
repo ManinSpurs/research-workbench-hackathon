@@ -1,0 +1,129 @@
+\documentclass{article}
+\usepackage{lmodern}
+\begin{document}
+
+\section{The problem}
+
+A research console can produce a confident paragraph and a citation that does not exist in
+the material the researcher actually registered. The damage is not the prose: it is that a
+reader has no cheap way to see which sentences the stored evidence supports.
+
+A Claim-Evidence check ships in this build, and it is implemented and independently
+reviewed here: the engine is \texttt{app/claim\_check.py} and the interface is
+\texttt{frontend/claim\_check\_ui.js}. Numbers in a draft are reconciled against a stored results
+table by ordinary code with no model involved, so the same two arguments always give the
+same answer and no cost is incurred. Statements about a stored source are put to a model,
+which returns the passage it says supports or contradicts the statement, and app code
+checks that passage verbatim against the excerpt actually sent, so a quote the excerpt does
+not contain cannot be shown as evidence. No model call happens without an exact preview of
+what will be sent, where, on which model and at what cost, and the researcher's consent.
+Neither step decides whether an argument is good. What comes back is a secretary's note: a
+hedged, first person suggestion written in the researcher's language, which the researcher
+decides on, and never a ruling that a sentence is true. When no quote survives the verbatim
+check, the app says so in its own words instead of showing the model's note.
+
+\section{What is measured here}
+
+The console runs on one local SQLite database and one local interface. A local 4B
+instruction model can serve as a zero-cost arm: the app starts the installed server itself,
+verifies its identity, and stops it on quit. Nothing about that arm is claimed as a quality
+win. The claim check also runs in the cloud, on Baseten Muse Spark Open, and that path is
+live: the first live call, job aichk-d6f42801700a, returned a supported verdict with one
+quote verified verbatim in 3.4 s, for a calculated 0.004114 USD on 1,105 input and 643
+output tokens. It also exposed two defects, since fixed and independently reviewed: an
+internal source ID appeared where the source title belonged, and Korean rendered the word
+for an assertion as the word for a billing claim. A later benchmark of five alternating
+calls per arm showed a median of 2.55 s at reasoning effort low against 2.11 s at none; the
+0.45 s gap sits inside run-to-run spread and caching favored the cheaper arm, so effort
+stays low and the difference is not reported as a speed result. All ten calls were
+supported with one verified quote each, and none leaked an ID or used the billing word.
+
+\subsection{Current round 3}
+
+AI 1차 채점 → 사람 2차 검수(출처 공개 뒤)
+
+Ten questions across 3 FX, 4 DOB NOW, 3 BIS yielded 56/60 retained answers,
+all AI-scored. Human round-3 review is pending.
+
+\begin{center}
+\begin{tabular}{lrr}
+Provider & Basic success / planned & Harness success / planned \\
+Baseten & 9/10 & 9/10 \\
+Local Qwen & 4/10 & 6/10 \\
+Modal Shared & 7/10 & 7/10 \\
+\end{tabular}
+\end{center}
+
+Calculated round spend: Baseten 0.13738895 USD; Modal 0.21011545 USD;
+local API 0 USD. Baseten cross-round total is 0.20959970 USD.
+Modal retains an unresolved 3.958272 USD reservation, giving conservative
+exposure of 4.16838745 USD. Neither approved cap was exceeded; invoices
+are not verified. Two Modal jobs failed and one partial answer was discarded.
+Later Modal jobs continued contrary to the unknown-charge stop rule.
+Correlated datasets, provider profiles and one repetition limit the result:
+this is not established harness superiority. See the round-3 post-run
+preregistration and \texttt{ai-proxy-scores.json}.
+
+\subsection{Historical round 2}
+
+A basic-versus-harness research comparison ran on 2026-11-01: Baseten
+\texttt{meta-models/muse-spark-open-1026} and local Qwen3-4B, n=1 per case-arm.
+All 9 Baseten calls completed, at a calculated cost of about 0.0722 USD.
+Scoring: AI first-pass scoring, human second-pass review (after unblinding).
+GPT-6.1-Sol medium blind-scored all 36 claims and 80 citation occurrences.
+The author-reviewer agreed with those scores, changing no marks after unblinding;
+the second pass was not blinded or independent.
+
+Overall ratings (1 to 5), from the Post-run addendum in
+\texttt{HARNESS\_COMPARISON\_PREREG\_EN.md} and \texttt{ai-proxy-scores.json}:
+
+\begin{center}
+\begin{tabular}{lrrrr}
+Case & Baseten basic & Baseten harness & Local basic & Local harness \\
+FX-COST-1 & 4 & 4 & 4 & 4 \\
+FX-APPROVAL-1 & 4 & 5 & 4 & 3 \\
+NYC-DATE-1 & 3 & 4 & 2 & 3 \\
+\end{tabular}
+\end{center}
+
+On Baseten, the harness rated higher on 2 of 3 cases and tied on 1.
+Local Qwen results were mixed: higher on 1, lower on 1, tied on 1.
+All four FX-COST-1 answers omitted ``not actual final cost''.
+This is an indication, not an established harness effect: n=1, AI first pass,
+unblinded second pass, thresholds never set. Preregistered aggregates remain NOT_SCORED.
+
+The 4.6 to 6.4 second band below is for short questions; a claim check that sends source
+excerpts takes longer on the same local path, 8.0 to 11.1 seconds, still at zero cost.
+
+\section{Claims under verification}
+
+Each sentence below is one the check is run against in the demo, judged against this
+project's own stored notes and results table. The first three are the qualitative case; the rest are
+numbers already recorded in the project's results table in Literature Review, stored as
+measurements.csv.
+
+\begin{enumerate}
+  \item Local mode makes no API call, so a rehearsal costs nothing in API credits.
+  \item The app stops the local model server it started when the app quits.
+  \item Grounding checks confirm that a sentence is true.
+  \item In rehearsal the local model answered in 4.6 to 6.4 seconds per question.
+  \item The app declares an 8192-token context bound, the chat template overhead observed
+        at launch is 8 tokens, and the installed weights file is 2,497,281,120 bytes.
+  \item The full Python suite reached 2,224 passed and 1 xfailed.
+  \item An earlier count recorded 2,300 passed.
+\end{enumerate}
+
+\section{What this draft does not claim}
+
+It does not claim that the cloud route is unproven: one live claim check ran there, on
+Baseten Muse Spark Open, and is reported above with its job id and its calculated cost.
+It does not claim live cloud quality from that single call either, because one supported
+verdict is not a measurement of quality, and every cost stated here is calculated rather
+than read off an invoice. The comparison above is not an established harness effect.
+Self-hosted Spark Open and Glimmer benchmarks remain NOT_RUN; SAM mask raster decoding
+is NOT_IMPLEMENTED. No submission has been filed and no public repository created.
+The local route was verified live in the packaged build on
+2026-10-31. It does not claim model quality, a comparison win, or that any statement here
+is free of error. The check reports what it can see and states the rest as unverified.
+
+\end{document}

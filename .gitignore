@@ -1,0 +1,14 @@
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.db*
+.env*
+tmp/
+*.log
+.DS_Store
+current/rehearsal_build/data/*
+!current/rehearsal_build/data/dev_project/
+!current/rehearsal_build/data/fx/
+!current/rehearsal_build/data/nyc/

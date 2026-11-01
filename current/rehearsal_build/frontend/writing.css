@@ -1,0 +1,101 @@
+/* Writing interior only. Exterior console artwork remains owned by the shell. */
+#latex-view {
+  display: grid;
+  grid-template-columns: 156px minmax(260px, 1fr) minmax(250px, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  height: calc(100dvh - 224px);
+  gap: 0;
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: light;
+  font-size: 14px;
+  min-width: 0;
+  border: 1px solid var(--line);
+}
+:root[data-theme="dark"] #latex-view { color-scheme: dark; }
+#latex-view.hidden { display: none; }
+main section.writing-mode { display: flex; flex-direction: column; height: calc(100dvh - 112px); min-height: 560px; }
+main section.writing-mode > #project-title, main section.writing-mode > .view-bar { flex: 0 0 auto; }
+main section.writing-mode > #latex-view { flex: 1; height: auto; min-height: 0; }
+#latex-view > .writing-toolbar { grid-row: 1; position: sticky; top: 0; z-index: 1; background: var(--bg); }
+#latex-view > .latex-absence { grid-row: 2; }
+#latex-view > .writing-files, #latex-view > .latex-editor, #latex-view > .latex-preview { grid-row: 3; min-height: 0; overflow: auto; }
+#latex-view .writing-toolbar, #latex-view > .latex-absence { grid-column: 1 / -1; }
+#latex-view .writing-toolbar {
+  display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 8px; border-bottom: 1px solid var(--line); min-width: 0;
+}
+#latex-view .writing-toolbar > button { display: inline-flex; align-items: center; justify-content: center; width: auto; min-width: 0; max-width: 100%; flex: 0 0 auto; margin: 0; padding: 6px 8px; }
+#latex-view .writing-toolbar > label { width: auto; flex: 0 0 auto; margin: 0; }
+#latex-view .writing-toolbar > select { width: auto; min-width: 90px; max-width: 150px; flex: 0 1 125px; margin: 0; }
+#latex-view button, #latex-view select { min-height: 44px; font-size: 14px; }
+#latex-view button { background: var(--surface); color: var(--text); border: 1px solid var(--line-strong); border-radius: 5px; }
+#latex-view select, #latex-view input { background: var(--surface); color: var(--text); border: 1px solid var(--line-strong); }
+#latex-view select option { background: var(--surface); color: var(--text); }
+#latex-view input::placeholder { color: var(--muted); opacity: 1; }
+#latex-view button:hover { border-color: var(--accent); }
+#latex-view button:focus-visible, #latex-view select:focus-visible, #latex-editor:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+#latex-view button:disabled { opacity: .55; }
+#latex-file-dialog {
+  width: min(420px, calc(100vw - 48px)); max-height: calc(100vh - 48px); overflow: auto;
+  box-sizing: border-box; padding: 20px; color: var(--text); background: var(--surface);
+  border: 2px solid var(--accent); border-radius: 8px;
+}
+#latex-file-dialog::backdrop { background: rgb(19 24 29 / .38); }
+#latex-file-path { box-sizing: border-box; width: 100%; min-height: 44px; font-size: 15px; margin-top: 8px; }
+#latex-file-path:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#latex-file-error { color: var(--fail); min-height: 20px; }
+#latex-view .writing-files { padding: 12px 8px; border-right: 1px solid var(--line); min-width: 0; }
+#latex-view .writing-files button { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 6px 8px; white-space: normal; overflow-wrap: anywhere; }
+#latex-view .writing-files > *, #latex-view .writing-file-actions > * { min-width: 0; max-width: 100%; }
+#latex-files button { display: block; width: 100%; text-align: left; overflow-wrap: anywhere; margin-bottom: 4px; }
+#latex-files button[aria-pressed="true"] { border-left: 4px solid var(--accent); background: var(--surface-2); }
+#latex-view .writing-file-actions { display: grid; gap: 5px; margin-top: 18px; }
+#latex-import-source { max-width: 100%; font-size: 12px; min-height: 44px; }
+#latex-view .latex-editor, #latex-view .latex-preview { padding: 12px; min-width: 0; background: var(--surface); }
+#latex-view .latex-editor { border-right: 1px solid var(--line); display: grid; grid-template-rows: minmax(96px, 24%) minmax(200px, 1fr) minmax(80px, 20%); gap: 8px; overflow: hidden; }
+#latex-view .writing-editor-tools, #latex-view .writing-editor-actions { min-height: 0; overflow: auto; padding: 2px; }
+#latex-view .writing-editor-tools:focus-visible, #latex-view .writing-editor-actions:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#latex-view .writing-editor-actions > .row { position: sticky; top: 0; background: var(--surface); z-index: 1; padding: 2px 0; }
+#latex-view h3 { font-size: 15px; margin: 0 0 12px; }
+#latex-view .writing-syntax { padding: 8px 0; }
+#latex-view .writing-syntax-core, #latex-view .writing-syntax-more { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+#latex-view .writing-syntax-more { padding: 8px 0; }
+#latex-view .writing-syntax summary { cursor: pointer; padding: 10px 2px; min-height: 24px; }
+#latex-view .writing-syntax select { max-width: 100%; }
+#latex-view .writing-syntax summary:focus-visible { outline: 2px solid var(--accent); }
+#latex-editor {
+  box-sizing: border-box; width: 100%; min-height: 140px; height: 100%;
+  padding: 14px; resize: none; background: var(--surface); color: var(--text);
+  font: 14px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace;
+  tab-size: 2; border: 1px solid var(--line-strong);
+}
+#latex-preview { min-height: 340px; margin: 0; background: var(--surface-2); padding: 10px; }
+#latex-preview iframe { display: block; width: 100%; height: 52vh; min-height: 340px; border: 0; }
+#latex-view .muted, #latex-view .latex-absence { color: var(--muted); font-size: 12px; line-height: 1.5; }
+#latex-view .latex-absence { margin: 0; padding: 8px 12px; background: var(--bg); }
+#latex-view .latex-status { min-height: 22px; color: var(--accent); }
+#latex-view .latex-status[data-state="fail"] { color: var(--fail); }
+#latex-view .latex-status[data-state="dirty"] { color: var(--warn); }
+#latex-view .latex-citation-entry { display: block; }
+#latex-view #latex-citation-note { display: block; margin-top: 4px; }
+#latex-diagnostics li { padding: 8px; cursor: pointer; border-bottom: 1px solid var(--line); }
+#latex-raw-log { max-height: 180px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 1050px) {
+  main section.writing-mode { height: auto; min-height: 0; }
+  main section.writing-mode > #latex-view { flex: none; }
+  #latex-view { grid-template-columns: 135px minmax(0, 1fr); grid-template-rows: auto auto auto auto; height: auto; min-height: 0; }
+  #latex-view > .latex-editor { height: 680px; }
+  #latex-view > .latex-preview { grid-row: 4; grid-column: 1 / -1; border-top: 1px solid var(--line); }
+}
+@media (max-width: 620px) {
+  #latex-view { grid-template-columns: minmax(0, 1fr); }
+  #latex-view > * { grid-column: 1 !important; }
+  #latex-view > .writing-files { grid-row: 3; }
+  #latex-view > .latex-editor { grid-row: 4; }
+  #latex-view > .latex-preview { grid-row: 5; }
+  #latex-view .writing-file-actions { display: flex; flex-wrap: wrap; }
+  #latex-editor { min-height: 140px; }
+}

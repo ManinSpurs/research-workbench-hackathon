@@ -1,0 +1,101 @@
+/* Console home only. Research documents keep their existing styles. */
+.startup-choices, .desktop-shell .startup-choices { display: none !important; }
+.startup-kicker, .startup-status {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.home-chip-idle {
+  position: absolute; left: var(--display-x); top: var(--display-y);
+  width: var(--display-w); height: var(--display-h); color: #bcebe7;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; text-align: center; font: 600 14px/1.6 ui-monospace, monospace; letter-spacing: .16em;
+}
+.home-chip-idle[hidden] { display: none; }
+.idle-chip-mark { font-size: 44px; color: #52c5b5; }
+.home-chip-idle p { max-width: 90%; font-size: 12px; letter-spacing: 0; }
+/* The one instruction on the idle screen: where a chip is chosen. It is a
+   sentence, not a control, so it stays quiet beside the two real buttons. */
+.home-chip-hint {
+  margin: 0; max-width: 30ch; font-weight: 400; letter-spacing: 0;
+  font-size: 12px; line-height: 1.5; color: #9fc9c4;
+}
+.home-chip-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.home-chip-actions button {
+  padding: 6px 14px; min-height: 30px;
+  border: 1px solid #677079; border-radius: 6px;
+  background: #252e36; color: #e8f4f2;
+  font: 500 12px/1.2 system-ui, sans-serif; letter-spacing: 0; cursor: pointer;
+}
+.home-chip-actions button:hover { background: #44535f; }
+.home-chip-actions button:focus-visible { outline: 2px solid #20d0f0; outline-offset: 1px; }
+.startup.home .startup-screen.on {
+  background: var(--bg); color: var(--text); box-shadow: none;
+}
+.startup.home .startup-screen::after { display: none; }
+.startup.home .sys-menu { padding: 9px 10px; gap: 8px; }
+.startup.home .home-top { border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+.startup.home .field-tag, .startup.home .menu-settings {
+  text-shadow: none; box-shadow: none; background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: 4px; font: 600 10px/1.2 system-ui; letter-spacing: 0;
+}
+.startup.home .home-body { grid-template-columns: minmax(0, 44%) minmax(0, 1fr); gap: 12px; }
+.startup.home .home-secretary {
+  display: flex; flex-direction: column; padding: 0 10px 0 0; min-height: 0;
+  border: 0; border-right: 1px solid var(--line); background: transparent; box-shadow: none;
+  font: 12px/1.45 system-ui; color: var(--text);
+}
+.startup.home .home-secretary h3 { font: 650 12px/1.3 system-ui; letter-spacing: 0; color: inherit; margin: 0 0 5px; text-transform: none; }
+.home-project-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+#home-project { width: 100%; min-height: 24px; font: 11px/1.3 system-ui; padding: 3px; margin: 0 0 6px; }
+#home-conversation { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding: 2px 2px 6px; overscroll-behavior: contain; }
+#startup.home #home-secretary {
+  color: var(--text); background: var(--surface); padding: 10px;
+  font-family: system-ui, sans-serif; overflow-y: auto; box-sizing: border-box;
+}
+#startup.home #home-secretary h3 {
+  font-family: var(--font); border-radius: 0;
+}
+#startup.home #home-secretary .home-bubble { font-family: system-ui, sans-serif; }
+#home-secretary > :not(#home-conversation) { flex-shrink: 0; }
+#home-secretary .home-import-note { margin: 5px 0 10px; font: 12px/1.5 system-ui, sans-serif; }
+#home-secretary #home-conversation { min-height: 100px; box-sizing: border-box; padding-bottom: 12px; }
+#home-secretary #home-composer-slot { margin-top: 10px; }
+#home-conversation .home-brief-section { flex: 0 0 auto; border: 0; padding: 0; margin: 0; background: transparent; }
+#home-conversation .home-brief-section h3 { color: var(--tag-accent); margin: 5px 0; }
+#home-secretary #home-project, #home-secretary #secretary-input {
+  background: var(--surface); color: var(--text); border: 1px solid var(--line);
+}
+#home-secretary #home-project:disabled, #home-secretary #secretary-input:disabled {
+  background: var(--surface-2); color: var(--muted);
+}
+.home-bubble { align-self: flex-start; flex: 0 0 auto; max-width: 92%; padding: 7px 8px; border-radius: 8px 8px 8px 2px; background: var(--surface-2, #eee); color: inherit; white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.45 system-ui; }
+.home-bubble-researcher { align-self: flex-end; border-radius: 8px 8px 2px 8px; background: #d7efe6; color: #183e38; }
+#home-composer-slot { flex: 0 0 auto; }
+#home-composer-slot .secretary-compose { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px; margin: 4px 0 0; }
+#home-composer-slot #secretary-compose-hint { grid-column: 1 / -1; font: 9px/1.3 system-ui; max-height: 25px; overflow-y: auto; margin: 0; }
+#home-composer-slot #secretary-input { min-width: 0; width: 100%; margin: 0; padding: 6px; font: 11px system-ui; border-radius: 5px; }
+#home-composer-slot #secretary-send { margin: 0; padding: 5px; font: 11px system-ui; border-radius: 5px; }
+#home-error { flex: 0 0 auto; margin: 3px 0 0; font: 10px/1.3 system-ui; color: var(--fail); max-height: 38px; overflow: auto; }
+#home-error:empty { display: none; }
+.startup.home .home-menu { gap: 8px; }
+.startup.home .menu-item {
+  align-items: center; justify-content: center; padding: 7px; gap: 7px;
+  background: var(--surface); color: var(--text); border: 1px solid var(--line);
+  border-radius: 5px; box-shadow: none; transition: transform 100ms ease, border-color 100ms ease;
+}
+.startup.home .menu-item .menu-text { margin-top: 0; order: 2; text-align: center; }
+.startup.home .menu-label { font: 600 clamp(20px, 1.2vw, 28px)/1.25 system-ui; letter-spacing: 0; overflow-wrap: anywhere; }
+.startup.home .menu-note, .startup.home .menu-cursor { display: none; }
+.menu-icon { display: block; width: 45px; height: 45px; color: #268b80; }
+.menu-icon svg { width: 100%; height: 100%; }
+.startup.home .menu-item:hover, .startup.home .menu-item:focus { background: #dcf2e9; color: #183e38; border: 2px solid #208e80; box-shadow: none; transform: translateY(-2px); }
+.startup.home .menu-item:active { transform: translateY(1px) scale(.98); }
+.new-chip-dialog { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; width: min(310px, 80vw); padding: 18px; }
+.new-chip-dialog::backdrop { background: rgb(0 0 0 / .35); }
+.new-chip-dialog form { display: grid; gap: 10px; }
+.new-chip-dialog h2 { margin: 0; font-size: 18px; }
+.new-chip-dialog input { width: 100%; box-sizing: border-box; }
+.new-chip-dialog button { margin-right: 6px; }
+.new-chip-error { color: var(--fail); }
+.library-citation-entry { grid-column: 1 / -1; justify-self: start; }
+@media (prefers-reduced-motion: reduce) { .startup.home .menu-item { transition: none; transform: none; } }

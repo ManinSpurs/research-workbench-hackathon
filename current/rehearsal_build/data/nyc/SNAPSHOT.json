@@ -1,0 +1,17 @@
+{
+ "retrieved_at_utc": "2026-10-25T05:28:01Z",
+ "files": {
+  "data/nyc/bis_2024_subset.csv": {
+   "query": "ipu4-2q9a: select job__,job_type,permit_type,work_type,filing_status,permit_status,permit_sequence__,borough,filing_date,issuance_date,expiration_date,job_start_date where issuance_date like '%/2024' order by job__,permit_sequence__ limit 3000",
+   "rows": 3000,
+   "sha256": "82dbf1571a8e83303e10e820e2036c88be9a4f194d7af3bd0a1064849ec2c987",
+   "personal_columns": "none requested (names, phones, addresses excluded at download)"
+  },
+  "data/nyc/dobnow_2024_subset.csv": {
+   "query": "rbx6-tga4: select job_filing_number,work_permit,sequence_number,filing_reason,work_type,borough,approved_date,issued_date,expired_date,permit_status where issued_date in 2024 order by work_permit limit 3000",
+   "rows": 3000,
+   "sha256": "27e43300a12d1019a4fd70df58ba9d26d862c2eacdcda044c3085cc95fa8ebdc",
+   "personal_columns": "none requested (names, phones, addresses excluded at download)"
+  }
+ }
+}

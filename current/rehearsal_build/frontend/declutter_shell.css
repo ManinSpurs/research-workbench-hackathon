@@ -1,0 +1,438 @@
+/* Declutter shell: one quiet header, one view nav, panels on demand.
+
+   Presentation only. Every selector below is scoped to #app-shell.wb-dc, a class
+   declutter_shell.js adds after it moves nodes that ALREADY exist in index.html
+   into the header, the view bar and the two panels. Without that script nothing
+   here applies, so the shipped app is unchanged by this file alone.
+
+   No control is rebuilt and no function is reimplemented: the project list, the
+   secretary composer, the settings sheet and every view button keep their own
+   ids, listeners and state. Closing a panel is a CSS state, so a closing panel
+   never unmounts the PDF reader or drops an unsaved draft.
+   Colour comes only from the existing tokens, so light and dark stay in step. */
+
+#app-shell.wb-dc {
+  --dc-drawer: min(360px, 92vw);
+  --dc-header: 58px;
+  --dc-gutter: clamp(12px, 2.4vw, 20px);
+  --dc-nav: 52px;
+  /* Width the native minimize/close buttons occupy in the packaged app. Zero in a
+     browser, where no such controls are drawn. */
+  --dc-controls-w: 0px;
+}
+html.desktop-shell #app-shell.wb-dc { --dc-controls-w: 64px; }
+
+/* --- 1. One quiet header ------------------------------------------------ */
+/* Brand, project selector, Projects, Secretary, Settings, and one fold-out that
+   states the build's truth. Everything else the shipped header carried is moved
+   into that fold-out by the script; nothing is deleted. */
+#app-shell.wb-dc > header {
+  height: auto;
+  min-height: 58px;
+  /* The right padding reserves the strip the native minimize/close buttons occupy
+     in the packaged app, so no header control can ever sit under them. --dc-controls-w
+     is 0 in a browser, where nothing is drawn there. */
+  padding: 6px calc(var(--dc-gutter) + var(--dc-controls-w)) 6px var(--dc-gutter);
+  gap: 8px;
+  /* wrap, not nowrap: below roughly 1050px the controls no longer fit on one
+     row, and a nowrap row overflowed the header's own box — which is what put the
+     More button and the status pill underneath the window controls. Wrapping
+     moves the overflow into a second row inside the reserved padding instead.
+     Above that width nothing wraps, so the wide-window header is unchanged. */
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+#app-shell.wb-dc > header > strong {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -.01em;
+}
+#app-shell.wb-dc > header > strong::before {
+  height: 12px;
+  margin-right: 8px;
+}
+#app-shell.wb-dc > header > button,
+#app-shell.wb-dc > header > details > summary,
+#app-shell.wb-dc > header > select,
+#app-shell.wb-dc #quiet-project-select {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  white-space: nowrap;
+}
+#app-shell.wb-dc #quiet-project-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 320px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#app-shell.wb-dc > header > button {
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-ui);
+  background: var(--surface);
+  color: var(--text);
+}
+#app-shell.wb-dc > header > button:hover:not(:disabled) {
+  border-color: var(--text);
+}
+/* "← Home" is the one way back now that the tab strip is gone, so it is a
+   top-level header control. The shipped sheet already gives it the accent and
+   draws the arrow through ::before; here it only keeps its own size. */
+#app-shell.wb-dc > header > #back-to-menu {
+  flex: 0 0 auto;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#app-shell.wb-dc > header > #expand-surface { flex: 0 0 auto; }
+#app-shell.wb-dc #quiet-projects[aria-expanded="true"],
+#app-shell.wb-dc #quiet-secretary[aria-expanded="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+#app-shell.wb-dc #interior-settings-open {
+  border-color: var(--line-strong);
+}
+
+/* The truthful build status: a compact tag plus the shipped adapter badge, with
+   the whole truth one fold away. Nothing about AI readiness is hidden here — the
+   AI panel stays in the Secretary panel, and this says in words that no live
+   model is called. */
+#app-shell.wb-dc .wb-dc-truth {
+  position: relative;
+  margin-left: auto;
+  /* Shrinks before it wraps: the pill gives ground to the controls to its left
+     instead of pushing the row past the header's reserved right edge. */
+  flex: 0 1 auto;
+  min-width: 0;
+}
+#app-shell.wb-dc .wb-dc-truth > summary {
+  list-style: none;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-ui);
+  color: var(--muted);
+  cursor: pointer;
+}
+#app-shell.wb-dc .wb-dc-truth > summary::-webkit-details-marker { display: none; }
+#app-shell.wb-dc .wb-dc-truth-tag {
+  font-size: 12px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+#app-shell.wb-dc .wb-dc-truth #adapter-badge,
+#app-shell.wb-dc .wb-dc-truth .badge {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--coral);
+  white-space: nowrap;
+}
+/* The compact tag already states the build's truth, so the shipped badge only
+   has to be readable, not repeated in full: it truncates at a whole-word-safe
+   width when the window is narrow, and never mid-word when there is room. */
+@media (max-width: 1180px) {
+  #app-shell.wb-dc .wb-dc-truth #adapter-badge,
+  #app-shell.wb-dc .wb-dc-truth .badge {
+    max-width: 16ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+#app-shell.wb-dc .wb-dc-truth-body,
+#app-shell.wb-dc .wb-dc-more-body {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  width: min(340px, 92vw);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-ui);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+#app-shell.wb-dc .wb-dc-truth-text,
+#app-shell.wb-dc .wb-dc-more-note { margin: 0; color: var(--muted); }
+#app-shell.wb-dc .wb-dc-more { position: relative; flex: 0 0 auto; }
+#app-shell.wb-dc .wb-dc-more > summary {
+  list-style: none;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+}
+#app-shell.wb-dc .wb-dc-more > summary::-webkit-details-marker { display: none; }
+#app-shell.wb-dc .wb-dc-more-body > button { width: 100%; justify-content: flex-start; min-height: 44px; }
+/* `#end-session` carries margin-left:auto in the shipped sheet, where it sat at
+   the far right of the bar. Inside a stacked fold-out that would push it away. */
+#app-shell.wb-dc .wb-dc-more-body #end-session { margin-left: 0; }
+#app-shell.wb-dc .wb-dc-more-body .theme-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+#app-shell.wb-dc .wb-dc-more-body .theme-control label { font-size: 12px; color: var(--muted); }
+
+/* --- 2. One view nav, content that owns the window ---------------------- */
+/* Refusals, errors and session lines sit here, pinned under the header, so they
+   are on screen the moment they are written — never below the fold behind a
+   full-height surface. The shipped nodes keep their ids, roles and wording. */
+#app-shell.wb-dc > .wb-dc-alerts {
+  position: sticky;
+  top: var(--dc-header);
+  z-index: 80;
+}
+#app-shell.wb-dc > .wb-dc-alerts > * {
+  margin: 0;
+  padding: 8px var(--dc-gutter);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+#app-shell.wb-dc > .wb-dc-alerts > :empty { display: none; }
+#app-shell.wb-dc > main {
+  display: block;
+  padding: 0;
+  gap: 0;
+}
+#app-shell.wb-dc > main > .view-bar {
+  position: sticky;
+  top: calc(var(--dc-header) + var(--dc-alerts-height, 0px));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--dc-nav);
+  margin: 0;
+  padding: 0 var(--dc-gutter);
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+#app-shell.wb-dc > main > .view-bar[hidden] { display: none; }
+#app-shell.wb-dc > main > .view-bar .view-tabs { display: flex; gap: 4px; flex-wrap: nowrap; }
+/* The strip carries hidden in index.html so it stays out of the visible UI while
+   its five buttons remain in the document for the aria-pressed contract. Without
+   this rule the display:flex above wins over the attribute and the strip is only
+   invisible because its parent .view-bar is hidden — it would reappear the
+   moment that parent is shown. */
+#app-shell.wb-dc > main > .view-bar .view-tabs[hidden] { display: none; }
+#app-shell.wb-dc > main > .view-bar .view-tabs > button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  box-shadow: none;
+}
+#app-shell.wb-dc > main > .view-bar .view-tabs > button:hover:not(:disabled) { color: var(--text); }
+#app-shell.wb-dc > main > .view-bar .view-tabs > button[aria-pressed="true"] {
+  color: var(--text);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+  box-shadow: none;
+}
+#app-shell.wb-dc > main > section {
+  border: 0;
+  border-radius: 0;
+  padding: 22px var(--dc-gutter) 48px;
+  min-height: calc(100vh - var(--dc-header) - var(--dc-nav));
+}
+/* The header selector is the one place the open project is named, so the two
+   in-content echoes of that same name leave the flow. They leave the document
+   only in the visual sense: #project-title stays the surface's heading (and is
+   where startup.js moves focus on entry), and #research-location still carries
+   the research intro's location in every language, for assistive tech and for
+   the code that writes it. */
+#app-shell.wb-dc > main > section > #project-title,
+#app-shell.wb-dc > main > section > #research-intro > #research-location {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* That heading is where startup.js moves focus when the workspace opens, so a
+   keyboard user is shown where focus landed — on the work area's top edge, not as
+   a second copy of the project name. */
+#app-shell.wb-dc > main > section.wb-dc-surface-focus {
+  outline: 2px solid var(--focus, var(--line-strong));
+  outline-offset: -2px;
+}
+
+/* --- 3. The two panels: closed by default, usable on demand ------------- */
+/* The same `wb-collapse-*` classes the shipped panel state already maintains are
+   the only authority for open/closed, so aria-expanded, the AI settings route and
+   what is actually on screen can never disagree. */
+#app-shell.wb-dc > main > nav,
+#app-shell.wb-dc > main > aside {
+  position: fixed;
+  top: calc(var(--dc-header) + var(--dc-alerts-height, 0px));
+  bottom: 0;
+  z-index: 60;
+  width: var(--dc-drawer);
+  max-width: 100%;
+  overflow: auto;
+  padding: 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface);
+  /* visible the moment the panel opens; hidden only once it has slid out, so a
+     closing drawer never disappears halfway across its own track. */
+  transform: translateX(0);
+  transition: transform .16s ease, visibility 0s linear 0s;
+}
+/* Fixed drawers do not consume grid columns. Temporary expansion must not
+   hide an open drawer while the existing panel state still reports it open. */
+#app-shell.wb-dc > main.wb-expand-surface > nav,
+#app-shell.wb-dc > main.wb-expand-surface > aside { display: block; }
+#app-shell.wb-dc > main > nav { left: 0; border-right: 1px solid var(--line-strong); }
+#app-shell.wb-dc > main > aside { right: 0; border-left: 1px solid var(--line-strong); }
+#app-shell.wb-dc > main.wb-collapse-projects > nav,
+#app-shell.wb-dc > main.wb-collapse-secretary > aside {
+  visibility: hidden;
+  transition: transform .16s ease, visibility 0s linear .16s;
+}
+#app-shell.wb-dc > main.wb-collapse-projects > nav { transform: translateX(-101%); }
+#app-shell.wb-dc > main.wb-collapse-secretary > aside { transform: translateX(101%); }
+/* "Expand surface" is the shipped control, unchanged: a temporary state that
+   hides both side panels and is never written to the saved preference. Opening a
+   drawer leaves that temporary state first (the script does it through the
+   shipped toggle), so a panel is never hidden while claiming to be open. */
+#app-shell.wb-dc .wb-dc-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(19, 24, 29, .32);
+}
+#app-shell.wb-dc .wb-dc-scrim[hidden] { display: none; }
+#app-shell.wb-dc > main > nav button,
+#app-shell.wb-dc > main > aside button,
+#app-shell.wb-dc > main > nav select { min-height: 44px; }
+#app-shell.wb-dc .wb-dc-panel-actions {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+#app-shell.wb-dc .wb-dc-panel-actions > button { width: 100%; justify-content: flex-start; }
+#app-shell.wb-dc .wb-dc-panel-actions > button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --- 4. The research surface: question, evidence, decision first -------- */
+#app-shell.wb-dc #research-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 14px;
+  margin: 24px 0 20px;
+}
+#app-shell.wb-dc #research-intro > *:not(.wb-dc-new-question) { grid-column: 1; }
+#app-shell.wb-dc #research-intro > .wb-dc-new-question {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  min-height: 44px;
+  white-space: nowrap;
+}
+#app-shell.wb-dc #interior-question-title {
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.25;
+  margin: 0;
+}
+/* Data, canvas and the older record paths stay mounted and reachable; they do
+   not occupy the default working area. */
+#app-shell.wb-dc .wb-dc-support {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+#app-shell.wb-dc .wb-dc-support > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+#app-shell.wb-dc .wb-dc-support-body { display: grid; gap: 16px; margin-top: 12px; }
+/* A read-only record: the design candidate and the pack/work-question note. One
+   labelled line until asked for, and the label says what is inside, so nothing
+   is hidden without being named. */
+#app-shell.wb-dc .wb-dc-record {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+}
+#app-shell.wb-dc .wb-dc-record > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 14px;
+}
+#app-shell.wb-dc .wb-dc-record > summary::-webkit-details-marker { display: none; }
+#app-shell.wb-dc .wb-dc-record[open] > summary { border-bottom: 1px solid var(--line); }
+/* The card keeps its own border-top; inside a fold it would double the line. */
+#app-shell.wb-dc .wb-dc-record .card { border-top: 0; padding-top: 12px; }
+/* An unsupported control is a control nobody can use; the shipped sheet already
+   disables it. It is hidden here rather than shown as a broken promise. */
+#app-shell.wb-dc #research-tool-code { display: none; }
+
+/* --- 5. Narrow viewports ------------------------------------------------ */
+@media (max-width: 760px) {
+  #app-shell.wb-dc > header {
+    flex-wrap: wrap;
+    /* The window-control reservation survives the narrow layout: dropping it here
+       is exactly how the controls ended up over the header at a small width. */
+    padding: 8px calc(12px + var(--dc-controls-w)) 8px 12px;
+  }
+  #app-shell.wb-dc #quiet-project-select {
+    order: 5;
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  #app-shell.wb-dc .wb-dc-truth { margin-left: 0; }
+  /* The build's truth is never hidden by a narrow window: the tag wraps instead,
+     and the shipped badge keeps its ellipsis. */
+  #app-shell.wb-dc .wb-dc-truth-tag { white-space: normal; }
+  #app-shell.wb-dc > main > .view-bar { position: static; }
+  #app-shell.wb-dc .wb-dc-truth-body,
+  #app-shell.wb-dc .wb-dc-more-body {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    top: calc(var(--dc-header) + 8px);
+    width: auto;
+  }
+  #app-shell.wb-dc #research-intro { grid-template-columns: minmax(0, 1fr); }
+  #app-shell.wb-dc #research-intro > .wb-dc-new-question { grid-column: 1; grid-row: auto; justify-self: start; }
+}
+@media (max-width: 420px) {
+  #app-shell.wb-dc > main > .view-bar .view-tabs { flex-wrap: wrap; }
+  #app-shell.wb-dc > header > strong { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #app-shell.wb-dc > main > nav,
+  #app-shell.wb-dc > main > aside { transition: none; }
+}

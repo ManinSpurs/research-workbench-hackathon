@@ -1,0 +1,71 @@
+/* Project list reorder: a dedicated handle per row, a visible insertion line for
+   the pointer drag, and the same row moved by keyboard. Layout only — the
+   project row itself (name, open link, Attach to active chip) keeps the look
+   style.css gave it, so nothing here restyles an action. */
+
+#project-list li.project-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--space-1);
+  padding-left: var(--space-1);
+}
+/* The name link and the Attach action stay stacked in the second column. */
+.project-row-body { min-width: 0; }
+#project-list li.project-row > .project-row-body > a { padding-left: var(--space-2); }
+#project-list li.project-row > .project-row-body > button { margin-left: var(--space-2); }
+
+/* The handle is the only draggable part. It is a real button, so it is reachable
+   by Tab, announces its own label, and shows the shared focus ring. */
+.project-drag-handle {
+  min-height: 0;
+  width: 20px;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  cursor: grab;
+  touch-action: none;              /* a grab on the handle never scrolls the list */
+  -webkit-user-select: none;
+  user-select: none;
+}
+.project-drag-handle:hover { background: var(--surface-2); border-color: var(--line); color: var(--text); }
+.project-drag-handle:active { cursor: grabbing; }
+.project-drag-handle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.project-drag-handle svg { display: block; pointer-events: none; }
+
+/* The row being dragged stays in place as a dimmed placeholder, so the list does
+   not jump while the insertion line moves over it. */
+#project-list li.project-row.dragging { opacity: .55; }
+#project-list.project-list-dragging { cursor: grabbing; }
+#project-list.project-list-dragging .project-row-body { pointer-events: none; }  /* no open on drop */
+
+/* The insertion line: accent rule between two rows, the same accent the open
+   project uses, so "where it will land" reads at a glance. */
+#project-list li.project-drop-marker {
+  margin: 0;
+  border: 0;
+  height: 0;
+  border-top: 2px solid var(--accent);
+  list-style: none;
+}
+
+/* While a save is in flight the list is not draggable again; the busy state is
+   announced on the list and the handles stay focusable for the status text. */
+#project-list[aria-busy="true"] .project-drag-handle { cursor: progress; }
+
+/* One polite line under the list. It is empty until a move is saved, cancelled
+   or refused, so it takes no space in the usual case. */
+.project-order-status {
+  margin: 0 0 var(--space-2);
+  min-height: 0;
+  font-size: var(--text-xs);
+  line-height: var(--lh-tight);
+  color: var(--muted);
+}
+.project-order-status:empty { display: none; }

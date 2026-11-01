@@ -1,0 +1,447 @@
+/* Claim–evidence verification (frames F–I). Loaded before macos_theme.css,
+ * macos_surfaces.css, home_expand.css and overview_fit.css, so the shipped
+ * surface rules keep the last word. Only tokens defined upstream are used. */
+
+.claim-check-host { display: block; min-width: 0; flex: 0 0 auto; }
+.claim-check-host[hidden] { display: none; }
+
+/* The sheet stays collapsed until it is asked for, so the paper keeps the whole
+   first screen. Open, it takes a bounded band and scrolls inside that band: the
+   draft, its files and its PDF stay where they were. */
+.cc-sheetbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.cc-sheetbar .cc-title { margin-right: auto; }
+.claim-check-host.cc-open .cc-sheetbar { border-radius: 8px 8px 0 0; border-bottom: 0; }
+.claim-check-host.cc-open { max-height: 46vh; display: flex; flex-direction: column; min-height: 0; }
+.claim-check-host.cc-open .cc-root { overflow: auto; min-height: 0; padding: 10px 12px;
+  border: 1px solid var(--line); border-top: 0; border-radius: 0 0 8px 8px;
+  background: var(--surface); }
+
+.cc-root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cc-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+.cc-lede {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 82ch;
+}
+.cc-empty { margin: 0; font-size: 13px; color: var(--muted); }
+
+/* --- a step ------------------------------------------------------------- */
+.cc-step {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  padding: 10px 12px;
+  min-width: 0;
+}
+.cc-step-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.cc-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+.cc-step-title { margin: 0; font-size: 13px; font-weight: 650; color: var(--text); }
+.cc-free {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ok, var(--accent));
+  font-weight: 600;
+}
+.cc-step-help { margin: 0 0 8px; font-size: 12px; line-height: 1.45; color: var(--muted); max-width: 78ch; }
+.cc-sub { margin: 8px 0 3px; font-size: 12px; font-weight: 650; color: var(--text); }
+.cc-note { margin: 3px 0; font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+.cc-hint { font-size: 11.5px; color: var(--muted); }
+.cc-code { font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace; }
+
+.cc-field { margin: 0 0 8px; min-width: 0; }
+.cc-label { display: block; font-size: 11.5px; font-weight: 650; color: var(--text); margin-bottom: 3px; }
+.cc-claim {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+  font-size: 12.5px;
+  padding: 6px 8px;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 6px;
+  background: var(--surface-2, var(--surface));
+  color: var(--text);
+}
+.cc-fieldset { border: 0; padding: 0; margin: 0 0 8px; min-width: 0; }
+.cc-source-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 3px 12px;
+  max-height: 120px;
+  overflow: auto;
+}
+.cc-source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+  min-width: 0;
+}
+.cc-source input { flex: 0 0 auto; }
+.cc-source-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-source-kind {
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 4px;
+  flex: 0 0 auto;
+}
+.cc-privacy { margin: 6px 0 0; font-size: 11px; color: var(--muted); }
+
+/* --- actions ------------------------------------------------------------ */
+.cc-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.cc-primary {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cc-primary:disabled { opacity: .5; cursor: not-allowed; }
+.cc-secondary {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 6px;
+  background: var(--surface-2, var(--surface));
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cc-secondary:disabled { opacity: .5; cursor: not-allowed; }
+.cc-quiet {
+  min-height: 26px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.cc-quiet:hover:not(:disabled) { color: var(--text); background: var(--surface-2); }
+.cc-quiet-actions { margin-top: 6px; }
+
+/* --- numbers (step 2) --------------------------------------------------- */
+.cc-numbers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.cc-number {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface-2, rgba(0,0,0,.03));
+  border-left: 3px solid var(--line);
+}
+.cc-number.cc-match { border-left-color: var(--ok, #2f8f4e); }
+.cc-number.cc-near_mismatch { border-left-color: #b8860b; }
+.cc-number.cc-not_found { border-left-color: var(--fail, #b3261e); }
+.cc-number-value { font-weight: 650; font-family: ui-monospace, monospace; }
+.cc-number-status { color: var(--text); }
+.cc-number-why { color: var(--muted); font-size: 11px; }
+
+/* --- consent (step 3) --------------------------------------------------- */
+.cc-consent { border-color: var(--accent); }
+.cc-blocked {
+  border: 1px solid var(--fail, #b3261e);
+  border-radius: 7px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: rgba(179, 38, 30, .06);
+}
+.cc-blocked strong { display: block; font-size: 12.5px; color: var(--fail, #b3261e); }
+.cc-blocked p { margin: 3px 0 0; font-size: 11.5px; color: var(--text); line-height: 1.45; }
+.cc-facts {
+  display: grid;
+  grid-template-columns: minmax(120px, max-content) minmax(0, 1fr);
+  gap: 2px 12px;
+  margin: 6px 0;
+  font-size: 11.5px;
+}
+.cc-facts dt { color: var(--muted); }
+.cc-facts dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
+.cc-transmission {
+  border: 1px dashed var(--line-strong, var(--line));
+  border-radius: 7px;
+  padding: 6px 8px;
+  margin: 6px 0;
+  max-height: 200px;
+  overflow: auto;
+  background: var(--surface-2, transparent);
+}
+.cc-quote-claim, .cc-quote-text {
+  margin: 2px 0 4px;
+  padding: 3px 8px;
+  border-left: 3px solid var(--line-strong, var(--line));
+  font-size: 12px;
+  color: var(--text);
+}
+.cc-source-sent { margin-bottom: 6px; }
+.cc-excerpt { margin: 2px 0; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.cc-page {
+  display: inline-block;
+  font-weight: 650;
+  color: var(--muted);
+  margin-right: 6px;
+  font-size: 10.5px;
+}
+.cc-excerpt-text { white-space: pre-wrap; }
+.cc-truncated { margin-left: 6px; font-style: italic; }
+
+/* --- result (step 4) ---------------------------------------------------- */
+.cc-result { border-color: var(--line-strong, var(--line)); }
+.cc-badge {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  white-space: nowrap;
+}
+.cc-badge.cc-ok { color: var(--ok, #2f8f4e); border-color: currentColor; }
+.cc-badge.cc-fail { color: var(--fail, #b3261e); border-color: currentColor; }
+.cc-badge.cc-wait { color: var(--muted); }
+.cc-badge.cc-stale { color: #b8860b; border-color: currentColor; }
+.cc-terminal {
+  border-left: 3px solid var(--fail, #b3261e);
+  padding: 6px 10px;
+  background: rgba(179, 38, 30, .05);
+  border-radius: 6px;
+  margin: 6px 0;
+}
+.cc-terminal .cc-sub { color: var(--fail, #b3261e); }
+.cc-stale {
+  border-left: 3px solid #b8860b;
+  padding: 6px 10px;
+  background: rgba(184, 134, 11, .08);
+  border-radius: 6px;
+  margin: 6px 0;
+}
+.cc-stale strong { font-size: 12.5px; color: #8a6508; }
+.cc-stale p { margin: 2px 0 0; font-size: 11.5px; color: var(--text); line-height: 1.45; }
+/* The secretary's note. This is the reading, offered in the first person, so it
+   is set as ordinary prose — not a banner, not a callout, not a colour-coded
+   verdict. The leaning tag below is the only place the categorical judgement
+   appears, and it is deliberately small and quiet. */
+.cc-secretary-note { margin: 4px 0 8px; }
+.cc-secretary-text {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.cc-model-note { margin: 6px 0 0; }
+.cc-model-note summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--muted);
+  list-style: none;
+}
+.cc-model-note summary::-webkit-details-marker { display: none; }
+.cc-model-note summary::before { content: '▸ '; }
+.cc-model-note[open] summary::before { content: '▾ '; }
+.cc-model-note-text {
+  margin: 4px 0 0;
+  padding-left: 8px;
+  border-left: 2px solid var(--line);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.cc-checked { margin: 4px 0; }
+.cc-secretary-numbers {
+  margin: 6px 0 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+}
+/* A leaning, not a verdict: small, low-contrast, and never a heading. */
+.cc-leaning { margin: 6px 0 2px; }
+.cc-leaning-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2, rgba(0, 0, 0, .03));
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: .01em;
+}
+.cc-closing {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  font-style: italic;
+}
+.cc-quotes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cc-quote {
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: 7px;
+  padding: 6px 9px;
+  font-size: 12px;
+}
+.cc-quote-yes { border-left-color: var(--ok, #2f8f4e); }
+.cc-quote-no { border-left-color: var(--fail, #b3261e); background: rgba(179, 38, 30, .04); }
+/* The mark is a sentence, not a badge: no weight, no fill, no all-caps. Where a
+   quote was found is a quiet fact; where it was not is said plainly, and the
+   quote keeps a left rule so the two states are still distinguishable without
+   relying on colour. */
+.cc-quote-mark { display: block; font-size: 11px; font-weight: 500; }
+.cc-quote-yes .cc-quote-mark { color: var(--muted); }
+.cc-quote-no .cc-quote-mark { color: var(--text); }
+.cc-quote-reason { display: block; margin-top: 2px; font-size: 11px; color: var(--muted); }
+.cc-quote-crosspage { display: block; margin-top: 2px; font-size: 11px; color: var(--muted); font-style: italic; }
+/* Model and source text can carry a long unbroken run (a digest, a file stem);
+   it wraps inside the sheet instead of pushing the decision buttons sideways. */
+.cc-secretary-text,
+.cc-model-note-text,
+.cc-quote-text,
+.cc-quote-claim,
+.cc-quote-mark,
+.cc-quote-reason,
+.cc-quote-crosspage { overflow-wrap: anywhere; }
+
+.cc-decide { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 6px; }
+.cc-note-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 6px;
+  background: var(--surface-2, var(--surface));
+  color: var(--text);
+}
+.cc-recorded { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 6px; }
+.cc-error {
+  margin: 0;
+  padding: 6px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--fail, #b3261e);
+  background: rgba(179, 38, 30, .06);
+  color: var(--fail, #b3261e);
+  font-size: 12px;
+}
+
+/* --- history ------------------------------------------------------------ */
+.cc-history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.cc-history-row { min-width: 0; }
+.cc-history-open {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 0;
+}
+.cc-history-open:hover { background: var(--surface-2); }
+.cc-history-claim { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 auto; min-width: 0; }
+/* Where the claim came from, said quietly: the claim itself is what the reader
+   is scanning, and this only has to stop a typed claim being read as a quoted
+   one. It never shrinks and never wraps. */
+.cc-history-from {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* --- receipt panel ------------------------------------------------------ */
+.cc-receipt-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(520px, calc(100vw - 32px));
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  z-index: 80;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0,0,0,.22);
+  padding: 10px 12px;
+}
+.cc-receipt-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cc-receipt-head h3 { margin: 0; font-size: 13px; }
+
+/* --- the app's minimum window ------------------------------------------- */
+@media (max-height: 560px), (max-width: 860px) {
+  .claim-check-host.cc-open { max-height: 64vh; }
+  .cc-sheetbar { padding: 4px 8px; }
+  .cc-root { gap: 7px; }
+  .cc-lede { font-size: 11.5px; }
+  .cc-step { padding: 7px 9px; }
+  .cc-step-title { font-size: 12px; }
+  .cc-step-help { font-size: 11px; margin-bottom: 5px; }
+  .cc-source-list { max-height: 74px; }
+  .cc-transmission { max-height: 120px; }
+  .cc-primary, .cc-secondary { min-height: 26px; font-size: 11.5px; padding: 0 9px; }
+  .cc-facts { font-size: 11px; }
+}
+@media (max-width: 620px) {
+  .cc-facts { grid-template-columns: minmax(0, 1fr); }
+  .cc-facts dt { font-weight: 650; }
+}

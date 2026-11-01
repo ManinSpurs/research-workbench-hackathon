@@ -1,0 +1,800 @@
+{
+ "bis": [
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:BOROUGH",
+   "source_id": "DD-BIS-2019",
+   "field": "BOROUGH",
+   "definition": "The name of the NYC borough where the proposed work will take place.",
+   "notes": "Expected values = Manhattan, Bronx, Brooklyn, Queens, Staten Island.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 3"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Bin #",
+   "source_id": "DD-BIS-2019",
+   "field": "Bin #",
+   "definition": "Building Identification Number assigned by Department of City Planning.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 4"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:House #",
+   "source_id": "DD-BIS-2019",
+   "field": "House #",
+   "definition": "The house number for the building where the proposed work will take place.",
+   "notes": "In the address, \"280 Broadway\", 280 is the house number. This number may contain a dash (-), as in \"8-15 27 Avenue\".",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 5"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Street Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Street Name",
+   "definition": "The street name for the building where the proposed work will take place.",
+   "notes": "In the address, \"1050 Park Place\", Park Place is the street name.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 6"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Job #",
+   "source_id": "DD-BIS-2019",
+   "field": "Job #",
+   "definition": "The DOB Job Application Number assigned when the applicant begins the application.",
+   "notes": "This is the unique identifier for the application submitted to the Department. It may contain several work types, and more work types may be added as the application review and the work continues. It is a 9-digit number where the first digit indicates the borough where the building is located. \n\u2022 1 = Manhattan\n\u2022 2 = Bronx\n\u2022 3 = Brooklyn\n\u2022 4 = Queens\n\u2022 5 = Staten Island",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 7"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Job doc. #",
+   "source_id": "DD-BIS-2019",
+   "field": "Job doc. #",
+   "definition": "A sequential number assigned to each of the documents that make up a job application.",
+   "notes": "Every job application should have a 01 document. Every additional document receives a number that increases by 1 (ex: 02, 03, 04)",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 8"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Job Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Job Type",
+   "definition": "2-digit code to indicate the overall job type for the application.\n\nNote: You should also look at the Permit Type field to find out what this specific permit has been issued for. An NB job, for example, can have several different Work/Permit Types such as PL, SP, EQ, etc. And each Work/Permit Type will be issued a seperate permit.",
+   "notes": "Expected values are:\n\u2022 A1 = Alteration Type I, A major alteration that will change the use, egress, or occupancy of the building.\n\u2022 A2 = Alteration Type II, An application with multiple types of work that do not affect the use, egress, or occupancy of the building.\n\u2022 A3 = Alteration Type III, One type of minor work that doesn't affect the use, egress, or occupancy of the building.\n\u2022 NB = New Building, An application to build a new structure. \u201cNB\u201d cannot be selected if any existing building elements are to remain\u2014for example a part of\nan old foundation, a portion of a fa\u00e7ade that will be incorporated into the construction, etc.\n\u2022 DM = Demolition, An application to fully or partially demolish an existing building.\n\u2022 SG = Sign, An application to install or remove an outdoor sign.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 9"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Self_Cert",
+   "source_id": "DD-BIS-2019",
+   "field": "Self_Cert",
+   "definition": "Indicates whether or not the application was submitted as Professionally Certified. A Professional Engineer (PE) or Registered Architect (RA) can certify compliance with applicable laws and codes on applications filed by him/her as applicant.",
+   "notes": "Expected values are: \n\u2022 Y = Yes. \n\u2022 N = No.\n\u2022 blank = No information for this record.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 10"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Block",
+   "source_id": "DD-BIS-2019",
+   "field": "Block",
+   "definition": "Tax Block assigned to the location of the proposed work by the Department of Finance.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 11"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Lot",
+   "source_id": "DD-BIS-2019",
+   "field": "Lot",
+   "definition": "Tax Lot assigned to the location of the proposed work by the Department of Finance.",
+   "notes": "Note: NYC Tax Lots are 4 digits. This dataset reports them in 5 digits with a leading zero. If you are concatenating fields to create the BBL, you will need to adjust for this.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 12"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Community Board",
+   "source_id": "DD-BIS-2019",
+   "field": "Community Board",
+   "definition": "Community Board Number for the building\u2019s address.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 13"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Zip Code",
+   "source_id": "DD-BIS-2019",
+   "field": "Zip Code",
+   "definition": "ZIP Code for the building's address.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 14"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Bldg Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Bldg Type",
+   "definition": "Legal occupancy classification.",
+   "notes": "Expected values are:\n\u2022 1 = 1-2-3 Family\n\u2022 2 = Other\n\nDOF classification has 36 types - this field just simplifies it for DOB purposes. Anything above 3 family we consider multiple dwelling and is regulated more heavily. Other agencies might have different cutoffs.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 15"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Residential",
+   "source_id": "DD-BIS-2019",
+   "field": "Residential",
+   "definition": "",
+   "notes": "Expected values are: \n\u2022 Y = Yes. \n\u2022 blank = No information for this record.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 16"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Special District 1",
+   "source_id": "DD-BIS-2019",
+   "field": "Special District 1",
+   "definition": "",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 17"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Special District 2",
+   "source_id": "DD-BIS-2019",
+   "field": "Special District 2",
+   "definition": "",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 18"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Work Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Work Type",
+   "definition": "The specific type of work covered by the permit.",
+   "notes": "This is a two character code to indicate the type of work. Check the Type Values sheet in this document for expected values and definitions. If the Work Type is blank, check the Permit Type.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 19"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permit Status",
+   "source_id": "DD-BIS-2019",
+   "field": "Permit Status",
+   "definition": "The current status of the permit application.",
+   "notes": "Expected values are \n\u2022 IN PROCESS = The applicant submitted the PW-2 appliction for a permit and it is being processed\n\u2022 ISSUED = The permit has been issued\n\u2022 RE-ISSUED = The permit has been reissued\n\u2022 REVOKED = The permit has been revoked",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 20"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Filing Status",
+   "source_id": "DD-BIS-2019",
+   "field": "Filing Status",
+   "definition": "Indicates if this is the first time the permit is being applied for or if the permit is being renewed.",
+   "notes": "Expected values are INITIAL or RENEWAL.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 21"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permit Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Permit Type",
+   "definition": "The specific type of work covered by the permit.",
+   "notes": "This is a two character code to indicate the type of work. Check the Type Values sheet in this document for expected values and definitions.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 22"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permit Sequence #",
+   "source_id": "DD-BIS-2019",
+   "field": "Permit Sequence #",
+   "definition": "A sequential number assigned to each issuance of the particular permit from initial issuance to each subsequent renewal.",
+   "notes": "Every initial permit should have a 01 sequence number. Every additional renewal receives a number that increases by 1 (ex: 02, 03, 04)",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 23"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permit Subtype",
+   "source_id": "DD-BIS-2019",
+   "field": "Permit Subtype",
+   "definition": "A more specific designation for the type of work indicated in the Permit Type.",
+   "notes": "This is a two character code to indicate the type of work. Check the Type Values sheet in this document for expected values and definitions.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 24"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Oil Gas",
+   "source_id": "DD-BIS-2019",
+   "field": "Oil Gas",
+   "definition": "If the permit is for work on fuel burning equipment, this indicates whether it burns oil or gas.",
+   "notes": "Expected values are OIL, GAS, or blank.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 25"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Site Fill",
+   "source_id": "DD-BIS-2019",
+   "field": "Site Fill",
+   "definition": "This indicates the source of any fill dirt that will be used on the construction site. When over 300 cubic yards of fill is being used, the Department is required to inform Sanitation of where the fill is coming from and the amount.",
+   "notes": "Expected Values are:\n\u2022 USE UNDER 300 CU.YD = Less than 300 cubic yards (on-site or off-site) is being used. \n\u2022 NOT APPLICABLE = Not applicable to proposed work.\n\u2022 ON-SITE = 300 or more cubic yards of fill is being used from on-site.\n\u2022 OFF-SITE = 300 or more cubic yards of fill will be transplanted from an off-site location.\n\u2022 blank",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 26"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Filing Date",
+   "source_id": "DD-BIS-2019",
+   "field": "Filing Date",
+   "definition": "The date the permit application was filed with DOB.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 27"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Issuance Date",
+   "source_id": "DD-BIS-2019",
+   "field": "Issuance Date",
+   "definition": "The date the permit was issued.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 28"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Expiration Date",
+   "source_id": "DD-BIS-2019",
+   "field": "Expiration Date",
+   "definition": "The date that the permit expires.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 29"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Job Start Date",
+   "source_id": "DD-BIS-2019",
+   "field": "Job Start Date",
+   "definition": "The date that the initial permit was issued for this Permit Type.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 30"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's First Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's First Name",
+   "definition": "First name of the person that the permit was issued to.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 31"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's Last Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's Last Name",
+   "definition": "Last name of the person that the permit was issued to.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 32"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's Business Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's Business Name",
+   "definition": "Business name of the person that the permit was issued to.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 33"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's Phone #",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's Phone #",
+   "definition": "Phone number of the person that the permit was issued to.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 34"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's License Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's License Type",
+   "definition": "Professional license type of the person that the permit was issued to.",
+   "notes": "Expected values are:\nDM = \nFS = Fire Suppression Contractor\nGC = General Contractor\nHI = \nMP = Master Plumber\nNW = \nOB = Oil Burner Installer\nOW = \nPE = Professional Engineer\nRA = Registered Architect\nSI = Sign Hanger",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 35"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's License #",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's License #",
+   "definition": "Professional license number of the person that the permit was issued to.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 36"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Act as Superintendent",
+   "source_id": "DD-BIS-2019",
+   "field": "Act as Superintendent",
+   "definition": "Indicates if the permittee acts as the Construction Superintendent for the work site.",
+   "notes": "Expected values are Y, blank.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 37"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Permittee's Other Title",
+   "source_id": "DD-BIS-2019",
+   "field": "Permittee's Other Title",
+   "definition": "Another license number for the person that the permit was issued to, if any.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 38"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:HIC License",
+   "source_id": "DD-BIS-2019",
+   "field": "HIC License",
+   "definition": "NYC-Registered Home Improvement Contractors (HIC)  need a license for all alteration work in 1-, 2-, 3- , 4-family homes or individual apartments in condos/co-ops. HIC licenses are issued by the NYC Department of Consumer Affairs.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 39"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Site Safety Mgr's First Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Site Safety Mgr's First Name",
+   "definition": "The Site Safety Manager's first name.",
+   "notes": "A certified Site Safety Manager is required on new construction or demolition sites 15 stories and above or 100,000 square feet or greater.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 40"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Site Safety Mgr's Last Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Site Safety Mgr's Last Name",
+   "definition": "The Site Safety Manager's last name.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 41"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Site Safety Mgr Business Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Site Safety Mgr Business Name",
+   "definition": "The Site Safety Manager's business name.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 42"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Superintendent First & Last Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Superintendent First & Last Name",
+   "definition": "The Construction Superintendent's first and last name.",
+   "notes": "A registered Construction Superintendent is required at new buildings and buildings under demolition nine stories and below.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 43"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Superintendent Business Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Superintendent Business Name",
+   "definition": "The Construction Superintendent's business name.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 44"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's Business Type",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's Business Type",
+   "definition": "Indicates the type of entity that owns the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 45"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Non-Profit",
+   "source_id": "DD-BIS-2019",
+   "field": "Non-Profit",
+   "definition": "Indicates if the building is owned by a non-profit.",
+   "notes": "Expected values are Y, N, blank.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 46"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's Business Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's Business Name",
+   "definition": "Business name for the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 47"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's First Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's First Name",
+   "definition": "First name of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 48"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's Last Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's Last Name",
+   "definition": "Last name of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 49"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's House #",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's House #",
+   "definition": "House number for the address of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 50"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's House Street Name",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's House Street Name",
+   "definition": "Street for the address of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 51"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's House City",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's House City",
+   "definition": "City for the address of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 52"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's House State",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's House State",
+   "definition": "State for the address of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 53"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's House Zip Code",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's House Zip Code",
+   "definition": "ZIP Code for the address of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 54"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:Owner's Phone #",
+   "source_id": "DD-BIS-2019",
+   "field": "Owner's Phone #",
+   "definition": "Phone number of the owner of the building where the work will be performed.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 55"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:DOBRunDate",
+   "source_id": "DD-BIS-2019",
+   "field": "DOBRunDate",
+   "definition": "Date when query is run and pushed to Open Data. Could be used to differentiate report dates.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 56"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:PERMIT_SI_NO",
+   "source_id": "DD-BIS-2019",
+   "field": "PERMIT_SI_NO",
+   "definition": "",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 57"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:LATITUDE",
+   "source_id": "DD-BIS-2019",
+   "field": "LATITUDE",
+   "definition": "Latitude for the building where the proposed work will take place.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 58"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:LONGITUDE",
+   "source_id": "DD-BIS-2019",
+   "field": "LONGITUDE",
+   "definition": "Longitude for the building where the proposed work will take place.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 59"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:COUNCIL_DISTRICT",
+   "source_id": "DD-BIS-2019",
+   "field": "COUNCIL_DISTRICT",
+   "definition": "Council District for the building where the proposed work will take place.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 60"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:CENSUS_TRACT",
+   "source_id": "DD-BIS-2019",
+   "field": "CENSUS_TRACT",
+   "definition": "Census Tract for the building where the proposed work will take place.",
+   "notes": "",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 61"
+  },
+  {
+   "evidence_id": "DD-BIS-2019:Column Info:NTA_NAME",
+   "source_id": "DD-BIS-2019",
+   "field": "NTA_NAME",
+   "definition": "Neighborhood Tabulation Area for the building where the proposed work will take place.",
+   "notes": "Neighborhood Tabulation Areas (NTAs) were created to project populations at a small area level, from 2000 to 2030 for PlaNYC, the long-term sustainability plan for New York City. For more info, go to https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page.",
+   "location": "DD_DOB_Permit_Issuance_2019-07-29.xlsx \u203a Column Info \u203a row 62"
+  }
+ ],
+ "dobnow": [
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Job Filing Number",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Job Filing Number",
+   "definition": "The DOB Job Filing Number assigned when the applicant begins the application.",
+   "notes": "This is the unique identifier for the filing submitted through DOB NOW. \n\nThe first character is a letter representing the NYC Borough where the building is located. (B=Brooklyn, M=Manhattan, Q=Queens, S=Staten Island, X=Bronx)\n\nThe next 8 characters are numbers that make the Job Filing Number unique.\n\nThe last three characters are a dash, a letter, and a number. The letter is either I=Initial, P=Post Approval Amendment, or S=Subsequent. The number indicates the sequence of the filing when you can have multiple of that type. You should always have I1 because there can only be one initial filing. But you can have multiple Subsequent filings, and the number indicates the order in which they were filed. \n\nNote: A Post Approval Amendment is filed to indicate a change in the application and/or plans after they have already been approved by the Department of Buildings.",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 3"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Filing Reason",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Filing Reason",
+   "definition": "The reason the permit was applied for.",
+   "notes": "Expected values include:\nInitial Permit\nNo Work Permit\nRenewal Permit Without Changes",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 4"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:House No",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "House No",
+   "definition": "The house number for the building where the proposed work will take place.",
+   "notes": "In the address, \"280 Broadway\", 280 is the house number. This number may contain a dash (-), as in \"8-15 27 Avenue\".",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 5"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Street Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Street Name",
+   "definition": "The street name for the building where the proposed work will take place.",
+   "notes": "In the address, \"1050 Park Place\", Park Place is the street name.",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 6"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Borough",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Borough",
+   "definition": "The name of the NYC borough where the proposed work will take place.",
+   "notes": "Expected values = MANHATTAN, BRONX, BROOKLYN, QUEENS, STATEN ISLAND.",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 7"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:LOT",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "LOT",
+   "definition": "Tax Lot assigned to the location of the proposed work by the Department of Finance.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 8"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Bin",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Bin",
+   "definition": "Building Identification Number assigned by Department of City Planning.",
+   "notes": "This BIN comes from the DOB database.",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 9"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Block",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Block",
+   "definition": "Tax Block assigned to the location of the proposed work by the Department of Finance.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 10"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:C B NO",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "C B NO",
+   "definition": "Community Board Number for the building\u2019s address.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 11"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Apt/Condo No(s)",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Apt/Condo No(s)",
+   "definition": "The apartment number for the location where the proposed work will take place if the work is restricted to only certain apartments or condos within the building.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 12"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Work on Floor",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Work on Floor",
+   "definition": "The name or number of the floor(s) of the building where the work will be performed.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 13"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Work Type",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Work Type",
+   "definition": "The type of work that will be performed under this permit.",
+   "notes": "Expected values include, but are not limited to:\n\u2022 Antenna - An antenna is a device that transfers electrical signals across air or wires and can receive, transmit, or broadcast signals to a singular or multiple locations. \n\u2022 Construction Fence - A fence that encloses the construction work and protects the site. \n\u2022 Curb Cut - An angled drop cut to the curb in the roadway, street, public right of way, or similar, which provides access to the zoning or tax lot.\n\u2022 Plumbing - The installation, maintenance, extension, and alteration of all piping, fixtures, appliances, and equipment in connection with: sanitary drainage, storm drainage facilities, the venting system and the public or private water supply system.\n\u2022 Sidewalk Shed - A sidewalk shed protects pedestrians from potential debris when construction work on higher floors occurs above the sidewalk.\n\u2022 Sign - To install a sign, a construction permit is required from the Department. Signs that are painted or smaller than six square feet and not illuminated do not require a permit. \n\u2022 Sprinkler - The installation, modification, repair, or removal of the system of piping and sprinkler heads connected to one or more sources of water supply.\n\u2022 Standpipe -  Installation and/or modifications to piping installed for Standpipe system in a building or structure that serves to transfer water from a water supply to hose connections at one or more locations in a building or structure for fire-fighting purposes.\n\u2022 Supported Scaffold - Scaffold is a temporary elevated platform, including its supporting structure, erected at a construction site during construction to support workers and/or materials and providing aboveground access to the building\u2019s exterior.",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 14"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Permittee's License Type",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Permittee's License Type",
+   "definition": "The type of professional license that the person applying for the permit holds.",
+   "notes": "Expected values include, but are not limited to:\nF = \nGC = General Contractor\nP = \nPE = Professional Engineer\nRA = Registered Architect\nS = Sign Hanger\nPR = Preparer  (This is not actually a license type. It is the default if someone does not connect a license type to their DOB NOW account.)",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 15"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant License #",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant License #",
+   "definition": "The applicant's license number on file with the Department.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 16"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant First Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant First Name",
+   "definition": "First name of the person who filed the application.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 17"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant Middle Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant Middle Name",
+   "definition": "Middle name of the person who filed the application.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 18"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant Last Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant Last Name",
+   "definition": "Last name of the person who filed the application.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 19"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant Business Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant Business Name",
+   "definition": "The business name of the applicant.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 20"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Applicant Business Address",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Applicant Business Address",
+   "definition": "The business address for the applicant.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 21"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Filing Representative First Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Filing Representative First Name",
+   "definition": "First name of the filing representative, if any. A filing representative is someone who fills out Department of Buildings paperwork on behalf of a building owner or licensed professional.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 22"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Filing Representative Middle Initial",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Filing Representative Middle Initial",
+   "definition": "Middle initial of the name of the person who filed the application.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 23"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Filing Representative Last Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Filing Representative Last Name",
+   "definition": "Last name of the person who filed the application.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 24"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Filing Representative Business Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Filing Representative Business Name",
+   "definition": "The business name of the filing representative.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 25"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Work Permit",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Work Permit",
+   "definition": "The DOB Permit Number assigned to this permit.",
+   "notes": "This is the unique identifier for the permit assigned by DOB NOW. \n\nThe first character is a letter representing the NYC Borough where the building is located. (B=Brooklyn, M=Manhattan, Q=Queens, S=Staten Island, X=Bronx)\n\nThe next 8 characters are numbers that make the Permit Number unique.\n\nThe next three characters are a dash, a letter, and a number. The letter is either EW=, I=Initial, P=Post Approval Amendment, or S=Subsequent. The number indicates the sequence of the filing when you can have multiple of that type. You should always have I1 because there can only be one initial filing. But you can have multiple Subsequent filings, and the number indicates the order in which they were filed. \n\nNote: A Post Approval Amendment is filed to indicate a change in the application and/or plans after they have already been approved by the Department of Buildings.\n\nThe last two characters indicate the type of work that the permit covers:\nAN = Antenna\nCC = Curb Cut\nFN = Fence\nPL = Plumbing\nSD = Standpipe\nSF = Scaffold\nSG = Sign\nSH = Shed\nSP = Sprinkler",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 26"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Approved Date",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Approved Date",
+   "definition": "This is the date that the entire job was approved by the Plan Examiner. The applicant can now pull a permit.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 27"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Issued Date",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Issued Date",
+   "definition": "This is the date that the permit was issued.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 28"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Expired Date",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Expired Date",
+   "definition": "This is the date that the permit expires.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 29"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Job Description",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Job Description",
+   "definition": "The general description of the work being applied for. This field is free text, and is filled out by the applicant.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 30"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Estimated Job Costs",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Estimated Job Costs",
+   "definition": "This is a dollar amount that indicates the applicant's estimate for how much the job will cost.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 31"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner Business Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner Business Name",
+   "definition": "The business name of the building owner.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 32"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner Name",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner Name",
+   "definition": "The name of the building owner.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 33"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner Street Address",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner Street Address",
+   "definition": "The street name for the building owner's address.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 34"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner City",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner City",
+   "definition": "The city for the building owner's address.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 35"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner State",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner State",
+   "definition": "The state for the building owner's address.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 36"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Owner Zip Code",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Owner Zip Code",
+   "definition": "The Zip Code for the building owner's address.",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 37"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Permit Status",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Permit Status",
+   "definition": "The most recent status of the permit",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 38"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Tracking Number",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Tracking Number",
+   "definition": "Unique identifier of the permit",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 39"
+  },
+  {
+   "evidence_id": "DD-DOBNOW-2018:Column Info:Sequence Number",
+   "source_id": "DD-DOBNOW-2018",
+   "field": "Sequence Number",
+   "definition": "The numeric order of permit issuance",
+   "notes": "",
+   "location": "DOB_NOW_Build_Approved_Permits_Data_Dictionary.xlsx \u203a Column Info \u203a row 40"
+  }
+ ],
+ "official": [
+  {
+   "evidence_id": "META-BIS-COVERAGE",
+   "source_id": "META-BIS-COVERAGE",
+   "field": "(dataset coverage)",
+   "definition": "Note: This dataset only includes permits issued in the Buildings Information System (BIS), most current permits are now issued in DOB NOW.",
+   "notes": "",
+   "location": "NYC Open Data dataset ipu4-2q9a \u203a About \u203a description (retrieved 2026-10-24)"
+  }
+ ]
+}

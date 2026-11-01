@@ -1,0 +1,17 @@
+fastapi==0.162.0
+uvicorn==0.54.0
+pydantic==2.14.1
+pydantic-ai==2.61.0
+openai==3.37.0
+httpx==0.28.1
+pytest==9.1.1
+
+socksio==1.0.0
+
+# Test dependency, not an app runtime import: the Modal deployment suites import
+# the installed SDK (``modal.app``/``modal.runner``/``modal.exception``) and the
+# status codes its gRPC layer exposes (``grpclib.const``). Pinned to the SDK
+# version those tests were written against; the SDK's own dependencies
+# (grpclib, aiohttp, synchronicity, ...) come with it. Installing the app alone
+# does not need this package, but collecting ``tests/`` does.
+modal==1.6.3

@@ -1,0 +1,55 @@
+/* PDF ordering in the library index.
+   A document row gains a drag handle and two unambiguous drop zones: a rule on
+   the top edge means "place before this document", a rule on the bottom edge
+   means "place after it". Both indicators are inset shadows, so nothing below
+   the row shifts while the pointer moves — the list never reflows under the
+   drag, which is what makes the target readable. Notes keep the plain row from
+   style.css: they are grouped by day and never take part in this ordering. */
+
+.library-item-row[data-reorder="true"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-1);
+  align-items: start;
+}
+/* The handle sits in the first column, the title and its meta stack in the
+   second — the same two-line shape the plain row has, shifted right by the
+   handle's own width. */
+.library-item-row[data-reorder="true"] .library-item-title,
+.library-item-row[data-reorder="true"] .library-item-meta { grid-column: 2; }
+
+/* The handle is decoration for the pointer; the row keeps its own keyboard and
+   screen-reader path (Alt+ArrowUp / Alt+ArrowDown, announced on the row). */
+.library-drag-handle {
+  display: inline-block;
+  align-self: center;
+  padding: 0 var(--space-0) 0 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--lh-tight);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.library-item-row[data-reorder="true"]:hover .library-drag-handle,
+.library-item-row[data-reorder="true"]:focus-visible .library-drag-handle { color: var(--text); }
+.library-item-row[data-reorder="true"].dragging .library-drag-handle { cursor: grabbing; }
+
+/* The dragged row stays legible while it moves. */
+.library-item-row.dragging { cursor: grabbing; }
+
+/* Before: the accent sits on the top edge. After: on the bottom edge. The 1px
+   inset keeps the neighbouring rows' own rules intact. */
+.library-item-row.drop-before {
+  box-shadow: inset 0 2px 0 0 var(--accent);
+  border-top-color: var(--accent);
+  background: var(--surface-2);
+}
+.library-item-row.drop-after {
+  box-shadow: inset 0 -2px 0 0 var(--accent);
+  border-bottom-color: var(--accent);
+  background: var(--surface-2);
+}
+
+/* The drop hint is stated once above the list, muted, and only while a PDF row
+   is being dragged within the same list. */
+.library-items[aria-busy="true"] { cursor: progress; }

@@ -1,0 +1,11 @@
+/* Zoom from the physical display; the shell leaves before the zoom finishes. */
+.startup.console-leaving { animation: console-shell-exit 120ms ease-out both; pointer-events: none; }
+@keyframes console-shell-exit { from { opacity: 1; } to { opacity: 0; } }
+.display-portal.opening #app-shell { animation: console-workspace-arrive 320ms ease-out both; }
+@keyframes console-workspace-arrive {
+  0%, 65% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .startup.console-leaving, .display-portal.opening #app-shell { animation: none; }
+}

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "project": {
+    "name": "Research Workbench - hackathon build",
+    "csv_file": "measurements.csv",
+    "pack_id": null,
+    "dictionary": {
+      "entries": [
+        {
+          "source_id": "DEV-MEASUREMENTS",
+          "evidence_id": "DEV-MEASUREMENTS:metric",
+          "field": "metric",
+          "definition": "The name of the measurement.",
+          "location": "measurements.csv > metric",
+          "notes": "Measurement log of this build; not an external dataset."
+        },
+        {
+          "source_id": "DEV-MEASUREMENTS",
+          "evidence_id": "DEV-MEASUREMENTS:value",
+          "field": "value",
+          "definition": "The measured number as written, in the unit named on the same row.",
+          "location": "measurements.csv > value",
+          "notes": "Observed during this build; the source column on each row names where."
+        },
+        {
+          "source_id": "DEV-MEASUREMENTS",
+          "evidence_id": "DEV-MEASUREMENTS:unit",
+          "field": "unit",
+          "definition": "The unit the value is expressed in: seconds, tokens, tests, bytes or USD.",
+          "location": "measurements.csv > unit",
+          "notes": ""
+        },
+        {
+          "source_id": "DEV-MEASUREMENTS",
+          "evidence_id": "DEV-MEASUREMENTS:source",
+          "field": "source",
+          "definition": "Where the number came from: a Lead-observed live run on 2026-10-31 with its log outside the repository, or a declared constant in app/ai/local_runtime.py.",
+          "location": "measurements.csv > source",
+          "notes": ""
+        },
+        {
+          "source_id": "DEV-MEASUREMENTS",
+          "evidence_id": "DEV-MEASUREMENTS:coverage",
+          "field": "(dataset coverage)",
+          "definition": "Sixteen rows, one per recorded measurement. No private research data.",
+          "location": "measurements.csv",
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "folders": ["Design", "Hackathon rules", "Decisions", "Model notes"],
+  "notes": [
+    {
+      "folder": "Design",
+      "title": "Design: the console and the AI layer",
+      "file": "notes/design_console.md"
+    },
+    {
+      "folder": "Design",
+      "title": "Claim-Evidence verification",
+      "file": "notes/design_claim_evidence.md"
+    },
+    {
+      "folder": "Hackathon rules",
+      "title": "Hackathon FAQ (as provided by the participant)",
+      "file": "notes/hackathon_faq.md"
+    },
+    {
+      "folder": "Hackathon rules",
+      "title": "Contribution ledger: what is new and what is not",
+      "file": "notes/hackathon_ledger.md"
+    },
+    {
+      "folder": "Decisions",
+      "title": "Decision record: routes, cost and release gate",
+      "file": "notes/decisions_release_gate.md"
+    },
+    {
+      "folder": "Model notes",
+      "title": "Local model: the pinned install",
+      "file": "notes/local_model.md"
+    }
+  ],
+  "decisions": [
+    {
+      "key": "local-zero-cost",
+      "question": "Can a local 4B model give zero-cost research help?",
+      "verdict": "adopt",
+      "reason": "Local compute only, so no API credits are spent; the arm stays opt-in per job and never replaces the cloud route by itself."
+    },
+    {
+      "key": "meta-route-baseten",
+      "question": "Which route should Meta reasoning use while Meta API credits are exhausted?",
+      "verdict": "adopt",
+      "reason": "The Baseten-hosted Muse Spark Open endpoint, chosen explicitly per prepared job and recorded on the prepared record."
+    },
+    {
+      "key": "claim-evidence-core",
+      "question": "Should claim-evidence verification be the core feature of this build?",
+      "verdict": "adopt",
+      "reason": "Claim-evidence verification is the core feature of this build, and it is implemented and independently reviewed in this build (app/claim_check.py, frontend/claim_check_ui.js). Numbers are reconciled by code with no AI and no cost, and statements about a stored source are put to a model whose quote must match verbatim against the excerpt actually sent, after an exact preview and the researcher's consent. What comes back is a secretary's note, a hedged suggestion the researcher decides on, never a ruling. The local path was verified live in the packaged build on 2026-10-31, and the cloud path is live on Baseten Muse Spark Open: job aichk-d6f42801700a returned a supported verdict with 1 verbatim quote in 3.4 s. The research comparison ran on 2026-11-01 on Baseten Muse Spark Open and local Qwen3-4B, basic versus harness, n=1 per case-arm. Scoring: AI first-pass scoring, human second-pass review (after unblinding). See the contribution ledger note for ratings and limitations; no established harness effect is claimed. Preregistered aggregates remain NOT_SCORED."
+    },
+    {
+      "key": "keep-reasoning-effort-low",
+      "question": "Should the cloud claim check keep reasoning effort low, or switch to none?",
+      "verdict": "adopt",
+      "reason": "Keep reasoning effort low. Five alternating calls per arm on Baseten Muse Spark Open gave a median of 2.55 s at low (range 2.32 to 4.04 s, 0.0151 USD) against 2.11 s at none (range 1.91 to 2.61 s, 0.0126 USD). The 0.45 s gap sits inside run-to-run spread and caching favored the none arm, so it is not evidence of a real speed difference. All 10 calls were supported with 1 verified quote, and no note leaked an internal ID or rendered claim as a billing term. Costs are calculated, not invoice-verified."
+    },
+    {
+      "key": "dmg-review-gate",
+      "question": "Should a packaged DMG build be reviewed before release?",
+      "verdict": "adopt",
+      "reason": "Every packaged build is opened and reviewed on its own fresh session database first; a build that fails its checks is not shipped."
+    }
+  ],
+  "draft": {
+    "title": "Submission write-up - draft",
+    "file": "draft/main.tex"
+  },
+  "table": {
+    "title": "Measurements",
+    "csv_file": "measurements.csv"
+  }
+}

@@ -1,0 +1,133 @@
+/* Load last. Size the real workspace, not the home console. Content keeps its
+   original controls and scrolls inside its owning surface. */
+#app-shell.wb-dc {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#app-shell.wb-dc > header,
+#app-shell.wb-dc > .wb-dc-alerts { flex: 0 0 auto; }
+#app-shell.wb-dc > main {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#app-shell.wb-dc > main > .view-bar {
+  position: static;
+  flex: 0 0 auto;
+}
+#app-shell.wb-dc > main > section {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 12px var(--dc-gutter);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+#app-shell.wb-dc .interior-research-intro { margin: 0 0 10px; }
+#app-shell.wb-dc .interior-research-tools { margin: 8px 0 12px; }
+/* The three document surfaces consume the remaining flex track. Only active
+   surfaces get a display rule: .hidden and the native hidden attribute win. */
+#app-shell.wb-dc > main > section:is(.writing-mode,.library-mode,.secretary-review-mode) {
+  display: flex;
+  flex-direction: column;
+}
+#app-shell.wb-dc #latex-view:not(.hidden),
+#app-shell.wb-dc #library-view:not(.hidden),
+#app-shell.wb-dc #secretary-review-view:not(.hidden) {
+  flex: 1 1 0;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+}
+#app-shell.wb-dc #latex-view.dw-writing:not(.hidden) { overflow: auto; }
+#app-shell.wb-dc #latex-view.dw-writing #latex-editor { overflow: auto; }
+#app-shell.wb-dc #library-view:not(.hidden) {
+  align-items: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+#app-shell.wb-dc #library-view .library-tree,
+#app-shell.wb-dc #library-view .library-docs {
+  min-height: 0;
+  overflow: auto;
+}
+#app-shell.wb-dc #library-view .library-docs {
+  display: flex;
+  flex-direction: column;
+}
+#app-shell.wb-dc #library-view .library-toolbar { flex: 0 0 auto; }
+#app-shell.wb-dc #library-view .library-body {
+  flex: 1 1 0;
+  min-height: 0;
+  align-items: stretch;
+}
+#app-shell.wb-dc #library-view .library-index,
+#app-shell.wb-dc #library-view .library-reader {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+#app-shell.wb-dc #secretary-review-view:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+}
+#app-shell.wb-dc #secretary-review-view .secretary-review-head { flex: 0 0 auto; }
+#app-shell.wb-dc #secretary-review-groups {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+@media (min-width: 1100px) {
+  /* The existing support disclosure is an explicit context, not a second
+     dashboard. Opening New question gives that form the available work area.
+     Closing the same summary restores the still-mounted evidence/decision.
+     Older support controls stay reachable in this pane below the form. */
+  #app-shell.wb-dc .wb-dc-support[open]:has(#question-entry[open]) {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 12px var(--dc-gutter);
+    background: var(--bg);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  #app-shell.wb-dc .wb-dc-support[open]:has(#question-entry[open]) .wb-dc-support-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 0;
+  }
+  #app-shell.wb-dc .wb-dc-support[open] #question-entry[open] {
+    order: -1;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  /* Keep the working question and its action together without shrinking type
+     or suppressing the disk/privacy warning. */
+  #app-shell.wb-dc #ask-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6px 18px;
+    align-items: start;
+  }
+  #app-shell.wb-dc #ask-form > label { margin-top: 0; }
+  #app-shell.wb-dc #ask-form > :is(label[for="question"],#question,.muted,button) {
+    grid-column: 1 / -1;
+  }
+  #app-shell.wb-dc #ask-form > label[for="pack-select"] { grid-column: 1; grid-row: 3; }
+  #app-shell.wb-dc #ask-form > #pack-select { grid-column: 1; grid-row: 4; }
+  #app-shell.wb-dc #ask-form > label[for="dataset-select"] { grid-column: 2; grid-row: 3; }
+  #app-shell.wb-dc #ask-form > #dataset-select { grid-column: 2; grid-row: 4; }
+  #app-shell.wb-dc #ask-form > p { margin: 0; }
+  #app-shell.wb-dc #result { max-height: 36dvh; overflow: auto; }
+}
+@media (max-width: 760px) {
+  /* Tall forms remain scrollable at phone widths, never clipped. */
+  #app-shell.wb-dc #library-view:not(.hidden) { display: block; overflow: auto; }
+  #app-shell.wb-dc #library-view .library-body { display: block; }
+  #app-shell.wb-dc #library-view .library-reader { max-height: 65dvh; }
+  #app-shell.wb-dc #secretary-review-view:not(.hidden) { overflow: auto; }
+  #app-shell.wb-dc #secretary-review-groups { flex-shrink: 0; }
+}

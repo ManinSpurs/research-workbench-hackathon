@@ -1,0 +1,20 @@
+import asyncio, json, sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "tests"))
+import httpx
+from app.ai import service
+from app.ai.provider import MetaProvider
+from test_dot_safety import h  # noqa
+from test_ai_review_readback import _mock_ok
+
+def test_probe_arms(wired):
+    svc, qid, _ = wired
+    svc.configure(True, 150)
+    asyncio.run(svc.verify_account())
+    prep = svc.prepare(qid, {})
+    asyncio.run(svc.execute(prep["job_id"], prep["preview_hash"], True))
+    res = json.loads(svc.db.execute("SELECT result_json FROM ai_jobs WHERE id=?", (prep["job_id"],)).fetchone()[0])
+    print("PROBE-ARMS:", sorted(res["outputs"].keys()))
+    print("PROBE-KEYS:", sorted(res.keys()))
+    print("PROBE-QTEXT-IN-JOBS:", json.dumps(svc.jobs(qid))[:200])

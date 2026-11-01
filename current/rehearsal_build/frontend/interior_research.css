@@ -1,0 +1,155 @@
+/* Approved interior study applied to the real workspace, not to its hardware. */
+#app-shell {
+  --text-base: 15px;
+  --text-sm: 14px;
+  --text-xs: 12px;
+  --text-md: 16px;
+  --text-lg: 19px;
+  --text-xl: 27px;
+  --control-h: 44px;
+  --radius: 4px;
+  --radius-ui: 4px;
+  --panel-projects: 192px;
+  --panel-secretary: 304px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--text-base);
+}
+:root[data-theme="dark"] #app-shell {
+  --muted: #acb4bb;
+  --line: #435060;
+}
+#app-shell > header {
+  min-height: 64px;
+  padding: 10px 16px;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+#app-shell > header strong { font-size: 16px; }
+#app-shell > header > button,
+#app-shell > header select { min-height: 44px; font-size: 13px; }
+#app-shell > header .theme-control { gap: 4px; }
+#app-shell > header .theme-control label { font-size: 10px; }
+#app-shell > main { padding: 0; gap: 0; align-items: stretch; }
+#app-shell > main > nav {
+  padding: 24px 16px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface-2);
+}
+#app-shell > main > section {
+  padding: 26px 28px;
+  border: 0;
+  border-radius: 0;
+}
+#app-shell > main > aside {
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+}
+#app-shell > main button,
+#app-shell > main select,
+#app-shell > main input:not([type="checkbox"]):not([type="radio"]) {
+  min-height: 44px;
+}
+#app-shell > main :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+#app-shell #project-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--muted);
+}
+#app-shell .view-bar { gap: 12px; margin-bottom: 20px; padding-bottom: 16px; }
+#app-shell .view-tabs { gap: 6px; }
+#app-shell .view-tabs button { min-height: 44px; }
+#app-shell .view-tabs button[aria-pressed="true"] {
+  box-shadow: inset 0 -3px var(--accent);
+  font-weight: 650;
+}
+.interior-research-intro { margin: 28px 0 18px; }
+.interior-eyebrow {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .05em;
+}
+#interior-question-title {
+  margin: 0 0 14px;
+  font-size: clamp(23px, 2.2vw, 30px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+.interior-research-intro > .muted { max-width: 66ch; font-size: 14px; line-height: 1.6; }
+.interior-research-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.interior-research-tools button { width: auto; padding-inline: 16px; margin: 0; }
+#research-intro[hidden], #research-tools[hidden] { display: none !important; }
+#app-shell #question-entry,
+#app-shell #canvas-panel {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+#app-shell #question-entry > summary,
+#app-shell #canvas-panel > summary {
+  min-height: 44px;
+  padding-block: 10px;
+  font-weight: 600;
+}
+#app-shell #ask-form > label { margin-top: 16px; }
+#app-shell #ask-form > .muted { font-size: 13px; line-height: 1.55; }
+#app-shell #result, #app-shell #decision { padding: 20px; }
+#app-shell #result { border-top: 3px solid var(--accent); }
+#app-shell #decision { background: var(--surface-2); }
+#app-shell #decision h3 { font-size: 21px; }
+#app-shell #decision .row { gap: 8px; flex-wrap: wrap; }
+#app-shell #result pre { overflow: auto; max-width: 100%; }
+#app-shell > main > section:not(.writing-mode):not(.library-mode):not(.citation-mode):not(.secretary-review-mode) > #result:not(.hidden):has(+ #decision:not(.hidden)),
+#app-shell > main > section:not(.writing-mode):not(.library-mode):not(.citation-mode):not(.secretary-review-mode) > #result:not(.hidden) + #decision:not(.hidden) {
+  display: inline-block;
+  width: calc(50% - 14px);
+  vertical-align: top;
+}
+#app-shell > main > section > #result:not(.hidden):has(+ #decision:not(.hidden)) { margin-right: 20px; }
+#app-shell main.wb-collapse-projects > nav,
+#app-shell main.wb-collapse-secretary > aside { padding: 12px 4px; }
+@media (max-width: 1050px) {
+  #app-shell > main > section { padding: 22px 20px; }
+  #app-shell > header { gap: 6px; }
+  #app-shell > main > section:not(.writing-mode):not(.library-mode):not(.citation-mode):not(.secretary-review-mode) > #result:not(.hidden):has(+ #decision:not(.hidden)),
+  #app-shell > main > section:not(.writing-mode):not(.library-mode):not(.citation-mode):not(.secretary-review-mode) > #result:not(.hidden) + #decision:not(.hidden) {
+    display: block;
+    width: auto;
+    margin-right: 0;
+  }
+}
+@media (max-width: 760px) {
+  #app-shell > main { display: flex; flex-direction: column; }
+  #app-shell > main > nav,
+  #app-shell > main > section,
+  #app-shell > main > aside { width: 100%; }
+  #app-shell > main > nav { border-right: 0; border-bottom: 1px solid var(--line); }
+  #app-shell > main > aside { border-left: 0; border-top: 1px solid var(--line); }
+  #app-shell > header { padding: 12px; }
+  #app-shell .theme-control { flex-wrap: wrap; }
+  #app-shell #library-view, #app-shell .library-body { grid-template-columns: minmax(0, 1fr); }
+  #app-shell .library-tree { position: static; border-right: 0; }
+  #app-shell .view-bar { align-items: stretch; flex-wrap: wrap; }
+  #app-shell .view-tabs { flex-wrap: wrap; }
+  #app-shell #project-list { max-height: 240px; overflow: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #app-shell button, #app-shell input, #app-shell select { transition: none; }
+}

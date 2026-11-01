@@ -1,0 +1,354 @@
+/* Research Workbench — clarity frames A–E (design/mockups/workbench-clarity).
+   Presentation only. Loaded before macos_theme.css / macos_surfaces.css so those
+   two keep the last word on colour, type and surface, and before
+   overview_fit.css, which owns the height budget.
+
+   Each menu's first screen answers three questions in this order — what is this
+   place for, what do I do first, and what does it look like before I have done
+   anything. The one primary action is a new button wired to the handler that
+   already existed; every other control keeps its node, its handler and its place,
+   and is only drawn quieter (the per-surface rules below).
+
+   Layout rule (overview_fit): the purpose line is one compact row, so the working
+   content below it stays on the first screen; only a long list scrolls, inside
+   the pane that owns it. */
+
+/* --- the purpose row: one sentence, one action --------------------------- */
+.clarity-purpose {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 18px;
+  margin: 0 0 10px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.clarity-purpose-copy { min-width: 0; flex: 1 1 320px; }
+/* The pane's heading and its empty state's heading are h2/h3 inside the section,
+   so macos_surfaces.css's `#app-shell.wb-dc > main > section h2/h3` step (26/20/17
+   with its own margins) outranks a bare class. The step is right for a document
+   title; the pane is an orientation line above the working content and keeps its
+   own smaller step. These selectors carry the same id-and-section prefix so the
+   size asked for here is the size painted, and the compact block below can then
+   shrink it further at the app's minimum height. */
+#app-shell.wb-dc > main > section .clarity-title,
+#app-shell.wb-dc > main > section .clarity-empty h3 {
+  font-weight: 650;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+#app-shell.wb-dc > main > section .clarity-title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.3;
+}
+#app-shell.wb-dc > main > section .clarity-empty h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.clarity-sub {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  max-width: 76ch;
+}
+.clarity-purpose-act {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+}
+/* The single filled control on the screen. It is the same action the menu always
+   offered, and it is the only thing painted as primary.
+   macos_surfaces.css is loaded after this file and paints every control in a
+   surface on the plain surface fill; these selectors carry one more class than
+   its `#app-shell.wb-dc > main > section button:not(:disabled)` rule, so the
+   accent fill this file asks for is the fill that is actually painted. The same
+   selector is repeated for the dark theme, whose own control rule outranks it on
+   type count alone. The ink is the theme's on-accent token: white in the light
+   theme, and the dark theme's own dark ink on its lighter accent, because white
+   on that blue would not be legible. */
+.clarity-primary {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#app-shell.wb-dc > main > section .clarity-primary:not(:disabled) {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+:root[data-theme="dark"] #app-shell.wb-dc > main > section .clarity-primary:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+#app-shell.wb-dc > main > section .clarity-primary:hover:not(:disabled),
+:root[data-theme="dark"] #app-shell.wb-dc > main > section .clarity-primary:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  filter: brightness(1.08);
+}
+#app-shell.wb-dc > main > section .clarity-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+#app-shell.wb-dc > main > section .clarity-primary:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.clarity-act-note {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+/* --- the orientation steps (Research) ------------------------------------ */
+/* The steps live in a <details> so a short window can fold them behind one
+   summary line. At every normal size the summary is not drawn and the three
+   cards are, exactly as before; the fold is only ever visible in the compact
+   block at the end of this file.
+
+   The steps need their own `display: grid` to be three cards, and an author
+   `display` value beats the user-agent rule a closed <details> uses to hide its
+   content — which is why the *folding* is done here explicitly, by
+   `details:not([open]) > .clarity-steps`, and not left to the element. */
+.clarity-steps-fold > summary { display: none; }
+.clarity-steps-fold:not([open]) > .clarity-steps { display: none; }
+.clarity-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+.clarity-steps[hidden] { display: none; }
+.clarity-steps > li {
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-2);
+}
+.clarity-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+.clarity-step-t { font-size: 12.5px; font-weight: 650; color: var(--text); }
+.clarity-step-p { margin: 3px 0 0; font-size: 11.5px; line-height: 1.4; color: var(--muted); }
+
+/* Once a question is being worked, the purpose row keeps its sentence and its one
+   action but gives its spacing back to the evidence below it. The measured
+   budget at 1280x800 has no slack: the pane must cost the section nothing that
+   its own content would otherwise have used. */
+.clarity-pane[data-clarity-pane="research"]:has(.clarity-empty[hidden]) .clarity-purpose {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
+.clarity-pane[data-clarity-pane="research"]:has(.clarity-empty[hidden]) .clarity-act-note { display: none; }
+#app-shell.wb-dc > main > section .clarity-pane[data-clarity-pane="research"]:has(.clarity-empty[hidden]) .clarity-title { font-size: 14.5px; }
+
+/* --- the empty state: what this looks like before you have anything ------ */
+.clarity-empty {
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-strong, var(--line));
+  border-radius: 8px;
+  background: var(--surface-2);
+  min-width: 0;
+}
+.clarity-empty[hidden] { display: none; }
+.clarity-empty h3 { margin: 0 0 4px; font-size: 14px; font-weight: 650; color: var(--text); }
+.clarity-empty p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--muted); max-width: 82ch; }
+.clarity-empty p + p { margin-top: 3px; }
+.clarity-empty b { font-weight: 650; color: var(--text); }
+
+/* --- per-screen placement ------------------------------------------------ */
+/* Each menu's pane is one sibling of that menu's own view, injected by clarity.js
+   into the workspace section. Keeping it out of the view's grid leaves every
+   existing grid rule — and overview_fit.css's height budget — untouched: the view
+   still owns its own rows and scrolls internally, and the pane is a fixed row
+   above it.
+
+   Which pane is on screen is decided by which view is on screen, with the same
+   .hidden flag the views already use. No second notion of "current view". */
+.clarity-pane { display: none; flex: 0 0 auto; min-width: 0; }
+#app-shell > main > section:has(> #library-view:not(.hidden)) > .clarity-pane[data-clarity-pane="library"],
+#app-shell > main > section:has(> #latex-view:not(.hidden)) > .clarity-pane[data-clarity-pane="writing"],
+#app-shell > main > section:has(> #secretary-review-view:not(.hidden)) > .clarity-pane[data-clarity-pane="review"] {
+  display: block;
+}
+/* Research has no view container of its own, so its pane is the default and the
+   three document views above switch it off. */
+#app-shell > main > section:has(> #research-intro) > .clarity-pane[data-clarity-pane="research"] {
+  display: block;
+}
+#app-shell > main > section:has(> #library-view:not(.hidden)) > .clarity-pane[data-clarity-pane="research"],
+#app-shell > main > section:has(> #latex-view:not(.hidden)) > .clarity-pane[data-clarity-pane="research"],
+#app-shell > main > section:has(> #secretary-review-view:not(.hidden)) > .clarity-pane[data-clarity-pane="research"],
+#app-shell > main > section:has(> #citation-view:not(.hidden)) > .clarity-pane[data-clarity-pane="research"] {
+  display: none;
+}
+
+/* --- demoted secondary controls ------------------------------------------ */
+/* Everything below keeps its node, its handler and its place. It only stops
+   looking like the thing to press first. This block is the one shared demotion
+   treatment: a control that is not the primary action is drawn the same way on
+   every screen, so "quiet" means one thing in the product. */
+#app-shell.wb-dc #library-view .library-tree-head button:not(.clarity-primary),
+#app-shell.wb-dc #library-view .library-tools button:not(.clarity-primary),
+#app-shell.wb-dc #library-view .library-citation-entry,
+#app-shell.wb-dc #secretary-review-view #secretary-review-clear-discarded,
+#app-shell.wb-dc #research-intro > .wb-dc-new-question {
+  border-color: transparent;
+  background: none;
+  color: var(--muted);
+  font-weight: 500;
+  box-shadow: none;
+}
+#app-shell.wb-dc #library-view .library-tree-head button:hover:not(:disabled),
+#app-shell.wb-dc #library-view .library-tools button:hover:not(:disabled),
+#app-shell.wb-dc #library-view .library-citation-entry:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-2);
+}
+/* Review: the one destructive bulk action keeps its own tone on hover, because a
+   delete is not the same quiet as a mode switch. */
+#app-shell.wb-dc #secretary-review-view #secretary-review-clear-discarded:hover:not(:disabled) {
+  color: var(--fail);
+}
+/* Research: the tool switch is a mode picker, not the next action. */
+#app-shell.wb-dc #research-tools button { font-weight: 500; }
+
+/* --- the older view heads, demoted --------------------------------------- */
+/* Each of these views used to open with its own heading and its own copy of the
+   first action, directly under the purpose row that now says the same thing
+   once. Nothing is removed: the heading, its explanation and its control all
+   stay in the DOM, keep their ids and their handlers, and stay readable — they
+   simply stop competing with the one statement at the top. The purpose row is
+   the screen's first line; the head below it is the reference text for someone
+   already working. */
+#app-shell.wb-dc #secretary-review-view > .secretary-review-head > h3 {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+#app-shell.wb-dc #secretary-review-view > .secretary-review-head > .muted {
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+/* Research: the shipped intro is superseded, not removed. It used to repeat the
+   purpose row's statement in its own heading, its own explanation and its own
+   copy of the first action, which gave the screen two headings and two "New
+   question" controls. The purpose row is now the screen's single statement, so
+   the intro's box is not drawn at all: display:none also takes it out of the tab
+   order and out of the accessibility tree, while every node and id inside it
+   (#research-intro, #research-location, #interior-question-title, the shipped
+   New question button) stays in the document for the code and the contracts that
+   read them. */
+#app-shell.wb-dc #research-intro { display: none; }
+
+/* --- frame A: one purpose line under each home tile ---------------------- */
+/* The home layout is unchanged — centred title, small tiles, wide secretary
+   panel, large gear. The line is added under the tile's own label, and the
+   tile's existing note stays where it was (hidden in the home state). */
+#startup.home .menu-item .clarity-tile-purpose {
+  display: block;
+  margin-top: 4px;
+  font: 400 11.5px/1.35 var(--font, system-ui);
+  letter-spacing: 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+#startup.home .menu-item:hover .clarity-tile-purpose,
+#startup.home .menu-item:focus .clarity-tile-purpose,
+#startup.home .menu-item:focus-visible .clarity-tile-purpose { color: var(--text); }
+@media (max-width: 720px) {
+  #startup.home .menu-item .clarity-tile-purpose { font-size: 10.5px; margin-top: 2px; }
+}
+
+/* Short windows (720x480 is the app's minimum): one compact line each, the note
+   under the button folds away, and the steps stay readable in three columns. */
+@media (max-height: 560px), (max-width: 860px) {
+  .clarity-purpose { margin-bottom: 6px; padding-bottom: 5px; gap: 4px 10px; }
+  .clarity-title { font-size: 14px; }
+  .clarity-sub { font-size: 11.5px; }
+  .clarity-act-note { display: none; }
+  .clarity-primary { min-height: 30px; padding: 0 11px; font-size: 12.5px; }
+  .clarity-steps { gap: 6px; margin-bottom: 6px; }
+  .clarity-steps > li { padding: 5px 7px; }
+  .clarity-step-p { font-size: 11px; }
+  .clarity-empty { padding: 8px 10px; margin-bottom: 6px; }
+  .clarity-empty h3 { font-size: 13px; }
+  .clarity-empty p { font-size: 11.5px; }
+}
+@media (max-width: 620px) {
+  .clarity-steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The 720x480 minimum is the tightest the app runs at. Above 560px of height the
+   fold is open and the three cards are drawn as they always were; at or below it
+   clarity.js closes the fold, so the same three steps occupy one summary line and
+   the sentence, the action and the empty state keep the first screen. Nothing is
+   removed at any size: the copy is either drawn as three cards or one line that
+   opens into them.
+
+   No text is clamped anywhere. A half-word cut is not a shorter sentence, it is a
+   different one, and the space that saved was the space the fold had already
+   given back. */
+@media (max-height: 560px) {
+  .clarity-steps-fold > summary { display: block; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-steps-fold { margin: 0 0 4px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-steps-fold[open] { margin-bottom: 4px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-steps-fold > summary {
+    padding: 2px 0; font-size: 10.5px; line-height: 1.3; color: var(--muted);
+  }
+  .clarity-pane[data-clarity-pane="research"] .clarity-sub { font-size: 10.5px; line-height: 1.35; margin-top: 1px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-purpose {
+    margin-bottom: 4px; padding-bottom: 3px; align-items: center;
+  }
+  .clarity-pane[data-clarity-pane="research"] .clarity-primary { min-height: 26px; padding: 0 9px; font-size: 11.5px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-steps { gap: 4px; margin-bottom: 3px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-steps > li { padding: 3px 5px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-step-n { font-size: 9.5px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-step-t { font-size: 10.5px; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-step-p { font-size: 10px; line-height: 1.3; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-empty { padding: 5px 8px; margin-bottom: 0; }
+  .clarity-pane[data-clarity-pane="research"] .clarity-empty p { font-size: 10.5px; line-height: 1.3; }
+  /* Same id-and-section prefix as the surface's own heading step, so these sizes
+     are the ones painted at the minimum height rather than being outranked. */
+  #app-shell.wb-dc > main > section .clarity-pane[data-clarity-pane="research"] .clarity-title {
+    font-size: 13px; line-height: 1.25; margin: 0;
+  }
+  #app-shell.wb-dc > main > section .clarity-pane[data-clarity-pane="research"] .clarity-empty h3 {
+    font-size: 11.5px; line-height: 1.25; margin: 0 0 1px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clarity-primary { transition: none; }
+}

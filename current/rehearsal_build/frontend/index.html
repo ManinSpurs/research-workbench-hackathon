@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Workbench (rehearsal)</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="startup.css">
+<link rel="stylesheet" href="desktop_shell.css">
+<link rel="stylesheet" href="home_hub.css">
+<link rel="stylesheet" href="console_motion.css">
+<link rel="stylesheet" href="writing.css">
+<link rel="stylesheet" href="project_order.css">
+<link rel="stylesheet" href="library_order.css">
+<link rel="stylesheet" href="interior_research.css">
+<link rel="stylesheet" href="interior_secretary.css">
+<link rel="stylesheet" href="interior_settings.css">
+<link rel="stylesheet" href="declutter_writing.css">
+<link rel="stylesheet" href="declutter_shell.css">
+<link rel="stylesheet" href="clarity.css">
+<link rel="stylesheet" href="claim_check_ui.css">
+<link rel="stylesheet" href="macos_theme.css">
+<link rel="stylesheet" href="macos_surfaces.css">
+<link rel="stylesheet" href="home_expand.css">
+<link rel="stylesheet" href="macos27.css">
+<link rel="stylesheet" href="overview_fit.css">
+<script src="desktop_shell.js"></script>
+<script src="theme.js"></script>
+<script src="i18n.js"></script>
+</head>
+<body>
+<div id="startup" class="startup" aria-label="Research field start screen">
+  <div class="startup-inner">
+    <p class="startup-kicker" id="startup-kicker" data-i18n>Choose a research field</p>
+    <div class="startup-stage" id="startup-stage">
+      <svg class="startup-hardware" viewBox="24 170 1488 656" role="img" aria-label="Approved console artwork, unchanged">
+<defs><clipPath id="approvedHardwareSilhouette" clipPathUnits="userSpaceOnUse"><path d="M32 323H33V322H34V323H37V300H41V286H45V283H46V277H50V247H53V244H54V243H61V230H64V228H65V227H71V221H74V217H75V216H78V212H85V208H86V207H89V203H99V200H100V199H106V195H111V192H120V187H131V183H165V178H218V183H223V194H253V196H257V195H261V203H262V202H263V203H264V199H266V198H267V196H268V195H324V191H326V189H327V188H360V191H363V194H365V195H402V190H404V188H419V189H421V188H481V189H482V191H483V194H484V195H489V194H1028V191H1030V189H1092V191H1094V195H1113V187H1116V183H1119V182H1120V180H1237V183H1240V187H1243V195H1250V196H1268V195H1276V198H1279V196H1281V195H1283V194H1313V183H1319V178H1370V179H1373V183H1405V187H1415V191H1416V192H1425V195H1430V199H1437V203H1445V207H1449V208H1452V212H1458V216H1461V217H1462V221H1465V227H1470V228H1471V229H1472V230H1474V231H1475V243H1483V247H1486V277H1491V285H1494V286H1495V299H1499V302H1500V323H1504V703H1503V704H1500V724H1499V725H1495V738H1491V746H1489V749H1486V755H1483V758H1482V759H1479V761H1478V762H1475V773H1473V774H1470V777H1469V778H1466V782H1462V786H1458V790H1457V791H1455V794H1448V798H1440V801H1439V802H1435V804H1434V806H1425V810H1412V815H1393V819H1285V815H1279V812H1276V813H1273V814H1268V819H1265V818H1264V817H271V818H268V817H267V813H260V812H258V815H251V819H145V815H124V810H112V806H103V802H97V798H87V794H83V791H80V790H78V786H74V782H70V777H66V773H61V762H58V759H54V758H53V754H50V748H47V746H46V738H41V725H37V704H33V703H32Z"/></clipPath></defs>
+        <image id="approvedHardwareImage" x="0" y="0" width="1536" height="1024" preserveAspectRatio="xMidYMid meet" clip-path="url(#approvedHardwareSilhouette)" href="assets/Console_Concept_A.png"/>
+      </svg>
+      <div class="startup-screen" id="startup-screen">
+        <div class="dot-boot" id="startup-boot" aria-hidden="true" hidden>
+          <div class="boot-mark">
+            <svg class="dot-word" id="boot-word-1" viewBox="0 0 96 14" aria-hidden="true" focusable="false"><text x="48" y="11" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" letter-spacing="1.2" fill="currentColor">RESEARCH</text></svg>
+            <svg class="dot-word second" id="boot-word-2" viewBox="0 0 112 14" aria-hidden="true" focusable="false"><text x="56" y="11" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" letter-spacing="1.2" fill="currentColor">WORKBENCH</text></svg>
+          </div>
+          <div class="boot-rule" id="boot-rule" aria-hidden="true"></div>
+          <p class="boot-field" id="boot-field">LOCAL REHEARSAL</p>
+          <p class="boot-note" id="boot-note">NO NETWORK</p>
+        </div>
+        <div class="sys-menu" id="startup-menu" hidden>
+          <div class="home-top">
+            <span class="field-tag" id="home-field">SOCIAL SCIENCE</span>
+            <button type="button" class="menu-settings" id="home-settings" data-testid="home-settings" aria-label="Settings" title="Settings"><span class="home-settings-label">Settings</span><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="m10 3-.6 2.3-1.5.9-2.3-.6-2 3.4 1.7 1.7v1.8L3.6 14l2 3.5 2.3-.6 1.5.9.6 2.2h4l.6-2.2 1.5-.9 2.3.6 2-3.5-1.7-1.5v-1.8L20.4 9l-2-3.4-2.3.6-1.5-.9L14 3Z"/><circle cx="12" cy="11.5" r="3.2"/></svg></button>
+          </div>
+          <div class="home-body">
+            <div class="home-secretary" id="home-secretary">
+              <h3 data-i18n>Research Secretary</h3>
+              <label class="home-project-label" for="home-project" data-i18n>Project</label>
+              <select id="home-project" aria-label="Project" data-i18n-attrs="aria-label"></select>
+              <div id="home-conversation" role="log" aria-live="polite" aria-label="Conversation with the secretary"></div>
+              <div id="home-composer-slot"></div>
+              <p id="home-error" role="alert"></p>
+            </div>
+            <div class="home-menu" id="home-menu" role="group" aria-label="Workbench menus"></div>
+          </div>
+        </div>
+      </div>
+      <div class="startup-card" id="startup-card" aria-hidden="true"></div>
+    </div>
+    <div class="startup-choices" id="startup-choices" role="group" aria-label="Research field"></div>
+    <p class="startup-status" id="startup-status" role="status" aria-live="polite" data-i18n>Choose a cartridge to open the workbench.</p>
+    <button type="button" class="startup-cancel" id="startup-cancel" hidden data-i18n>Cancel and keep the current field</button>
+    <div class="settings-layer" id="settings-layer" hidden>
+      <div class="settings-sheet" id="settings-sheet" role="dialog" aria-modal="false" aria-labelledby="settings-title" data-testid="settings-sheet">
+        <div class="settings-head">
+          <h3 id="settings-title" data-i18n>Settings</h3>
+          <button type="button" class="settings-close" id="settings-close" data-testid="settings-close" aria-label="Close settings" title="Close settings" data-i18n-attrs="aria-label title">&#215;</button>
+        </div>
+        <label class="settings-row"><span data-i18n>Language</span>
+          <select id="settings-lang" data-testid="settings-lang">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+          </select>
+        </label>
+        <label class="settings-row"><span data-i18n>Theme</span>
+          <select id="settings-theme" data-testid="settings-theme">
+            <option value="system" data-i18n>System</option>
+            <option value="light" data-i18n>Light</option>
+            <option value="dark" data-i18n>Dark</option>
+          </select>
+        </label>
+        <label class="settings-row"><span data-i18n>Startup sounds</span>
+          <input type="checkbox" id="settings-sound" data-testid="settings-sound" checked>
+        </label>
+        <p class="settings-note muted" data-i18n>Applies to this window.</p>
+        <div class="settings-row"><span data-i18n>Research field</span>
+          <button type="button" id="settings-field" data-testid="settings-field" data-i18n>Change research field</button>
+        </div>
+        <div class="settings-row"><span data-i18n>Session</span>
+          <button type="button" id="settings-end" data-testid="settings-end" data-i18n>End session</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="portal" class="display-portal" hidden>
+<div id="app-shell" class="app-shell">
+<header>
+  <strong data-i18n>Research Workbench</strong>
+  <span class="badge" id="adapter-badge" data-testid="adapter-badge">REHEARSAL · adapter not yet reported</span>
+<button id="startup-change" data-testid="startup-change" type="button" hidden><span data-i18n>Change research field</span></button>
+<button id="back-to-menu" data-testid="back-to-menu" type="button" hidden onclick="window.WB_STARTUP &amp;&amp; WB_STARTUP.backToMenu()" title="Return to the home menu (Escape)" data-i18n-attrs="title"><span data-i18n>Home</span><kbd class="key-hint">Esc</kbd></button>
+<button id="interior-settings-open" data-testid="interior-settings-open" type="button" onclick="window.WB_STARTUP.openSettings()" data-i18n>Settings</button>
+<div class="theme-control">
+  <label for="theme-select" data-i18n>Theme</label>
+  <select id="theme-select" data-testid="theme-select" onchange="window.WB_THEME &amp;&amp; WB_THEME.set(this.value)">
+    <option value="system" data-i18n>System</option>
+    <option value="light" data-i18n>Light</option>
+    <option value="dark" data-i18n>Dark</option>
+  </select>
+</div>
+<div class="theme-control">
+  <label for="lang-select" data-i18n>Language</label>
+  <select id="lang-select" data-testid="lang-select" onchange="window.WB_I18N &amp;&amp; WB_I18N.set(this.value)">
+    <option value="en">English</option>
+    <option value="ko">한국어</option>
+  </select>
+</div>
+<button id="end-session" data-testid="end-session" onclick="endSession()" data-i18n>End session</button>
+</header>
+<main>
+  <nav aria-label="Projects">
+    <div class="panel-head">
+      <h2 data-i18n>Projects</h2>
+      <button type="button" class="panel-toggle" id="toggle-projects" data-testid="toggle-projects" aria-expanded="true" aria-controls="project-list" aria-label="Collapse the projects panel" title="Collapse the projects panel" onclick="togglePanel('projects')">
+        <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M7.5 2 3.5 6l4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <ul id="project-list" data-testid="project-list"></ul>
+    <button data-testid="register-nyc" onclick="registerProject('nyc')" data-i18n>Register NYC permit data</button>
+    <button data-testid="register-fx" onclick="registerProject('fx')" data-i18n>Register synthetic fixture</button>
+    <details>
+      <summary data-i18n>Register local CSV + dictionary</summary>
+      <form id="upload-form" onsubmit="uploadProject(event)" novalidate>
+        <label for="upload-name" data-i18n>Project name (1–120 characters)</label>
+        <input id="upload-name" data-testid="upload-name" maxlength="120">
+        <label for="upload-csv" data-i18n>CSV file (up to 2 MiB / 50,000 data rows)</label>
+        <input id="upload-csv" data-testid="upload-csv" type="file" accept=".csv,text/csv">
+        <label for="upload-dictionary" data-i18n>JSON dictionary (up to 2,000 entries)</label>
+        <input id="upload-dictionary" data-testid="upload-dictionary" type="file" accept=".json,application/json">
+        <p class="muted" data-i18n>Only the files you select are read. Their contents are copied to the local backend; originals stay unchanged. Registration does not fetch network sources.</p>
+        <details><summary data-i18n>Dictionary format</summary><pre>{"entries":[{"source_id":"my-dictionary","evidence_id":"approval-definition","field":"approval_date","definition":"Final approval date","location":"row 1"}]}</pre><p class="muted" data-i18n>Each entry requires these five text fields; notes is optional.</p></details>
+        <button type="submit" data-testid="upload-project" data-i18n>Register selected files</button>
+        <p id="upload-status" data-testid="upload-status" role="status"></p>
+      </form>
+    </details>
+  </nav>
+
+  <section aria-label="Research surface">
+    <h2 id="project-title" tabindex="-1" data-i18n>No project open</h2>
+    <div class="view-bar">
+      <!-- The Research / Writing / Library tab strip used to be the visible
+           navigation here, repeating the home menu's destinations beside the
+           title. Navigation is now: home menu -> a destination, and back through
+           the single "← Home" control in the header. The strip is removed from
+           the visible UI (hidden, not rendered) but its five buttons stay in the
+           document: each keeps its id, testid, inline onclick and aria-pressed
+           contract, because latex.js / library.js / citations.js /
+           secretary_review.js publish the open surface through those
+           aria-pressed values. Every button calls the same view-opening function
+           it always called, so no flow loses its entry point. -->
+      <div class="view-tabs" role="group" aria-label="Workspace view" hidden aria-hidden="true">
+        <button type="button" id="view-research" data-testid="view-research" onclick="showResearchView()" aria-pressed="true" data-i18n>Research</button>
+        <button type="button" id="view-writing" data-testid="view-writing" onclick="openWritingView()" aria-pressed="false" data-i18n>Writing</button>
+        <button type="button" id="library-tab" data-testid="view-library" onclick="openLibraryView()" aria-pressed="false" data-i18n>Library</button>
+        <button type="button" id="view-citations" data-testid="view-citations" onclick="openCitationView()" aria-pressed="false" data-i18n hidden>Citation Composer</button>
+        <button type="button" id="view-secretary-review" data-testid="view-secretary-review" onclick="openSecretaryReview()" aria-pressed="false" data-i18n>Conversation Review</button>
+      </div>
+      <button type="button" class="surface-expand" id="expand-surface" data-testid="expand-surface" onclick="toggleSurfaceExpand()" aria-pressed="false" title="Expand the working area, hiding both side panels">Expand surface</button>
+    </div>
+    <details><summary data-i18n>Registered data profile (read-only)</summary><div id="profile" data-testid="profile">Open a project to inspect its variables.</div></details>
+    <div id="research-intro" class="interior-research-intro" data-testid="research-intro">
+      <p id="research-location" class="interior-eyebrow"></p>
+      <h2 id="interior-question-title"></h2>
+      <p class="muted" data-i18n>Inspect the registered data and evidence. A proposed design stays a proposal until you decide.</p>
+    </div>
+    <div id="research-tools" class="interior-research-tools" role="group" aria-label="Research tools" data-i18n-attrs="aria-label">
+      <button type="button" id="research-tool-data" onclick="WB_INTERIOR_RESEARCH.showTool('data')" data-i18n>Data</button>
+      <button type="button" id="research-tool-canvas" onclick="WB_INTERIOR_RESEARCH.showTool('canvas')" data-i18n>Canvas</button>
+      <button type="button" id="research-tool-sources" onclick="WB_INTERIOR_RESEARCH.showTool('sources')" data-i18n>Sources</button>
+      <button type="button" id="research-tool-code" disabled title="A code workspace is not available in this build." data-i18n-attrs="title" data-i18n>Code</button>
+    </div>
+    <details id="question-entry" open><summary data-i18n>Question and domain pack</summary>
+    <form id="ask-form" onsubmit="ask(event)">
+      <label for="question" data-i18n>Ask about this dataset</label>
+      <textarea id="question" data-testid="question" rows="2"></textarea>
+      <label for="pack-select" data-i18n>Domain pack for new questions</label>
+      <select id="pack-select" data-testid="pack-select" onchange="changePack()"></select>
+      <p class="muted" data-i18n>Core editing stays local. Optional Meta tasks are configured separately in Secretary. Existing questions retain their original pack.</p>
+      <label for="dataset-select" data-i18n>Dataset for this question</label>
+      <select id="dataset-select" data-testid="dataset-select"><option value="" data-i18n>Use question wording or all registered datasets</option></select>
+      <label class="muted"><input type="checkbox" id="session-only" data-testid="session-only" style="width:auto"> <span data-i18n>Don't remember this question after this session</span></label>
+      <p class="muted" data-i18n>Session-only text is stored on disk during this session, excluded from search and briefings, and deleted when you end the session or on the next backend startup after an unclean exit. Closing this browser tab alone does not end the backend session. External provider copies cannot be deleted here.</p>
+      <button type="submit" data-testid="ask" disabled data-i18n>Ask</button>
+    </form></details>
+    <details id="canvas-panel" class="hidden">
+      <summary data-i18n>Research canvas: variables, gaps and evidence</summary>
+      <p class="muted" data-i18n>Link variables to researcher-defined events or measurement components. A link is not verification. Arrows are relationships you assert yourself; none is inferred, timed or verified.</p>
+      <div id="research-canvas" data-testid="research-canvas"></div>
+      <details id="canvas-edit"><summary data-i18n>Edit event or measurement links</summary>
+      <div id="canvas-editor"></div>
+      <button type="button" onclick="saveCanvas()" data-i18n>Save canvas draft</button></details>
+      <p id="canvas-status" role="status"></p>
+      <details><summary data-i18n>Compare with previous saved draft</summary><div id="canvas-comparison"></div></details>
+    </details>
+    <div id="refinement" data-testid="refinement" class="card hidden"></div>
+    <div id="design" data-testid="design" class="card hidden"></div>
+    <div id="clarification" data-testid="clarification" class="card hidden"></div>
+    <div id="result" data-testid="result" class="card hidden"></div>
+    <div id="decision" class="card hidden">
+      <h3 data-i18n>Decision</h3>
+      <label for="reason" data-i18n>Reason (optional)</label>
+      <input id="reason" data-testid="reason">
+      <div class="row">
+        <button data-testid="adopt" onclick="decide('adopt')" data-i18n>Adopt</button>
+        <button data-testid="defer" onclick="decide('defer')" data-i18n>Defer</button>
+        <button data-testid="reject" onclick="decide('reject')" data-i18n>Reject</button>
+      </div>
+      <p id="decision-status" data-testid="decision-status"></p>
+      <div id="revisit-create" class="hidden"></div>
+    </div>
+    <div id="shadow" data-testid="shadow" class="card hidden"></div>
+    <div class="row">
+      <button data-testid="shadow-run" onclick="shadowRun()" disabled id="shadow-btn" data-i18n>Legacy rehearsal comparison</button>
+      <button data-testid="delete" onclick="deleteQuestion()" disabled id="delete-btn" data-i18n>Delete this question</button>
+    </div>
+    <p id="delete-status" data-testid="delete-status"></p>
+    <div id="latex-view" class="latex-view hidden" data-testid="latex-view" role="region" aria-label="Paper writing">
+      <nav class="writing-toolbar" aria-label="Paper controls">
+        <label for="latex-draft-select" data-i18n>Paper</label>
+        <select id="latex-draft-select" onchange="latexChooseDraft(this.value)" aria-label="Choose paper"></select>
+        <button type="button" onclick="latexChooseDraft(null, true)" data-i18n>New paper</button>
+        <button type="button" onclick="latexDownloadSource()" data-i18n>Download active source</button>
+        <button type="button" onclick="latexDownloadPdf()" data-i18n>Download PDF</button>
+        <button type="button" onclick="document.getElementById('toggle-secretary').click()" data-i18n>Secretary</button>
+      </nav>
+      <p class="latex-absence" data-testid="latex-absence" id="latex-absence" hidden></p>
+      <dialog id="latex-file-dialog" data-testid="latex-file-dialog" aria-labelledby="latex-file-dialog-title" aria-describedby="latex-file-path-help" oncancel="event.preventDefault(); latexCloseFileDialog()" onclose="latexCloseFileDialog()">
+        <form novalidate onsubmit="latexSubmitFileDialog(event)">
+          <h3 id="latex-file-dialog-title">Add file</h3>
+          <label for="latex-file-path" data-i18n>File path</label>
+          <input id="latex-file-path" data-testid="latex-file-path" type="text" autocomplete="off" spellcheck="false" aria-describedby="latex-file-path-help latex-file-error" autofocus>
+          <p id="latex-file-path-help" class="muted" data-i18n>Paths use letters, numbers, hyphens, underscores and optional folders. Example: sections/intro.tex</p>
+          <p id="latex-file-error" data-testid="latex-file-error" role="alert"></p>
+          <div class="row">
+            <button type="button" id="latex-file-cancel" onclick="latexCloseFileDialog()" data-i18n>Cancel</button>
+            <button type="submit" id="latex-file-confirm" data-testid="latex-file-confirm" data-i18n>Confirm file path</button>
+          </div>
+        </form>
+      </dialog>
+      <aside class="writing-files" aria-label="Paper files">
+        <h3 data-i18n>Files</h3>
+        <div id="latex-files" data-testid="latex-files"></div>
+        <div class="writing-file-actions">
+          <button type="button" onclick="latexFileAction('add')" data-i18n>Add file</button>
+          <button type="button" onclick="latexFileAction('rename')" data-i18n>Rename</button>
+          <button type="button" onclick="latexFileAction('delete')" data-i18n>Delete</button>
+          <label for="latex-import-source" data-i18n>Import source</label>
+          <input id="latex-import-source" type="file" accept=".tex,.bib,.latex" onchange="latexImportSource(this)">
+        </div>
+        <p class="muted" data-i18n>Up to 10 source files. Main file is protected.</p>
+      </aside>
+      <div class="latex-editor">
+        <div class="writing-editor-tools" tabindex="0" aria-label="Source tools">
+        <h3 data-i18n>Paper draft</h3>
+        <div class="row latex-citation-entry">
+          <button type="button" data-testid="citation-from-writing" onclick="openCitationView()" aria-describedby="latex-citation-note" data-i18n>Cite this sentence</button>
+          <span class="muted" id="latex-citation-note" data-i18n>Opens the Citation Composer for the sentence in this draft. Nothing is written into the paper until you approve a proposal.</span>
+        </div>
+        <p class="muted" id="latex-draft-label" data-testid="latex-draft-label">Open a project to start a draft.</p>
+        <p class="muted" id="latex-notice" data-testid="latex-notice"></p>
+        <label for="latex-editor"><span data-i18n>Source</span> · <span id="latex-active-file">main.tex</span></label>
+        <div class="writing-syntax" role="group" aria-label="Insert LaTeX syntax">
+          <div class="writing-syntax-core">
+            <button type="button" data-latex-snippet onclick="latexInsertSyntax('heading')" data-i18n>Heading</button>
+            <button type="button" data-latex-snippet onclick="latexInsertSyntax('bold')" data-i18n>Bold</button>
+            <button type="button" data-latex-snippet onclick="latexInsertSyntax('italic')" data-i18n>Italic</button>
+            <button type="button" data-latex-snippet onclick="latexInsertSyntax('bullets')" data-i18n>Bulleted list</button>
+          </div>
+          <details ontoggle="if(this.open) syncLatexSyntax()">
+            <summary data-i18n>More syntax</summary>
+            <div class="writing-syntax-more">
+              <button type="button" data-latex-snippet onclick="latexInsertSyntax('subheading')" data-i18n>Subheading</button>
+              <button type="button" data-latex-snippet onclick="latexInsertSyntax('numbered')" data-i18n>Numbered list</button>
+              <button type="button" data-latex-snippet onclick="latexInsertSyntax('inline')" data-i18n>Inline equation</button>
+              <button type="button" data-latex-snippet onclick="latexInsertSyntax('display')" data-i18n>Display equation</button>
+              <button type="button" data-latex-snippet onclick="latexInsertSyntax('table')" data-i18n>Small table</button>
+              <label for="latex-citation-key" data-i18n>Existing bibliography key</label>
+              <select id="latex-citation-key" aria-label="Existing bibliography key"></select>
+              <button type="button" id="latex-insert-citation" onclick="latexInsertSyntax('citation')" data-i18n>Insert citation key</button>
+              <button type="button" onclick="latexUndoSyntax()" data-i18n>Undo syntax insertion</button>
+            </div>
+            <p id="latex-syntax-note" class="muted" role="status"></p>
+            <details>
+              <summary data-i18n>How to use these buttons</summary>
+              <p class="muted" data-i18n>Select words to wrap them, or place the caret and choose a button. Replace the selected placeholder. Insert inside the document body, between \begin{document} and \end{document}. Nothing compiles automatically.</p>
+              <p class="muted" data-i18n>Example: Bold creates \textbf{Text}. Lists use \item for each item. Tables separate columns with &amp; and end rows with \\. Equations expect math syntax, not ordinary prose.</p>
+              <p class="muted" data-i18n>Undo syntax insertion reverses up to 12 insertions in this session. Undo later typing first; it will never discard later edits.</p>
+            </details>
+          </details>
+        </div>
+        </div>
+        <textarea id="latex-editor" data-testid="latex-editor" spellcheck="false" rows="24"></textarea>
+        <div class="writing-editor-actions" tabindex="0" aria-label="Save and compile controls">
+        <div class="row">
+          <button type="button" id="latex-save" data-testid="latex-save" onclick="saveDraft('manual')" data-i18n>Save draft</button>
+          <button type="button" id="latex-reload" data-testid="latex-reload" onclick="reloadDraft()" data-i18n>Reload saved draft</button>
+          <button type="button" id="latex-compile" data-testid="latex-compile" onclick="compileDraft()" disabled aria-describedby="latex-compile-note" data-i18n>Compile</button>
+        </div>
+        <p class="latex-status" id="latex-status" data-testid="latex-status" role="status">Idle</p>
+        <p class="muted" id="latex-compile-note">Compile sends the saved draft to the local backend (POST /drafts/{id}/compile) and shows only the PDF returned for the current revision. It stays disabled while no LaTeX engine is found on this machine.</p>
+        <details><summary data-i18n>About compiling local LaTeX</summary>
+          <p class="muted" data-i18n>Compile runs in a temporary directory with a cleaned environment and shell escape off. That is not a container and cannot promise a hostile document fails to read another file on this machine. Diagnostics carry severity and line; select one to jump to the line.</p>
+        </details>
+      </div>
+        </div>
+      <div class="latex-preview">
+        <h3 data-i18n>PDF preview</h3>
+        <p class="muted" id="latex-preview" data-testid="latex-preview" aria-describedby="latex-absence">No PDF yet.</p>
+        <p><button type="button" data-testid="latex-recheck" onclick="recheckLatex()" data-i18n>Re-check for a TeX engine</button></p>
+        <ul class="latex-diagnostics" id="latex-diagnostics" data-testid="latex-diagnostics" hidden></ul>
+        <pre id="latex-raw-log" data-testid="latex-raw-log" hidden></pre>
+        <p class="muted" id="latex-cjk-note" data-i18n>Korean (Hangul) text is not supported yet: this build compiles with pdfLaTeX only, and Hangul needs XeLaTeX with the kotex package, which is not enabled here. Your imported source text is never rewritten.</p>
+      </div>
+    </div>
+    <div id="citation-view" class="citation-view hidden" data-testid="citation-view" role="region" aria-label="Citation composer">
+      <div class="citation-compose">
+        <h3 data-i18n>Compose a citation</h3>
+        <p class="muted" data-i18n>The composer proposes a replacement sentence. Nothing is written into the paper until you approve it.</p>
+        <label for="citation-sentence" data-i18n>The sentence you wrote</label>
+        <textarea id="citation-sentence" data-testid="citation-sentence" rows="3"></textarea>
+        <label for="citation-evidence" data-i18n>Evidence that supports or limits it (registered source IDs)</label>
+        <input id="citation-evidence" data-testid="citation-evidence" autocomplete="off" placeholder="off-notes-2025, dd-2023">
+        <p class="muted" data-i18n>Separate several IDs with a comma. Only sources already registered for this project can be used.</p>
+        <label for="citation-support" data-i18n>How it supports the sentence</label>
+        <textarea id="citation-support" data-testid="citation-support" rows="2"></textarea>
+        <label for="citation-limitations" data-i18n>What it does not support</label>
+        <textarea id="citation-limitations" data-testid="citation-limitations" rows="2"></textarea>
+        <label for="citation-proposed" data-i18n>Proposed replacement</label>
+        <textarea id="citation-proposed" data-testid="citation-proposed" rows="3" spellcheck="false"></textarea>
+        <p class="muted" data-i18n>TeX commands, values, equations and citation keys are kept exactly as you write them.</p>
+        <div class="row">
+          <button type="button" data-testid="citation-submit" onclick="citationCreate()" data-i18n>Propose</button>
+          <button type="button" data-testid="citation-clear" onclick="citationClearForm()" data-i18n>Clear</button>
+        </div>
+        <p class="citation-status" id="citation-status" data-testid="citation-status" role="status"></p>
+      </div>
+      <div class="citation-list">
+        <h3 data-i18n>Proposals</h3>
+        <p class="muted" data-testid="citation-absence" id="citation-absence" data-i18n>Open a project to compose a citation.</p>
+        <ul id="citation-items" data-testid="citation-items"></ul>
+      </div>
+    </div>
+    <div id="secretary-review-view" class="secretary-review-view hidden" data-testid="secretary-review-view" role="region" aria-label="Conversation Review">
+      <div class="secretary-review-head">
+        <h3 data-i18n>Conversation Review</h3>
+        <p class="muted" data-i18n>Past exchanges with the secretary, newest first. Keep what matters and delete the rest.</p>
+        <p class="muted" data-i18n>Keeping a turn changes only its status. The recorded text is never rewritten.</p>
+        <div class="row">
+          <button type="button" id="secretary-review-clear-discarded" data-testid="secretary-review-clear-discarded" onclick="secretaryReviewClearDiscarded()" hidden data-i18n>Delete all discarded</button>
+        </div>
+        <p class="secretary-review-status" id="secretary-review-status" data-testid="secretary-review-status" role="status"></p>
+        <p class="muted" id="secretary-review-absence" data-testid="secretary-review-absence" data-i18n>Open a project to review its secretary exchanges.</p>
+      </div>
+      <div id="secretary-review-groups" data-testid="secretary-review-groups"></div>
+    </div>
+    <div id="library-view" class="library-view hidden" data-testid="library-view" role="region" aria-label="Research library">
+      <button type="button" class="library-citation-entry" onclick="openCitationView()" data-i18n>Citation Composer</button>
+      <div class="library-tree" aria-label="Library folders">
+        <div class="library-tree-head">
+          <h3 data-i18n>Folders</h3>
+          <button type="button" data-testid="new-folder" onclick="libraryCreateFolder()" data-i18n>New folder</button>
+        </div>
+        <ul id="library-folder-list" data-testid="library-folders" aria-label="Library folder tree"></ul>
+        <p class="muted library-status" id="library-status" data-testid="library-status" role="status"></p>
+      </div>
+      <div class="library-docs">
+        <div class="library-toolbar">
+          <h3 id="library-folder-title" data-testid="library-folder-title" data-i18n>All documents</h3>
+          <div class="library-tools">
+            <label class="library-search-label" for="library-search"><span data-i18n>Search</span>
+              <input id="library-search" data-testid="library-search" type="search" autocomplete="off" placeholder="Text in this project's documents" data-i18n-attrs="placeholder" onkeydown="if(event.key==='Enter'){event.preventDefault();librarySearch();}">
+            </label>
+            <button type="button" data-testid="library-search-run" onclick="librarySearch()" data-i18n>Search</button>
+            <button type="button" data-testid="rename-folder" onclick="libraryRenameSelectedFolder()" data-i18n>Rename folder</button>
+            <button type="button" data-testid="library-screen" onclick="libraryScreen()" data-i18n>First-pass screen</button>
+          </div>
+        </div>
+        <div class="library-body">
+          <div class="library-index" aria-label="Documents in this folder">
+            <div class="library-dropzone" id="library-dropzone" data-testid="library-dropzone" role="button" tabindex="0" aria-label="Add PDF files to the library" onclick="libraryPickFiles(event)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();libraryPickFiles(event);}">
+              <p data-i18n>Drop PDF files here, or choose files. A file dropped on a folder in the tree is filed into that folder.</p>
+              <input type="file" id="library-file-input" data-testid="library-file-input" accept="application/pdf,.pdf" multiple onchange="libraryUploadFiles(this.files)">
+            </div>
+            <ul id="library-items" class="library-items" data-testid="library-items"></ul>
+          </div>
+          <div class="library-reader" aria-label="Document, note and screen reader">
+            <p class="library-hint muted" id="library-hint" data-i18n>Select a document to read it, run a search, or start a first-pass screen.</p>
+            <div id="library-search-results" data-testid="library-search-results" hidden></div>
+            <div id="library-screen-result" data-testid="library-screen-result" hidden></div>
+            <div id="library-viewer" class="library-viewer" data-testid="library-viewer" hidden></div>
+            <div id="library-note-composer">
+              <label for="note-input" data-i18n>New note in this folder</label>
+              <textarea id="note-input" data-testid="note-input" rows="3" placeholder="Write a note while it is fresh." data-i18n-attrs="placeholder"></textarea>
+              <button type="button" data-testid="note-save" onclick="librarySaveNote()" data-i18n>Save note</button>
+              <p class="muted" data-i18n>Notes are grouped by the day you wrote them. No date entry is needed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside aria-label="Research Secretary">
+    <div class="panel-head">
+      <h2 data-i18n>Secretary</h2>
+      <button type="button" class="panel-toggle" id="toggle-secretary" data-testid="toggle-secretary" aria-expanded="true" aria-controls="secretary-log" aria-label="Collapse the secretary panel" title="Collapse the secretary panel" onclick="togglePanel('secretary')">
+        <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4.5 2 8.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <section id="launch-briefing" data-testid="launch-briefing" aria-label="Return briefing"><p class="muted">Loading return briefing…</p></section>
+    <div id="secretary-log" class="secretary-log" data-testid="secretary-log" role="log" aria-label="Conversation with the secretary" aria-live="polite">
+      <div id="briefing" data-testid="briefing"><p data-i18n>Open a project to get a briefing.</p></div>
+      <div id="revisit-management" aria-live="polite"></div>
+      <div id="pending" data-testid="pending"></div>
+    </div>
+    <form id="secretary-compose" class="secretary-compose" onsubmit="sendSecretaryTurn(event)">
+      <label class="muted" for="secretary-input" id="secretary-compose-hint" data-testid="secretary-compose-hint" data-i18n>Ask a research question.</label>
+      <input id="secretary-input" data-testid="secretary-input" autocomplete="off" maxlength="20000">
+      <button type="submit" id="secretary-send" data-testid="secretary-send" data-i18n>Send</button>
+    </form>
+    <section id="quick-notes" class="quick-notes" data-testid="quick-notes" aria-label="Researcher scratch notes">
+      <h3 data-i18n>Scratch notes</h3>
+      <label class="muted" for="quick-note-input" data-i18n>Your own notes, not messages to the secretary.</label>
+      <textarea id="quick-note-input" data-testid="quick-note-input" rows="3" placeholder="Jot a thought, a page number, a to-do." data-i18n-attrs="placeholder"></textarea>
+      <button type="button" data-testid="quick-note-save" onclick="saveQuickNote()" data-i18n>Save note</button>
+      <p class="muted" id="quick-note-status" data-testid="quick-note-status" role="status"></p>
+      <p class="muted" data-i18n>Saved notes go to the Library, grouped by the day you wrote them.</p>
+    </section>
+    <button data-testid="refresh-briefing" onclick="loadBriefing()" data-i18n>Refresh briefing</button>
+    <div id="canvas-evidence" class="hidden" aria-live="polite"></div>
+    <details><summary data-i18n>Saved questions and canvases</summary><div id="saved-canvases"></div></details>
+    <details id="ai-panel"><summary data-i18n>Advanced: optional Meta AI tasks</summary>
+      <p id="ai-connection" role="status" data-i18n>Cloud is off until enabled.</p>
+      <p id="ai-baseten-status" role="status" data-i18n>Baseten account: not verified.</p>
+      <p id="ai-local-status" class="muted" role="status" data-i18n>Local: status not checked yet.</p>
+      <details id="ai-local-connection">
+        <summary data-i18n>Local model (llama.cpp on this machine)</summary>
+        <p class="muted" data-i18n>Local mode runs a small instruction model on this machine through a server you start yourself. It is text only, sends nothing to a cloud provider, and is not metered as API spend. Its endpoint, model alias and context size come from this machine's runtime environment, not from this window.</p>
+        <p class="muted" data-i18n>The readiness check sends one empty request to that local server: no research text, no files, no key, and no API cost. Until it succeeds the panel reports local as configured-but-not-ready, and the API model stays the active path.</p>
+        <button type="button" id="ai-local-probe" onclick="probeLocalRuntime()" data-i18n>Check local model readiness</button>
+      </details>
+      <details id="ai-modal-connection">
+        <summary data-i18n>Modal / Muse Glimmer-30B connection readiness</summary>
+        <p data-i18n>Separate Modal connection code is available, not a local model or a replacement for Spark. Live execution is disabled until an endpoint, GPU cost controls and explicit authorization are in place.</p>
+        <p id="ai-modal-status" role="status" data-i18n>Endpoint not deployed/configured. Configuration readiness only; runtime and account access have not been verified.</p>
+        <p class="muted" data-i18n>Modal bills GPU time, not tokens. This is not free. SDK login does not establish inference readiness. No new key entry or account check is needed at this code-only stage.</p>
+      </details>
+      <details id="ai-modal-shared">
+        <summary data-i18n>Modal Shared / Muse Spark Open (token billed)</summary>
+        <p id="ai-modal-shared-status" role="status" data-i18n>Modal Shared: endpoint not configured in this runtime. Configuration readiness only; nothing was sent.</p>
+        <p class="muted" data-i18n>This route uses a Modal-provided model API endpoint. It bills per token, not per GPU second, and is not free. Credits included with your Modal plan cannot be used for this route.</p>
+        <p class="muted" data-i18n>A separate promotional or hackathon grant may or may not cover this route. That depends on this account's own terms, and this app cannot check it. The allowance control in this panel is this app's own spending bookkeeping, not provider credit, so it does not measure such a grant.</p>
+        <p class="muted" data-i18n>Listing the route proves only that it is configured. The endpoint and remote model are set by this machine's runtime environment, not in this window, so do not change them here. Its key is entered in the shared key group below, once, like every other provider. The account check asks the backend to contact Modal once, on your click only, and sends no research material; opening this panel sends no account, metadata or inference request.</p>
+        <button type="button" id="ai-modal-shared-verify" onclick="verifyModalSharedAccount()" data-i18n>Verify Modal Shared account</button>
+      </details>
+      <h3 data-i18n>Access and allowance</h3>
+      <button onclick="verifyAIAccount()" data-i18n>Check account model access</button>
+      <div id="ai-keys" aria-label="API keys per provider">
+        <p class="muted" data-i18n>Each provider keeps its own key in a private owner-only file outside this project. A key is written one way only: it is never shown again, never returned by the app, and never reused for another provider. An environment variable for that provider still wins over the saved file.</p>
+        <div class="ai-key-row" data-ai-key="meta">
+          <label><span data-i18n>Meta API key</span><input type="password" id="ai-key-meta" autocomplete="off" spellcheck="false" placeholder="sk-..."></label>
+          <button type="button" onclick="saveAIKey('meta')" data-i18n>Save Meta key</button>
+          <span class="muted" id="ai-key-status-meta" role="status" data-i18n>No key saved yet.</span>
+          <p class="muted" data-i18n>Meta-hosted models are unavailable until a key with credits is entered.</p>
+        </div>
+        <div class="ai-key-row" data-ai-key="baseten">
+          <label><span data-i18n>Baseten API key</span><input type="password" id="ai-key-baseten" autocomplete="off" spellcheck="false" placeholder="b10_..."></label>
+          <button type="button" onclick="saveAIKey('baseten')" data-i18n>Save Baseten key</button>
+          <span class="muted" id="ai-key-status-baseten" role="status" data-i18n>Not checked.</span>
+        </div>
+        <div class="ai-key-row" data-ai-key="modal_shared">
+          <label><span data-i18n>Modal Shared API key</span><input type="password" id="ai-key-modal_shared" autocomplete="off" spellcheck="false" placeholder="token..."></label>
+          <button type="button" onclick="saveAIKey('modal_shared')" data-i18n>Save Modal Shared key</button>
+          <span class="muted" id="ai-key-status-modal_shared" role="status" data-i18n>Not checked.</span>
+        </div>
+      <div class="ai-key-row" data-ai-key="openai">
+        <label><span data-i18n>OpenAI API key</span><input type="password" id="ai-key-openai" autocomplete="off" spellcheck="false" placeholder="sk-..."></label>
+        <button type="button" onclick="saveAIKey('openai')" data-i18n>Save OpenAI key</button>
+        <span class="muted" id="ai-key-status-openai" role="status" data-i18n>Not checked.</span>
+      </div>
+      </div>
+      <label><input id="ai-cloud-enabled" type="checkbox" onchange="configureAI()"> <span data-i18n>Enable optional cloud tasks</span></label>
+      <p class="muted" data-i18n>OpenAI test: GPT-5.4 Mini. Total reservations are capped at $1 on this local database, even after deleting questions. This is not your provider credit balance. No hosted tools or files.</p>
+      <label><input type="checkbox" id="ai-public-test-data" onchange="aiPreview=null;document.getElementById('ai-consent').checked=false;document.getElementById('ai-preview-panel').classList.add('hidden');updateAIControls()"> <span data-i18n>I confirm the entire transmitted question, notes, decisions and source context are public or synthetic test data. No private research.</span></label>
+      <label><span data-i18n>Local total API allowance (USD)</span><input id="ai-budget" type="number" min="0.01" max="150" step="0.01" value="150" onchange="configureAI()"></label>
+      <p class="muted" data-i18n>API keys stay in your local user environment or private key file. Credit balance is not available here.</p>
+      <h3 data-i18n>Task definition</h3>
+      <label><span data-i18n>Task</span><select id="ai-task" disabled></select></label>
+      <template id="ai-task-options">
+        <option value="research_query" data-i18n>Research query</option><option value="literature_analysis" data-i18n>Literature analysis</option>
+        <option value="methodology_review" data-i18n>Methodology review</option><option value="cross_artifact_review" data-i18n>Cross-artifact review</option>
+        <option value="transcribe" data-i18n>Interview transcription</option><option value="segment" data-i18n>Image segmentation</option>
+        <option value="image_generate" data-i18n>Generate concept image</option><option value="image_edit" data-i18n>Edit reference image</option>
+      </template>
+      <label><span data-i18n>Model</span><select id="ai-model"><option value="auto" data-i18n>Automatic by task</option></select></label>
+      <label><span data-i18n>Task instruction</span><textarea id="ai-instruction" rows="2" maxlength="12000"></textarea></label>
+      <label><input type="checkbox" id="ai-harness" checked> <span data-i18n>Apply research harness</span></label>
+      <label><input type="checkbox" id="ai-compare"> <span data-i18n>Compare basic vs harness on the same model</span></label>
+      <label><span data-i18n>Task maximum reservation (USD)</span><input id="ai-max-cost" type="number" min="0.01" max="50" step="0.01" value="5"></label>
+      <label><span data-i18n>Attach locally (8 MiB each)</span><input id="ai-file" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf,.mp4,.wav,.txt"></label>
+      <h3 data-i18n>Record a voice memo</h3>
+      <p class="muted" data-i18n>Recorded in this browser as 16-bit PCM mono WAV at 16 kHz, which the validator accepts. Recording and playback stay on this machine; only an explicit Submit registers the file as a question asset.</p>
+      <p id="voice-rec-status" role="status" data-i18n>Recorder idle.</p>
+      <div class="row">
+        <button type="button" id="voice-rec-record" onclick="voiceRecStart()" data-i18n>Record</button>
+        <button type="button" id="voice-rec-stop" onclick="voiceRecStop()" disabled data-i18n>Stop</button>
+        <button type="button" id="voice-rec-submit" onclick="voiceRecSubmit()" disabled data-i18n>Submit recording</button>
+        <button type="button" id="voice-rec-discard" onclick="voiceRecDiscard()" disabled data-i18n>Discard</button>
+      </div>
+      <div id="voice-rec-playback"></div>
+      <h3 data-i18n>Review and run</h3>
+      <button onclick="registerAIAsset()" data-i18n>Register selected file locally</button>
+      <div id="ai-assets"></div>
+      <button onclick="prepareAI()" data-i18n>Preview transmission and cost</button>
+      <details id="ai-preview-panel" class="hidden"><summary data-i18n>Exact transmission scope</summary><pre id="ai-preview"></pre></details>
+      <label><input id="ai-consent" type="checkbox" onchange="updateAIControls()"> <span data-i18n>I approve this exact cloud transmission and maximum reservation</span></label>
+      <button id="ai-send" onclick="executeAI()" disabled data-i18n>Run approved task</button>
+      <div id="ai-results" aria-live="polite"></div>
+    </details>
+  </aside>
+</main>
+<p id="session-status" data-testid="session-status" role="status"></p>
+<p id="error" data-testid="error" role="alert"></p>
+</div>
+</div>
+<script src="startup.js"></script>
+<script src="i18n.ko.js"></script>
+<script src="app.js"></script>
+<script src="canvas.js"></script>
+<script src="latex.js"></script>
+<script src="library.js"></script>
+<script src="citations.js"></script>
+<script src="secretary_review.js"></script>
+<script src="voice_recorder.js"></script>
+<script src="ai.js"></script>
+<script src="chip_bridge.js"></script>
+<script src="home_hub.js"></script>
+<script src="interior_research.js"></script>
+<script src="interior_secretary.js"></script>
+<script src="interior_settings.js"></script>
+<script src="declutter_writing.js"></script>
+<script src="declutter_shell.js"></script>
+<script src="clarity.js"></script>
+<script src="claim_check_ui.js"></script>
+</body>
+</html>

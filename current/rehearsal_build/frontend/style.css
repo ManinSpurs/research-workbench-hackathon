@@ -1,0 +1,837 @@
+/* Research Workbench: one stylesheet, one instrument language. The approved
+   Concept A artwork supplies the palette (paper, ink, cyan, coral); every colour
+   below is one of its samples. One spacing scale and one type scale carry the
+   whole app, and state is reported with weight, rules and markers as well as
+   colour. Sections: 1 tokens · 2 base · 3 controls · 4 header · 5 rules and
+   tables · 6 workspace · 7 secretary · 8 canvas · 9 optional AI panel · 10
+   writing · 11 start screen · 12 panel layout · 13 library · 14 scratch notes
+   · 15 narrow viewports. Content stays flat: no gradient, shadow, blur or glow
+   in this base sheet. macos27.css permits glass only on navigation, with solid
+   reduced-transparency and unsupported-filter fallbacks. */
+/* --- 1. Tokens ---------------------------------------------------------- */
+/* Light is the primary theme: the artwork is a paper-toned console. Dark keeps
+   the same two accents on a charcoal ground. */
+:root {
+  --bg: #fefaf0; --surface: #fffdf7; --surface-2: #f5efe0; --surface-3: #ebe2cd;
+  --text: #13181d; --muted: #5d5f63; --line: #ded6c3; --line-strong: #c3bba5;
+  --accent: #0f7f96; --cyan: #20d0f0; --coral: #f88868;
+  --warn: #9a5b00; --ok: #1a7f37; --fail: #b42318;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Spacing: one scale. A 2px micro step, then a 4/6/8/12/16/24/32 rhythm. Dense
+     by default — alignment and hairlines separate things, not large gaps. */
+  --space-0: 2px; --space-1: 4px; --space-2: 6px; --space-3: 8px;
+  --space-4: 12px; --space-5: 16px; --space-6: 24px; --space-7: 32px;
+
+  /* Type: seven steps. meta = uppercase instrument label, xs = annotation and
+     table text, sm = rows and controls, base = prose, md = subsection heading,
+     lg = section heading, xl = the surface title. Weight carries as much as size. */
+  --text-meta: 10.5px; --text-xs: 11.5px; --text-sm: 12.5px; --text-base: 13px;
+  --text-md: 14px; --text-lg: 16px; --text-xl: 19px;
+  --lh-tight: 1.25; --lh-body: 1.45; --lh-read: 1.6;
+  --w-normal: 400; --w-medium: 500; --w-strong: 600;
+
+  /* Furniture measured once, so every pane lines up across the app. */
+  --rail: 40px; --panel-projects: 208px; --panel-secretary: 304px;
+  --library-tree: 196px; --read: 72ch;
+  --radius: 2px; --radius-ui: 3px;
+  /* One control height for buttons, fields and selects. The spacing scale sizes
+     the gaps around a control; it cannot state how tall the control itself is,
+     which is why mixed rows (header, view bar, form) drifted by a pixel or two
+     and the smallest icon buttons fell under a comfortable target. Every
+     interactive control is at least this tall and never smaller. */
+  --control-h: 28px;
+}
+/* The dark palette is selected by the theme setting, not by the OS: theme.js
+   resolves 'system' | 'light' | 'dark' into a concrete data-theme value on the
+   root element before first paint, so an explicit Light or Dark choice wins over
+   prefers-color-scheme. Every token above is restated here, so no literal colour
+   below can be legible in only one theme. */
+:root[data-theme="dark"] {
+  --bg: #10151a; --surface: #171d23; --surface-2: #1e262e; --surface-3: #27313b;
+  --text: #f2ece0; --muted: #9aa3ac; --line: #2c343c; --line-strong: #435060;
+  --accent: #4fd8ee; --warn: #f0b35a; --ok: #7bd88a; --fail: #f19a93;
+}
+/* --- 2. Base: one type hierarchy ---------------------------------------- */
+* { box-sizing: border-box; }
+body { margin: 0; font: var(--text-base)/var(--lh-body) var(--font); background: var(--bg); color: var(--text);
+  -webkit-font-smoothing: antialiased; }
+/* Four steps that are actually used everywhere: title (surface), section
+   heading, subsection heading, body, and the muted meta line. */
+/* The ladder is 19 / 16 / 14 / 13 over a 12.5 control and an 11.5 meta step, so
+   each level is a visible step rather than a rounding difference. A heading
+   carries more air above it than below it: the gap above belongs to the block
+   that starts, the gap below binds it to the text it names. */
+h2 { font-size: var(--text-xl); font-weight: var(--w-strong); line-height: var(--lh-tight);
+  letter-spacing: -.011em; margin: 0 0 var(--space-3); }
+h3 { font-size: var(--text-lg); font-weight: var(--w-strong); line-height: var(--lh-tight);
+  letter-spacing: -.006em; margin: var(--space-4) 0 var(--space-2); }
+h4 { font-size: var(--text-md); font-weight: var(--w-strong); line-height: var(--lh-tight);
+  margin: var(--space-3) 0 var(--space-1); }
+h3:first-child, h4:first-child { margin-top: 0; }
+/* Body prose keeps a comfortable measure; the panels themselves stay dense. */
+p { margin: 0 0 var(--space-3); }
+p:last-child { margin-bottom: 0; }
+ul { padding-left: var(--space-5); margin: var(--space-2) 0 var(--space-3); }
+li { margin: var(--space-1) 0; }
+code, pre { font-family: var(--mono); }
+code { font-size: var(--text-sm); }
+/* Muted meta is the small, low-contrast-but-legible annotation step: one full
+   size under body text (11.5px) at the muted ink, which clears 4.5:1 against
+   both grounds. It carries the read line-height rather than the body one,
+   because annotations wrap over several lines and need the extra leading to
+   stay comfortable at this size. */
+.muted { color: var(--muted); font-size: var(--text-xs); line-height: var(--lh-read); }
+.flag { color: var(--warn); font-weight: var(--w-medium); }
+.hidden { display: none; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.card { border-top: 1px solid var(--line); padding: var(--space-4) 0; }
+.card:first-child { border-top: 0; padding-top: 0; }
+/* A card opens with its heading and closes on the rule, so the last block inside
+   it does not add a second gap under the border. */
+.card > :last-child { margin-bottom: 0; }
+/* The instrument label: small, uppercase, tracked. Used for panel headings,
+   group labels, table headers and day headers — never for body sentences, so
+   rendered text stays readable by assistive tech and by the eye. */
+.badge, .theme-control label, .library-search-label, th, .library-day-header,
+nav > h2, aside > h2, nav > .panel-head > h2, aside > .panel-head > h2 {
+  font-size: var(--text-meta); font-weight: var(--w-strong); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted); }
+/* Group labels inside a form or panel read as the same instrument voice but
+   never as small as the badge text: one rule for every label-ish line. */
+label { font-size: var(--text-sm); line-height: var(--lh-body); }
+
+/* --- 3. Controls: compact, one hairline, unmistakable states ------------- */
+/* One control height everywhere: a 28px box, generous 1px rule, and the same
+   inner padding in a button, a field and a select, so a row of mixed controls
+   has one baseline and one height. */
+textarea, input, select { width: 100%; font: inherit; font-size: var(--text-sm);
+  min-height: var(--control-h); padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius); background: var(--surface); color: var(--text); }
+select { padding: var(--space-1) var(--space-2); cursor: pointer; }
+textarea { line-height: var(--lh-body); padding: var(--space-2) var(--space-3); resize: vertical; }
+/* Checkboxes and radios keep their native box; the field rule above must not
+   stretch them into a full-width 28px slab. */
+input[type=checkbox], input[type=radio], input[type=file] { min-height: 0; width: auto; padding: 0; }
+input[type=checkbox], input[type=radio] { width: 14px; height: 14px; margin: 0 var(--space-1) 0 0;
+  vertical-align: -2px; accent-color: var(--accent); cursor: pointer; }
+input[type=file] { padding: var(--space-1) 0; border: 0; background: transparent; }
+textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+button { font: inherit; font-size: var(--text-sm); line-height: var(--lh-tight);
+  min-height: var(--control-h); padding: var(--space-1) var(--space-3); margin: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius); background: var(--surface); color: var(--text); cursor: pointer; }
+button:hover:not(:disabled):not(.menu-item) { background: var(--surface-2); border-color: var(--text); }
+button:active:not(:disabled) { background: var(--surface-3); }
+button[type=submit], .primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+button[type=submit]:hover:not(:disabled), .primary:hover:not(:disabled) { background: var(--text); border-color: var(--text); opacity: .88; }
+:root[data-theme="dark"] button[type=submit], :root[data-theme="dark"] .primary {
+  background: var(--cyan); border-color: var(--cyan); color: #10151a; }
+:root[data-theme="dark"] button[type=submit]:hover:not(:disabled), :root[data-theme="dark"] .primary:hover:not(:disabled) {
+  background: var(--cyan); border-color: var(--cyan); opacity: .88; }
+/* Keyboard focus is always visible: one accent outline, never removed. The
+   offset keeps it clear of the 1px border so no control loses the ring against
+   its own edge. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Disabled reads as disabled by tone, not by fading: muted ink, the recessed
+   surface, a dashed hairline and the not-allowed cursor. Full opacity is kept so
+   the label stays legible — a half-faded control is unreadable, not quiet. */
+button:disabled, input:disabled, textarea:disabled, select:disabled,
+button:disabled:hover, input:disabled:hover {
+  cursor: not-allowed; color: var(--muted); background: var(--surface-2);
+  border-color: var(--line); opacity: 1; }
+button:disabled { border-style: dashed; }
+button[type=submit]:disabled, .primary:disabled { background: var(--surface-2); color: var(--muted);
+  border-color: var(--line); border-style: dashed; }
+/* Checked marks keep their native box on the recessed tone without a border. */
+input[type=checkbox]:disabled, input[type=radio]:disabled { background: var(--surface-3);
+  border: 1px solid var(--line); }
+/* Busy: the form declares aria-busy and every control inside it says so too. */
+[aria-busy="true"] { cursor: progress; }
+button[aria-busy="true"]::after, [aria-busy="true"] button[type=submit]::after {
+  content: " ·"; color: var(--accent); font-weight: var(--w-strong); }
+/* Status lines: a leading rule plus the tone colour and a weight step, so a
+   failure is never signalled by colour alone. No generated glyphs are used, so
+   the element's own text stays the whole message for a screen reader. */
+#session-status, #error, .library-status, #upload-status, #delete-status,
+#decision-status, #canvas-status, #quick-note-status {
+  margin: var(--space-2) 0 0; font-size: var(--text-sm); line-height: var(--lh-read);
+  overflow-wrap: anywhere; }
+#session-status, #error { margin: var(--space-3) var(--space-4); }
+#error:not(:empty), .library-status[data-tone="fail"], #upload-status[data-tone="fail"],
+#delete-status[data-tone="fail"], #decision-status[data-tone="fail"],
+#quick-note-status[data-tone="fail"] {
+  color: var(--fail); font-weight: var(--w-medium);
+  border-left: 2px solid currentColor; padding-left: var(--space-2); }
+.library-status[data-tone="ok"], #upload-status[data-tone="ok"],
+#quick-note-status[data-tone="ok"] {
+  color: var(--ok); font-weight: var(--w-medium);
+  border-left: 2px solid currentColor; padding-left: var(--space-2); }
+#adapter-badge { background: transparent; color: var(--coral); border-color: var(--coral); font-weight: 700; }
+#pending { border-bottom: 1px solid var(--line); margin-bottom: var(--space-4); }
+#pending:empty { border-bottom: 0; margin-bottom: 0; }
+
+/* --- 4. Header: the widest fixed bar in the app ------------------------- */
+/* Fixed height so the bar never reflows around a badge of a different length;
+   the height is the control height plus a hairline of breathing room on each
+   side, and the gutter matches the workspace so the two left edges line up. */
+header { display: flex; gap: var(--space-3); align-items: center;
+  height: calc(var(--control-h) + var(--space-4)); padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--line-strong); background: var(--surface);
+  position: sticky; top: 0; z-index: 5; }
+header > strong { font-size: var(--text-md); font-weight: var(--w-strong); letter-spacing: -.006em;
+  white-space: nowrap; }
+header > strong::before { content: ""; display: inline-block; width: 3px; height: 14px;
+  background: var(--cyan); margin-right: var(--space-3); vertical-align: -2px; }
+header > button { margin-left: 0; white-space: nowrap; }
+/* The way back to the menu is the one control a person needs before they know
+   anything else, so it carries the accent instead of the neutral border every
+   other button uses. `white-space: nowrap` above keeps its two-word label on one
+   line: wrapped, it was taller than the fixed 40px header and clipped. */
+#back-to-menu { border-color: var(--accent); color: var(--accent); font-weight: var(--w-strong); }
+#back-to-menu::before { content: "\2190"; margin-right: var(--space-1); }
+#back-to-menu:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+/* The key that does the same thing, on the control itself: a person who does not
+   know Escape yet reads it here instead of having to be told. */
+.key-hint { margin-left: var(--space-2); padding: 0 4px; font: 400 10px/1.6 var(--mono);
+  color: inherit; border: 1px solid currentColor; border-radius: 2px; opacity: .7; }
+#end-session { margin-left: auto; }
+/* Theme setting: a quiet labelled select beside End session. No box of its own;
+   the shared 1px control styling carries it, and the label stays muted. */
+.theme-control { display: flex; align-items: center; gap: var(--space-1); margin-left: var(--space-3); }
+.theme-control select { width: auto; padding: var(--space-1) var(--space-2); font-size: var(--text-sm); margin: 0; }
+.badge { padding: 0 var(--space-2); border: 1px solid var(--coral);
+  color: var(--coral); border-radius: var(--radius); white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-width: 34ch; letter-spacing: .05em;
+  line-height: calc(var(--control-h) - 2px); }
+
+/* --- 5. Rules and tables ------------------------------------------------ */
+/* Disclosure rows are the app's section separator: one hairline, one row of
+   type, and the same rhythm everywhere. No transition or animation is attached
+   to details/summary and their display model is untouched. */
+details { margin-bottom: var(--space-3); }
+details > summary { font-size: var(--text-sm); font-weight: var(--w-medium);
+  line-height: var(--lh-tight); padding: var(--space-1) 0; border-radius: var(--radius); }
+details > summary:hover { color: var(--accent); }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; font-size: var(--text-xs); width: 100%; }
+th { font-weight: var(--w-strong); }
+th, td { padding: var(--space-1) var(--space-2); border-bottom: 1px solid var(--line);
+  text-align: left; overflow-wrap: anywhere; vertical-align: top; }
+tbody tr:hover { background: var(--surface-2); }
+
+/* --- 6. Workspace: three bays, one grid -------------------------------- */
+/* The workspace gutter is the same --space-4 the header uses, so the panel edge
+   and the header edge share one vertical line; the bottom gutter is one step
+   larger so the last panel never touches the window. */
+main { display: grid; grid-template-columns: var(--panel-projects) minmax(0, 1fr) var(--panel-secretary);
+  gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-6); align-items: start; }
+nav, section, aside { background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: var(--space-4); min-width: 0; }
+/* Panel headings are instrument labels, not prose headings. */
+nav > h2, aside > h2, nav > .panel-head > h2, aside > .panel-head > h2 { margin: 0 0 var(--space-3); }
+/* Project list: one row per project, a leading marker for the open one, and a
+   hairline between rows. The marker plus weight say "current", not colour. */
+#project-list { list-style: none; padding: 0; margin: 0 0 var(--space-3); }
+#project-list li { border-bottom: 1px solid var(--line); margin: 0; }
+#project-list li:first-child { border-top: 1px solid var(--line); }
+#project-list a { display: block; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  color: var(--text); text-decoration: none; font-size: var(--text-sm); line-height: var(--lh-body);
+  border-left: 2px solid transparent; overflow-wrap: anywhere; }
+#project-list a:hover { border-left-color: var(--cyan); background: var(--surface-2); color: var(--text); }
+#project-list a[aria-current="true"], #project-list li.current a {
+  border-left-color: var(--accent); font-weight: var(--w-strong); background: var(--surface-2); }
+nav > button { display: block; width: 100%; text-align: left; margin: 0 0 var(--space-2); }
+#project-title { margin-bottom: var(--space-3); }
+#project-title:focus-visible { outline-offset: var(--space-1); }
+#upload-form { margin-top: var(--space-3); }
+#upload-form label { display: block; margin: var(--space-3) 0 var(--space-1); }
+#upload-form pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--text-xs);
+  margin: var(--space-1) 0; }
+
+/* --- 7. Secretary: a scrolling conversation with its own rail ---------- */
+aside { font-size: var(--text-base); }
+aside section, aside #briefing, aside #pending { font-size: var(--text-sm); line-height: var(--lh-read); }
+aside #launch-briefing { border-left: 2px solid var(--cyan); padding: var(--space-0) 0 var(--space-0) var(--space-3);
+  margin-bottom: var(--space-3); }
+aside #launch-briefing h3 { margin-top: 0; }
+/* One saved project in the return briefing: name, what it is waiting for, the
+   disclosure row, then Open. Rows keep the paragraph rhythm they had before the
+   row became a div to host the readiness disclosure. */
+.launch-row { margin: 0 0 var(--space-3); line-height: var(--lh-read); }
+.launch-row:last-child { margin-bottom: 0; }
+.launch-row strong { font-weight: var(--w-strong); }
+/* Readiness detail is the engine's own count of what it looked at before it
+   offered this row. Kept verbatim, kept closed: opening the panel should lead
+   with the next action, not with bookkeeping. */
+.launch-basis { margin: var(--space-1) 0 0; }
+.launch-basis > summary { font-size: var(--text-xs); color: var(--muted); }
+.launch-basis > summary:hover { color: var(--accent); }
+aside #briefing strong { font-weight: var(--w-strong); }
+aside h3 { margin-top: var(--space-4); }
+aside > section > h3:first-child, .secretary-log h3:first-child { margin-top: 0; }
+/* Secretary as a conversation: a scrolling log, secretary on the left and the
+   researcher on the right, newest at the bottom. Flat surfaces with a 1px rule
+   and one muted tint per side — no gradient, shadow, blur or glow. */
+.secretary-log { max-height: 46vh; overflow-y: auto; overscroll-behavior: contain;
+  border-top: 1px solid var(--line); padding-top: var(--space-3);
+  display: flex; flex-direction: column; gap: var(--space-3); }
+.secretary-log > #briefing, .secretary-log > #pending { display: flex; flex-direction: column; gap: var(--space-3); }
+.secretary-log > #pending { align-items: flex-start; }
+#pending:empty { display: none; }
+.turn { display: flex; flex-direction: column; }
+/* The secretary's blocks are a stack of equal-width sections, so holding them at
+   flex-start sized each one to its own text: a section with three words came out
+   two thirds the width of the one beside it and the column read as ragged cards.
+   stretch gives them one measure; the blocks below already end their text short
+   of the edge, so the box no longer pretends to be a speech bubble. The
+   researcher's own turns stay shrink-to-fit, because there the width really is
+   the size of what was said. */
+.turn-secretary { align-items: stretch; }
+.turn-researcher { align-items: flex-end; }
+.turn-bubble, .turn-section { max-width: 92%; margin: 0; padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line); border-radius: var(--radius-ui); background: var(--surface-2);
+  color: var(--text); font-size: var(--text-sm); line-height: var(--lh-read); }
+/* A heading inside a conversation block is one level down from the panel's own
+   sections, so it takes the subsection step and a tight gap rather than the
+   full section step above it. */
+.turn-bubble h3, .turn-section h3 { font-size: var(--text-md); margin: var(--space-3) 0 var(--space-1); }
+.turn-researcher .turn-bubble { background: var(--surface); border-color: var(--line-strong);
+  text-align: left; border-right: 2px solid var(--accent); }
+.turn-secretary .turn-bubble, .turn-secretary .turn-section { border-left: 2px solid var(--line-strong); }
+.turn-secretary .turn-section h3:first-child { margin-top: 0; }
+.turn-section ul { margin: var(--space-1) 0 0; }
+.turn-section > :last-child { margin-bottom: 0; }
+/* Composer pinned at the foot of the conversation. */
+.secretary-compose { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: var(--space-1);
+  align-items: center; margin-top: var(--space-3); padding: var(--space-2) 0 var(--space-1);
+  border-top: 1px solid var(--line); background: var(--surface); }
+.secretary-compose label { flex: 1 1 100%; font-size: var(--text-xs); line-height: var(--lh-body); }
+.secretary-compose input { flex: 1 1 140px; min-width: 0; }
+.secretary-compose button { flex: 0 0 auto; margin: 0; }
+aside > button { display: block; width: 100%; text-align: left; }
+
+/* --- 8. Research canvas: restrained, code-rendered geometry ------------ */
+/* The diagram is one row of node buttons with one connector per researcher
+   edge drawn above it in an inline SVG. The SVG and the buttons share a single
+   scroll container, so an arc stays over the columns it names; the edge list
+   below repeats every relationship as text, so no label has to fit in the arc
+   band or collide with another one. */
+.canvas-diagram { margin: 0 0 var(--space-2); }
+.canvas-node-scroll { overflow-x: auto; }
+.canvas-graph { display: inline-block; min-width: 100%; }
+.canvas-connectors { display: block; height: 56px; color: var(--accent); overflow: visible; }
+.canvas-nodes { display: flex; gap: var(--space-2); }
+/* A column never squeezes a label into a mid-word break: the title steps down a
+   size and the row scrolls inside its own container, with the SVG above it, once
+   eight columns need more room than the panel has. */
+.canvas-nodes button { flex: 1 1 0; min-width: 96px; text-align: left; border-radius: var(--radius); }
+.canvas-nodes strong { font-size: var(--text-sm); }
+/* Variable names may be long identifiers, so only those break mid-word. */
+.canvas-nodes code { overflow-wrap: anywhere; }
+.canvas-edge-empty { border: 1px dashed var(--line-strong); border-radius: var(--radius);
+  padding: var(--space-3); margin: 0 0 var(--space-2); }
+.canvas-edge-list-heading { font-size: var(--text-meta); font-weight: var(--w-strong);
+  letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: var(--space-2) 0 var(--space-1); }
+/* One relationship per line, in the order the researcher entered them, so the
+   text list reads as a sequence and never as two interleaved columns. */
+.canvas-edge-list { list-style: none; padding: 0; margin: 0 0 var(--space-2);
+  font-size: var(--text-xs); line-height: var(--lh-body); }
+.canvas-edge-list li { padding: var(--space-1) 0 var(--space-1) var(--space-2);
+  border-left: 2px solid var(--line-strong); margin: 0; overflow-wrap: anywhere; }
+.canvas-edge-status { color: var(--muted); }
+.canvas-edge-editor { border: 1px solid var(--line); border-radius: var(--radius);
+  padding: var(--space-3); margin: var(--space-4) 0 var(--space-3); min-width: 0; }
+.canvas-edge-editor > legend { font-size: var(--text-meta); font-weight: var(--w-strong);
+  letter-spacing: .09em; text-transform: uppercase; color: var(--muted); padding: 0 var(--space-1); }
+.canvas-edit-row { display: grid; grid-template-columns: 1fr 2fr 2fr; gap: var(--space-2);
+  margin: var(--space-3) 0; }
+.canvas-edit-row label { font-size: var(--text-xs); min-width: 0; }
+.canvas-edit-row select { width: 100%; background: var(--bg); color: var(--text); padding: var(--space-1); }
+/* An edge row has five controls: source, target, description, note, remove. */
+.canvas-edge-row { grid-template-columns: 1fr 1fr 1.4fr 2fr auto; align-items: end;
+  border-top: 1px solid var(--line); padding-top: var(--space-2); }
+.canvas-edge-remove { margin: 0 0 var(--space-0); }
+.canvas-edge-comparison caption { text-align: left; font-size: var(--text-meta); font-weight: var(--w-strong);
+  letter-spacing: .09em; text-transform: uppercase; color: var(--muted); padding: var(--space-3) 0 var(--space-1); }
+.canvas-nodes button[aria-pressed="true"] { border-color: var(--accent); outline: 1px solid var(--accent);
+  font-weight: var(--w-strong); }
+.canvas-linked-row { outline: 2px solid var(--accent); outline-offset: -2px; font-weight: var(--w-strong); }
+#canvas-evidence { border-bottom: 1px solid var(--line); padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3); overflow-wrap: anywhere; font-size: var(--text-sm); }
+#canvas-evidence blockquote { margin: var(--space-2) 0; padding-left: var(--space-3);
+  border-left: 2px solid var(--line); }
+
+/* --- 9. Optional Meta AI panel: a dense instrument drawer -------------- */
+#ai-panel label { display: block; margin: var(--space-2) 0; }
+#ai-local-status { font-size: var(--text-sm); margin: var(--space-1) 0 0; }
+#ai-panel input[type=checkbox] { width: auto; }
+#ai-panel select { width: 100%; background: var(--bg); color: var(--text); padding: var(--space-1); }
+#ai-panel pre { max-height: 320px; overflow: auto; white-space: pre-wrap;
+  overflow-wrap: anywhere; font-size: var(--text-xs); }
+/* One write-only key container per provider: quiet 1px rules, no glow or shadow. */
+#ai-keys { margin: var(--space-2) 0; }
+.ai-key-row { border-top: 1px solid var(--line); padding: var(--space-2) 0; }
+.ai-key-row label { margin: 0 0 var(--space-2); }
+.ai-key-row input[type=password] { width: 100%; background: var(--bg); color: var(--text);
+  border: 1px solid var(--line); padding: var(--space-1); font-family: inherit; }
+.ai-key-row .muted { display: block; margin-top: var(--space-1); font-size: var(--text-xs); }
+#ai-panel summary, .wb-receipt > summary, .wb-record > summary { cursor: pointer; font-weight: var(--w-strong); }
+#ai-panel > h3 { margin: var(--space-4) 0 var(--space-1); padding-top: var(--space-2);
+  border-top: 1px solid var(--line); }
+#ai-results { display: grid; gap: var(--space-4); margin-top: var(--space-2); }
+.wb-job { border: 1px solid var(--line); border-radius: var(--radius-ui); padding: var(--space-3); }
+.wb-job .wb-status { font-size: var(--text-md); font-weight: var(--w-strong); margin: 0 0 var(--space-2); }
+.wb-job .wb-arm { margin: var(--space-4) 0 var(--space-1); }
+.wb-job figure { margin: var(--space-2) 0; }
+/* Job chips: square-cornered labelled tags, not marketing pills. A tone also
+   changes the weight so the state survives a monochrome rendering. */
+.wb-chip { display: inline-block; font-size: var(--text-xs); font-weight: var(--w-strong);
+  letter-spacing: .03em; padding: 0 var(--space-2); border: 1px solid var(--line);
+  border-radius: var(--radius); color: var(--text); background: transparent; }
+.wb-chip[data-tone="ok"] { color: var(--ok); border-color: var(--ok); }
+.wb-chip[data-tone="warn"] { color: var(--warn); border-color: var(--warn); }
+.wb-chip[data-tone="fail"] { color: var(--fail); border-color: var(--fail); font-weight: 700; }
+.wb-confirm { border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: var(--radius-ui); padding: var(--space-2) var(--space-3); margin: var(--space-4) 0; }
+.wb-receipt, .wb-record { margin-top: var(--space-2); }
+.wb-receipt ul, .wb-record ul { font-size: var(--text-sm); }
+
+/* --- 10. Writing view: one layout, editor | preview -------------------- */
+.view-tabs { display: flex; gap: var(--space-1); margin: 0; }
+.view-tabs button { margin: 0; }
+.view-tabs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
+  font-weight: var(--w-strong); border-bottom-width: 2px; }
+#latex-view { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);
+  min-height: 60vh; }
+#latex-view.hidden { display: none; }
+#latex-view > .latex-absence { grid-column: 1 / -1; }
+.latex-editor, .latex-preview { min-width: 0; }
+.latex-editor textarea { font: var(--text-sm)/var(--lh-read) var(--mono);
+  min-height: 60vh; resize: vertical; tab-size: 2; }
+.latex-status { font-size: var(--text-sm); color: var(--muted); }
+.latex-status[data-state="ok"] { color: var(--ok); font-weight: var(--w-medium); }
+.latex-status[data-state="fail"] { color: var(--fail); font-weight: var(--w-medium); }
+.latex-absence { border-left: 3px solid var(--warn); padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm); }
+/* Second, contextual entry to the composer: it sits with the draft, not in the
+   view tabs, and it never joins the compile row's in-flight lock. */
+.latex-citation-entry { margin: 0 0 var(--space-3); align-items: baseline; }
+.latex-citation-entry .muted { margin: 0; max-width: var(--read); }
+.latex-diagnostics li { font-size: var(--text-sm); }
+.latex-preview pre { max-height: 220px; overflow: auto; white-space: pre-wrap;
+  overflow-wrap: anywhere; font-size: var(--text-xs); }
+.latex-preview iframe, .latex-preview object { width: 100%; height: 70vh;
+  border: 1px solid var(--line); }
+main section.writing-mode > :not(#latex-view):not(#project-title):not(.view-tabs):not(.view-bar) { display: none; }
+
+
+/* --- 11. Start screen: the approved Concept A raster ------------------ */
+/* Composed at its own image-space anchors. Flat tonal surfaces only (no
+   gradients, glow, glass or shadows). The console owns the field choice; the
+   workspace mounts once in #portal and is revealed by expanding the inner
+   display, never by scaling the whole device. */
+.startup { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center;
+  justify-content: center; padding: var(--space-6) var(--space-4); background: var(--bg); overflow: auto; }
+.startup[hidden] { display: none; }
+.startup-inner { width: min(680px, 100%); margin: auto; }
+.startup-kicker { font-size: var(--text-meta); font-weight: var(--w-strong); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 var(--space-3); }
+.startup-stage { position: relative; width: 100%; aspect-ratio: 1488 / 656; --display-x:20.766129%; --display-y:13.871951%; --display-w:58.534946%; --display-h:74.085366%; --slot-x:77.620968%; --card-rest-y:.457317%; }
+.startup-hardware { display: block; width: 100%; height: 100%; }
+.startup-screen { position: absolute; left: var(--display-x); top: var(--display-y); width: var(--display-w); height: var(--display-h); background: #111b1c; opacity: 0; transition: opacity 200ms ease 300ms; }
+.startup-screen.on { opacity: 1; }
+/* The cartridge is pushed into the top bay: it stands proud of the slot, sinks
+   until only its 1px lip is left, and the display lights only after it seats.
+   The bottom edge never moves, so the cartridge really enters the bay instead
+   of sliding over the console. Height and top only; nothing is scaled. */
+.startup-card { position: absolute; left: calc(var(--slot-x) - 3.495%); top: var(--card-rest-y);
+  width: 6.99%; height: 1.8%; background: #3a404a; border-top: 1px solid #5a616d;
+  border-bottom: 1px solid #4b525d; opacity: 0; }
+.startup-card.on { animation: startup-chip-insert 400ms cubic-bezier(.32,.06,.24,1) both; }
+@keyframes startup-chip-insert {
+  0%   { opacity: 0; top: calc(var(--card-rest-y) - 11.4%); height: 13.2%; border-top-color: #5a616d; border-bottom-color: #4b525d; }
+  12%  { opacity: 1; top: calc(var(--card-rest-y) - 11.4%); height: 13.2%; border-top-color: #5a616d; border-bottom-color: #4b525d; }
+  58%  { opacity: 1; top: calc(var(--card-rest-y) - 11.4%); height: 13.2%; border-top-color: #6f7783; border-bottom-color: #4b525d; }
+  84%  { top: calc(var(--card-rest-y) - 1.1%); height: 2.9%; border-top-color: var(--accent); }
+  92%  { top: var(--card-rest-y); height: 1.8%; border-top-color: var(--accent); }
+  100% { opacity: 1; top: var(--card-rest-y); height: 1.8%; border-top-color: #5a616d; border-bottom-color: #4b525d; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .startup-card.on { animation: none; opacity: 1; }
+  .startup-screen { transition: none; }
+}
+.startup-choices { display: flex; gap: var(--space-3); flex-wrap: wrap; margin: var(--space-5) 0 0; }
+.startup-choice { flex: 1 1 200px; min-width: 0; margin: 0; padding: var(--space-3) var(--space-4);
+  text-align: left; border: 1px solid var(--line); border-radius: var(--radius-ui); background: var(--surface); }
+.startup-choice[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
+  font-weight: var(--w-strong); border-left-width: 3px; }
+.startup-choice strong { display: block; font-size: var(--text-md); font-weight: var(--w-strong); }
+.startup-choice span { display: block; font-size: var(--text-xs); color: var(--muted); margin-top: var(--space-0); }
+.startup-status { font-size: var(--text-sm); color: var(--muted); margin: var(--space-4) 0 0; min-height: 20px; }
+.startup-cancel { margin-top: var(--space-3); }
+.display-portal { position: fixed; z-index: 70; overflow: hidden; background: var(--bg); }
+.display-portal[hidden] { display: none; }
+.display-portal.expanded .startup { display: none; }
+.app-shell { position: absolute; inset: 0; overflow: auto; background: var(--bg); }
+body.workbench-open { overflow: hidden; }
+
+/* --- 12. Panel layout: rails, collapse, expand ------------------------- */
+/* The two side panels collapse independently and the working surface can take
+   the whole width. The grid itself changes columns so the middle column really
+   gains the freed space; hiding the content alone would leave an empty bay.
+   Flat surfaces, 1px rules, one accent — no shadow or glow. */
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+nav > .panel-head > h2, aside > .panel-head > h2 { margin: 0; }
+.panel-toggle { display: inline-flex; align-items: center; justify-content: center;
+  width: var(--control-h); height: var(--control-h); margin: 0; padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius); background: var(--surface); color: var(--muted); }
+.panel-toggle:hover:not(:disabled) { background: var(--surface-2); border-color: var(--text); color: var(--text); }
+.panel-toggle svg { width: 12px; height: 12px; display: block; transition: transform .12s linear; }
+nav > .panel-head { margin-bottom: var(--space-3); }
+aside > .panel-head { margin-bottom: var(--space-3); }
+main.wb-collapse-projects { grid-template-columns: var(--rail) minmax(0, 1fr) var(--panel-secretary); }
+main.wb-collapse-secretary { grid-template-columns: var(--panel-projects) minmax(0, 1fr) var(--rail); }
+main.wb-collapse-projects.wb-collapse-secretary { grid-template-columns: var(--rail) minmax(0, 1fr) var(--rail); }
+main.wb-collapse-projects > nav > :not(.panel-head) { display: none; }
+main.wb-collapse-secretary > aside > :not(.panel-head) { display: none; }
+main.wb-collapse-projects > nav > .panel-head > h2,
+main.wb-collapse-secretary > aside > .panel-head > h2 { display: none; }
+main.wb-collapse-projects > nav,
+main.wb-collapse-secretary > aside { padding: var(--space-4) var(--space-2); }
+main.wb-collapse-projects #toggle-projects svg { transform: rotate(180deg); }
+main.wb-collapse-secretary #toggle-secretary svg { transform: rotate(180deg); }
+/* Expanded surface: both side panels step out of the way temporarily and the
+   middle column takes every pixel. The saved panel preference is untouched, so
+   the second press restores exactly the previous layout. */
+main.wb-expand-surface { grid-template-columns: minmax(0, 1fr); }
+main.wb-expand-surface > nav, main.wb-expand-surface > aside { display: none; }
+.view-bar { display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin-bottom: var(--space-4); padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line); }
+.surface-expand { flex: 0 0 auto; margin: 0; font-size: var(--text-xs); }
+.surface-expand[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
+  font-weight: var(--w-strong); }
+
+@media (max-width:900px) {
+  main.wb-collapse-projects, main.wb-collapse-secretary,
+  main.wb-collapse-projects.wb-collapse-secretary, main.wb-expand-surface { grid-template-columns:1fr; }
+}
+
+/* --- 13. Library: one reading surface, two quiet indexes -------------- */
+/* The working core of the app. Left: the nested folder tree, one row per
+   folder, indented by a hairline per level so depth is visible without colour.
+   Right: the document list (a fast-scanning index) beside the reader pane.
+   The reader is the one place the eye is meant to land: the two indexes are
+   tight, single-purpose lists, and every heading in the library is instrument
+   type at one of the shared text steps. Separation is a 1px rule and a shared
+   header baseline, never a large gap. */
+#library-view { display: grid; grid-template-columns: var(--library-tree) minmax(0, 1fr);
+  gap: var(--space-4); min-height: 62vh; align-items: start; }
+#library-view.hidden { display: none; }
+
+/* Focus while the library is open: the two side rails drop to the page ground
+   and give up a little width, so the working surface is the only raised card in
+   the workspace. Nothing is hidden and both panels keep working; the saved
+   collapse preference and the grid itself are untouched. */
+main:has(> section.library-mode) { --panel-projects: 192px; --panel-secretary: 288px; }
+main:has(> section.library-mode) > nav,
+main:has(> section.library-mode) > aside { background: var(--bg); }
+/* The active surface carries the stronger rule, and the project name becomes a
+   quiet location line: the open document's own title is the largest type on the
+   screen, so the reading pane — not the chrome above it — leads. */
+main > section.library-mode { border-color: var(--line-strong); }
+main section.library-mode #project-title { font-size: var(--text-md); color: var(--muted);
+  margin-bottom: var(--space-2); }
+
+/* Pane A — folder tree. Sticky below the app header rather than behind it, so
+   the folder the reader is browsing stays in view down a long list. The offset
+   is the header's own height expression, so the two can never drift apart. */
+.library-tree { border-right: 1px solid var(--line); padding-right: var(--space-3);
+  min-width: 0; position: sticky;
+  top: calc(var(--control-h) + var(--space-4) + var(--space-3)); align-self: start; }
+/* Both column heads share one height and one rule weight, so the "Folders" rule
+   and the "All documents" rule land on the same baseline and the tree reads
+   straight across into the index. */
+.library-tree-head { display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-2); min-height: var(--control-h); padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2); border-bottom: 1px solid var(--line-strong); }
+.library-tree-head h3 { margin: 0; }
+/* The library's own controls keep the shared control height and step their type
+   down one size instead, so a dense toolbar is still a full-size target. */
+.library-tree-head button { margin: 0; font-size: var(--text-xs); padding: 0 var(--space-2); }
+#library-folder-list, .library-folder-children { list-style: none; margin: 0; padding: 0; }
+.library-folder-row { margin: 0; }
+.library-folder-line { display: flex; align-items: center; gap: var(--space-0);
+  border-left: 2px solid transparent; }
+/* One tight line per folder: the same 2px selection rule and 8px text inset as
+   the document rows, so folder names, day headers and item titles share an
+   alignment edge instead of three slightly different ones. */
+.library-folder-open { flex: 1 1 auto; min-width: 0; text-align: left; margin: 0;
+  padding: var(--space-1) var(--space-2); border: 0; border-radius: 0; background: transparent;
+  font-size: var(--text-sm); line-height: var(--lh-tight); color: var(--text);
+  overflow-wrap: anywhere; }
+.library-folder-open:hover:not(:disabled) { background: var(--surface-2); border-color: transparent; }
+.library-folder-open[aria-current="true"] { color: var(--accent); font-weight: var(--w-strong); }
+/* Current folder: accent rule + weight + tint, so it is not colour alone. */
+.library-folder-line.selected { border-left-color: var(--accent); background: var(--surface-2); }
+.library-folder-line.selected .library-folder-open { font-weight: var(--w-strong); }
+/* "All documents" is a folder row without a nested line wrapper, so it declares
+   the same 2px rule slot itself; its name then sits on the same alignment edge
+   as every folder below it. It also takes the same selected treatment, so the
+   tree speaks one selection language. */
+#library-folder-list > .library-folder-row:has(> .library-folder-open) {
+  border-left: 2px solid transparent; }
+#library-folder-list > .library-folder-row:has(> .library-folder-open.selected) {
+  border-left-color: var(--accent); background: var(--surface-2); }
+/* Depth: each nesting level gets its own hairline rule and indent step. */
+.library-folder-children { padding-left: var(--space-3); border-left: 1px solid var(--line-strong);
+  margin-left: var(--space-1); }
+/* Drop target reads as a different thing from a selection: a deeper tint, a
+   dashed accent outline and a weight step, never the selected tint alone. */
+.library-folder-line.drop-target { background: var(--surface-3); font-weight: var(--w-medium);
+  outline: 1px dashed var(--accent); outline-offset: -1px; }
+.library-inline-row input { font-size: var(--text-sm); padding: var(--space-0) var(--space-2); }
+.library-status { margin: var(--space-2) 0 0; overflow-wrap: anywhere; }
+.library-status:empty { display: none; }
+
+/* Pane B/C — the document column splits into the index and the reader as soon
+   as there is room for both; below that they stack, index first. The index is
+   the narrower of the two on purpose: it is a scan strip, and every pixel it
+   gives up goes to the reading measure beside it. */
+.library-docs { min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.library-toolbar { display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: var(--space-2); min-height: var(--control-h);
+  padding-bottom: var(--space-2); border-bottom: 1px solid var(--line-strong); }
+.library-toolbar h3 { margin: 0; font-size: var(--text-md); }
+.library-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
+.library-tools button { margin: 0; font-size: var(--text-xs); padding: 0 var(--space-2); }
+.library-search-label { display: flex; align-items: center; gap: var(--space-2); }
+.library-search-label input { width: 240px; max-width: 100%;
+  padding: var(--space-1) var(--space-2); font-size: var(--text-sm);
+  letter-spacing: normal; text-transform: none; }
+.library-body { display: grid; grid-template-columns: minmax(232px, 30%) minmax(0, 1fr);
+  gap: var(--space-4); align-items: start; min-width: 0; }
+.library-index { min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+/* The reader is the tallest thing on the screen in every state — empty, note,
+   search or PDF — so it stays the focal column instead of collapsing to the
+   height of one line and letting the index win by default. */
+.library-reader { min-width: 0; display: flex; flex-direction: column; gap: var(--space-3);
+  border-left: 1px solid var(--line-strong); padding-left: var(--space-4); min-height: 56vh; }
+/* Document list: a dense index. One row per item, aligned columns, hover tint. */
+.library-items { list-style: none; margin: 0; padding: 0; min-width: 0; }
+/* Two stacked lines: the title owns the full row width and the meta sits under
+   it. Side by side, a long meta ("PDF · 4 pages · no text layer") squeezed the
+   title until words split mid-letter; stacking keeps titles whole and still
+   scans as one dense row. Both lines run on the tight leading, so a wrapped
+   title costs one line of text rather than a wrapped paragraph, and the mixed
+   numerals in the meta line up under each other. */
+.library-item-row { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 0;
+  padding: var(--space-1) var(--space-2); margin: 0;
+  border-bottom: 1px solid var(--line); border-left: 2px solid transparent;
+  font-size: var(--text-sm); line-height: var(--lh-tight); cursor: pointer; }
+.library-item-row:hover, .library-item-row:focus-visible { background: var(--surface-2); }
+/* The open document: accent rule, weight and a tint, not colour alone. */
+.library-item-row.selected, .library-item-row[aria-current="true"] {
+  background: var(--surface-2); border-left-color: var(--accent); font-weight: var(--w-medium); }
+.library-item-row.selected .library-item-title,
+.library-item-row[aria-current="true"] .library-item-title { font-weight: var(--w-strong); }
+.library-item-row.dragging { opacity: .55; }
+.library-item-title { overflow-wrap: anywhere; }
+.library-item-meta { font-size: var(--text-xs); line-height: var(--lh-tight);
+  text-align: left; color: var(--muted); font-variant-numeric: tabular-nums;
+  margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Day headers separate notes from the PDFs above them: a rule, a tint and the
+   instrument label. The 2px left rule matches the item rows, so a day label and
+   the note titles under it share one left edge. */
+.library-day-header { margin: var(--space-2) 0 0; padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+  border-left: 2px solid var(--line-strong);
+  background: var(--surface-2); line-height: var(--lh-tight); }
+
+/* Pane C — reader: the focal column. The document title is the largest type on
+   the library screen and it sits on one rule, so the eye lands there before it
+   lands on the index. Prose keeps the --read measure; only titles and meta run
+   the full column, because they are scanned rather than read as sentences. */
+.library-viewer { min-width: 0; padding: 0; border: 0; margin: 0; }
+.library-viewer[hidden] { display: none; }
+.library-viewer h4 { font-size: var(--text-lg); font-weight: var(--w-strong);
+  line-height: var(--lh-tight); letter-spacing: -.006em; margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2); border-bottom: 1px solid var(--line-strong);
+  overflow-wrap: anywhere; }
+/* The PDF pane fills the reader column, not the viewport: 68vh left the bottom
+   of the screen empty under a short index and let the index look taller. */
+.library-pdf-frame { width: 100%; height: clamp(360px, 52vh, 720px);
+  border: 1px solid var(--line); background: var(--bg); }
+.library-note-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--text-base);
+  line-height: var(--lh-read); margin: 0; max-width: var(--read); }
+.library-snippet { border-left: 3px solid var(--accent); padding: var(--space-2) var(--space-3);
+  margin: var(--space-3) 0 0; font-size: var(--text-sm); line-height: var(--lh-read);
+  overflow-wrap: anywhere; background: var(--surface-2); max-width: var(--read); }
+/* An empty reader panel says what it is for; nothing else is invented. It steps
+   aside as soon as the reader holds a document, a search, or a screen. The hint
+   is a ruled line inside the column rather than a bordered card, so the empty
+   reader reads as one open surface waiting for a document, not as a floating
+   box above a void. */
+.library-hint { margin: 0; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  border-top: 1px solid var(--line); border-left: 3px solid var(--line-strong);
+  max-width: var(--read); }
+.library-reader:has(.library-viewer:not([hidden])) .library-hint,
+.library-reader:has(#library-search-results:not([hidden])) .library-hint,
+.library-reader:has(#library-screen-result:not([hidden])) .library-hint { display: none; }
+/* An empty folder is a state, not a blank: the list carries one ruled line that
+   says the folder is empty. It is the only row and it is never a fake document. */
+.library-empty { margin: 0; padding: var(--space-3) var(--space-2); color: var(--muted);
+  font-size: var(--text-sm); line-height: var(--lh-body);
+  border-bottom: 1px solid var(--line); border-left: 2px solid var(--line-strong); }
+
+/* Search results and the first-pass screen: ruled blocks inside the reader.
+   Working states are told apart by weight and rule, never by colour alone. */
+#library-search-results, #library-screen-result { min-width: 0;
+  border-top: 1px solid var(--line-strong); padding-top: var(--space-3); margin: 0; }
+#library-search-results[hidden], #library-screen-result[hidden] { display: none; }
+#library-search-results p, #library-screen-result p { margin: 0 0 var(--space-2);
+  font-size: var(--text-sm); line-height: var(--lh-read); max-width: var(--read); }
+/* A request in flight: the block itself says it is busy and steps its weight up,
+   and the whole region is announced as busy while the answer is open. */
+#library-search-results[aria-busy="true"], #library-screen-result[aria-busy="true"] {
+  border-top-color: var(--accent); font-weight: var(--w-medium); }
+#library-search-results ul, #library-screen-result ul { margin: 0; font-size: var(--text-sm);
+  line-height: var(--lh-read); }
+.library-hit { display: block; width: 100%; text-align: left; margin: 0 0 var(--space-1);
+  font-size: var(--text-sm); line-height: var(--lh-body); overflow-wrap: anywhere;
+  white-space: normal; border-left: 2px solid transparent; }
+.library-hit:hover:not(:disabled) { border-color: var(--accent); border-left-width: 2px; }
+/* The summary line of a search or a screen is the block's own heading. */
+#library-search-summary, #library-screen-message, #library-screen-dropped {
+  font-weight: var(--w-medium); color: var(--text); }
+#library-screen-message, #library-screen-dropped { border-left: 2px solid var(--line-strong);
+  padding-left: var(--space-2); }
+
+/* Drop zone: a low, wide target above the index, not a hero. Its resting state
+   is quiet; the live drop target steps the border solid, gains an accent rule and
+   a weight step, so "you may drop here" and "you are dropping here" differ. */
+.library-dropzone { border: 1px dashed var(--line-strong);
+  border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin: 0;
+  color: var(--muted); font-size: var(--text-xs); line-height: var(--lh-body);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); text-align: left; }
+.library-dropzone p { margin: 0; flex: 1 1 120px; }
+.library-dropzone.drop-target { border-color: var(--accent); color: var(--accent);
+  background: var(--surface-2); border-style: solid; font-weight: var(--w-medium);
+  outline: 1px dashed var(--accent); outline-offset: -3px; }
+.library-dropzone input[type=file] { width: auto; flex: 0 1 150px; font-size: var(--text-xs);
+  background: transparent; border: 0; padding: 0; }
+
+/* Note composer: pinned under the reader column, one rule above it. It keeps the
+   reading measure, so a note written here starts at the same left edge and the
+   same line length as the note it will become. */
+#library-note-composer { border-top: 1px solid var(--line-strong);
+  padding-top: var(--space-3); margin-top: auto; min-width: 0; }
+#library-note-composer label { display: block; margin-bottom: var(--space-1); }
+#library-note-composer textarea { max-width: var(--read); font-size: var(--text-sm);
+  line-height: var(--lh-body); }
+#library-note-composer button { margin-top: var(--space-2); }
+#library-note-composer .muted { margin-top: var(--space-1); max-width: var(--read); }
+main section.library-mode > :not(#library-view):not(#project-title):not(.view-bar) { display: none; }
+main section.library-mode #profile, main section.library-mode details { display: none; }
+
+/* --- 14. Scratch notes: the researcher's own pad ---------------------- */
+/* Deliberately unlike a chat bubble — a ruled side, no alignment, and its own
+   heading. */
+.quick-notes { margin-top: var(--space-4); padding: var(--space-2) 0 var(--space-2) var(--space-3);
+  border-left: 3px solid var(--line-strong); border-top: 1px solid var(--line); }
+.quick-notes h3 { margin: 0 0 var(--space-1); }
+.quick-notes textarea { font-size: var(--text-sm); }
+.quick-notes button { margin-top: var(--space-2); font-size: var(--text-xs); }
+.quick-notes .muted { margin: var(--space-2) 0 0; }
+
+/* --- 15. Secretary review: a record, one row per exchange --------------- */
+/* A reading list, not a chat: every turn is a row on a rule, with the role, the
+   chip, the status and the time on one instrument line above the recorded text.
+   Same flat language as the library index — hairlines, a 2px left rule and one
+   weight step for the state that matters. Nothing here is a bubble or a card. */
+#secretary-review-view { min-width: 0; max-width: var(--read); }
+#secretary-review-view.hidden { display: none; }
+.secretary-review-head { border-bottom: 1px solid var(--line-strong);
+  padding-bottom: var(--space-3); margin-bottom: var(--space-3); }
+.secretary-review-head h3 { margin: 0 0 var(--space-1); }
+.secretary-review-head .muted { margin: 0 0 var(--space-1); max-width: var(--read); }
+.secretary-review-head .row { margin-top: var(--space-2); }
+.secretary-review-status { margin: var(--space-2) 0 0; font-size: var(--text-sm);
+  line-height: var(--lh-read); overflow-wrap: anywhere; }
+.secretary-review-status:empty { display: none; }
+.secretary-review-status[data-tone="fail"] { color: var(--fail); font-weight: var(--w-medium);
+  border-left: 2px solid currentColor; padding-left: var(--space-2); }
+.secretary-review-status[data-tone="ok"] { color: var(--ok); font-weight: var(--w-medium);
+  border-left: 2px solid currentColor; padding-left: var(--space-2); }
+#secretary-review-absence { margin: var(--space-3) 0 0; padding: var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--line); border-left: 2px solid var(--line-strong);
+  max-width: var(--read); }
+#secretary-review-absence[hidden] { display: none; }
+.secretary-review-group + .secretary-review-group { margin-top: var(--space-4); }
+/* A chip heading only exists when the project holds more than one chip's turns;
+   it is the stored pack_id on its own rule, never a translated title. The
+   identifier keeps the exact casing the server stored it in — an instrument
+   label is uppercased, a data value is not. */
+.secretary-review-group-title { font-size: var(--text-xs); font-weight: var(--w-strong);
+  letter-spacing: .04em; color: var(--text);
+  margin: 0 0 var(--space-1); padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--line-strong); overflow-wrap: anywhere; }
+.secretary-review-items { list-style: none; margin: 0; padding: 0; min-width: 0; }
+.secretary-review-item { padding: var(--space-2) var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--line); border-left: 2px solid transparent; min-width: 0; }
+/* A discarded turn is told apart by a rule and a weight step as well as a tint. */
+.secretary-review-item[data-status="discarded"] { border-left-color: var(--line-strong);
+  background: var(--surface-2); }
+.secretary-review-item[data-status="kept"] { border-left-color: var(--accent); }
+.secretary-review-head { display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-3); margin: 0 0 var(--space-1); font-size: var(--text-xs);
+  line-height: var(--lh-tight); }
+.secretary-review-role { font-size: var(--text-xs); font-weight: var(--w-strong);
+  letter-spacing: .04em; }
+.secretary-review-chip { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.secretary-review-state { font-weight: var(--w-medium); }
+.secretary-review-item[data-status="kept"] .secretary-review-state { color: var(--accent); }
+.secretary-review-when { margin-left: auto; font-variant-numeric: tabular-nums;
+  white-space: nowrap; }
+.secretary-review-text, .secretary-review-question { margin: 0 0 var(--space-1);
+  font-size: var(--text-sm); line-height: var(--lh-read); overflow-wrap: anywhere;
+  white-space: pre-wrap; max-width: var(--read); }
+.secretary-review-question { border-left: 3px solid var(--line-strong);
+  padding-left: var(--space-2); color: var(--muted); }
+.secretary-review-item .row { margin-top: var(--space-2); }
+.secretary-review-item .row button { font-size: var(--text-xs); }
+main section.secretary-review-mode > :not(#secretary-review-view):not(#project-title):not(.view-bar) { display: none; }
+/* The review list narrows the side rails the way the library does, so the
+   recording is the widest reading column on the screen. */
+main:has(> section.secretary-review-mode) { --panel-projects: 192px; --panel-secretary: 288px; }
+main:has(> section.secretary-review-mode) > nav,
+main:has(> section.secretary-review-mode) > aside { background: var(--bg); }
+main > section.secretary-review-mode { border-color: var(--line-strong); }
+main section.secretary-review-mode #project-title { font-size: var(--text-md); color: var(--muted);
+  margin-bottom: var(--space-2); }
+
+/* --- 16. Narrow viewports: stack, never squeeze ----------------------- */
+/* Below 1180px the library's index and reader stack; below 900px the whole
+   workspace becomes one column. Nothing is hidden, only re-flowed. */
+@media (max-width: 1180px) {
+  .library-body { grid-template-columns: minmax(0, 1fr); }
+  .library-reader { border-left: 0; padding-left: 0; border-top: 1px solid var(--line-strong);
+    padding-top: var(--space-3); min-height: 0; }
+  .library-pdf-frame { height: clamp(320px, 46vh, 560px); }
+}
+@media (max-width: 900px) {
+  main, main.wb-collapse-projects, main.wb-collapse-secretary,
+  main.wb-collapse-projects.wb-collapse-secretary, main.wb-expand-surface {
+    grid-template-columns: minmax(0, 1fr); }
+  #library-view { grid-template-columns: minmax(0, 1fr); }
+  .library-tree { border-right: 0; border-bottom: 1px solid var(--line);
+    padding-right: 0; padding-bottom: var(--space-3); position: static; }
+  #latex-view { grid-template-columns: minmax(0, 1fr); }
+  .canvas-edit-row { grid-template-columns: minmax(0, 1fr); }
+  header { flex-wrap: wrap; height: auto; padding: var(--space-2) var(--space-4); }
+  #end-session { margin-left: 0; }
+}

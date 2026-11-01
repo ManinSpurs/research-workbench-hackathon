@@ -1,0 +1,37 @@
+/* Native-only presentation. Browser rehearsal and research contents are unchanged. */
+html.desktop-shell, html.desktop-shell body { background: transparent !important; }
+html.desktop-shell body { margin: 0; overflow: hidden; }
+.desktop-shell .startup { padding: 10px; background: transparent; overflow: hidden; }
+.desktop-shell .startup-inner {
+  position: relative; width: min(calc(100vw - 20px), calc((100vh - 20px) * 1488 / 656));
+  margin: auto;
+}
+.desktop-shell .startup-kicker, .desktop-shell .startup-status {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.desktop-shell .startup-choices {
+  position: absolute; left: 22%; top: 23%; width: 55%; max-height: 55%;
+  overflow: auto; margin: 0; padding: 8px; box-sizing: border-box;
+  background: var(--bg); border: 1px solid var(--line, #777);
+}
+.desktop-shell .startup-choices[hidden] { display: none; }
+.desktop-shell .startup-cancel { position: absolute; left: 24%; bottom: 13%; margin: 0; }
+.desktop-shell .desktop-console-drag {
+  position: absolute; left: 25%; top: 5%; width: 47%; height: 7%;
+  -webkit-app-region: drag; app-region: drag;
+}
+.desktop-window-controls { display: none; }
+.desktop-shell .desktop-window-controls { display: flex; gap: 4px; -webkit-app-region: no-drag; }
+.desktop-shell .desktop-console-controls { position: absolute; right: 22%; top: 5%; z-index: 5; }
+.desktop-shell .desktop-window-controls button {
+  padding: 0; margin: 0; width: 22px; height: 22px; min-height: 22px;
+  border: 1px solid #677079; border-radius: 4px; background: #252e36; color: #fff;
+  font: 16px/1 system-ui; cursor: pointer;
+}
+.desktop-shell .desktop-window-controls button:hover { background: #44535f; }
+.desktop-shell .desktop-window-controls button:focus-visible { outline: 2px solid #20d0f0; }
+.desktop-shell #app-shell > header { position: relative; padding-right: 70px; }
+.desktop-shell #app-shell > header > strong { -webkit-app-region: drag; app-region: drag; }
+.desktop-shell .desktop-workspace-controls { position: absolute; right: 8px; top: 8px; }
+.desktop-shell .display-portal.expanded { border-radius: 8px; }

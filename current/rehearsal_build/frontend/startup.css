@@ -1,0 +1,243 @@
+/* Startup console: the dot-matrix display, the boot sequence, the home menu and
+   the settings sheet.
+   Kept in its own file because the workspace doctrine in style.css is flat-only
+   (no gradient, shadow, blur or glow on research content; macos27.css permits
+   navigation glass with solid accessibility fallbacks) while the user
+   asked the START SCREEN to read like a game console: gradients, glow, inset
+   shadows and a dot-matrix texture are allowed here and only here. Every rule
+   below is scoped to #startup / .startup-* / .dot-* / .sys-menu / .settings-*,
+   so no workspace surface can inherit the flamboyant treatment.
+   The approved Concept A PNG is untouched and still clipped by its silhouette;
+   only the coloured layer inside the display is authored here. */
+.startup-inner { width: min(1120px, 100%); }
+
+/* --- The display: a dot-matrix screen inside the approved bezel --------- */
+.startup-screen { background: #0a1416; color: #b9f4ff; overflow: hidden; }
+.startup-screen:not(.on) { visibility: hidden; pointer-events: none; }
+.startup-screen.on {
+  background-color: #08110f;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(32, 208, 240, .16), transparent 62%),
+    radial-gradient(circle, rgba(32, 208, 240, .20) 1px, transparent 1.2px);
+  background-size: 100% 100%, 6px 6px;
+  background-position: 0 0, 0 0;
+  box-shadow: inset 0 0 18px rgba(32, 208, 240, .28), inset 0 0 2px rgba(32, 208, 240, .55);
+}
+.startup-screen::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .12;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .85) 0 1px, transparent 1px 3px);
+}
+
+/* --- Boot sequence ------------------------------------------------------ */
+.dot-boot { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; padding: 10px 14px;
+  text-align: center; }
+.dot-boot[hidden] { display: none; }
+.boot-mark { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+/* Each glyph is one discrete step: it is either lit or it is not. `steps(1, end)`
+   keeps the build blocky — no fade, no tween. */
+.dot-glyph { opacity: 0; animation: dot-step-in 1ms steps(1, end) both; }
+@keyframes dot-step-in { from { opacity: 0; } to { opacity: 1; } }
+.dot-word { display: block; width: 78%; max-width: 420px; height: auto; fill: #8ff3ff;
+  filter: none; }
+.dot-word.second { fill: #20d0f0; }
+.boot-rule { display: flex; gap: 4px; margin: 2px 0 0; }
+.boot-pip { width: 7px; height: 7px; border: 1px solid rgba(143, 243, 255, .45);
+  opacity: 0; animation: dot-step-in 1ms steps(1, end) both; }
+.boot-pip.lit { background: #8ff3ff; box-shadow: 0 0 6px rgba(143, 243, 255, .85); }
+.boot-field { margin: 0; font: 600 12px/1.3 var(--mono); letter-spacing: .22em;
+  text-transform: uppercase; color: #8ff3ff;
+  text-shadow: 0 0 8px rgba(32, 208, 240, .75), 0 0 2px rgba(32, 208, 240, .9); }
+.boot-note { margin: 0; font: 400 10px/1.3 var(--mono); letter-spacing: .12em;
+  color: rgba(185, 244, 255, .62); text-transform: uppercase; }
+
+/* --- Home screen: settings on top, secretary left, menu right ----------- */
+.sys-menu { position: absolute; inset: 0; display: flex; flex-direction: column;
+  gap: 7px; padding: 8px 10px 10px; }
+.sys-menu[hidden] { display: none; }
+.home-top { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  flex: 0 0 auto; }
+.field-tag { font: 600 9px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase;
+  color: #8ff3ff; text-shadow: 0 0 7px rgba(32, 208, 240, .8);
+  border: 1px solid rgba(32, 208, 240, .45); border-radius: 0; padding: 4px 7px;
+  background: linear-gradient(180deg, rgba(32, 208, 240, .16), rgba(32, 208, 240, .03));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%; }
+/* The small top control: same control as the menu items, deliberately quieter. */
+.menu-settings { font: 600 9px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase;
+  min-height: 0; margin: 0; padding: 4px 7px; color: rgba(185, 244, 255, .92);
+  border: 1px solid rgba(143, 243, 255, .35); border-radius: 0;
+  background: linear-gradient(180deg, rgba(8, 17, 15, .9), rgba(16, 40, 42, .9));
+  box-shadow: inset 0 1px 0 rgba(143, 243, 255, .22); }
+.menu-settings:hover, .menu-settings:focus-visible { color: #08110f; border-color: #8ff3ff;
+  background: linear-gradient(180deg, #b9f4ff, #20d0f0);
+  box-shadow: 0 0 10px rgba(32, 208, 240, .75); }
+.home-body { display: grid; grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+  gap: 8px; min-height: 0; flex: 1 1 auto; container-type: size; }
+.home-secretary { min-width: 0; overflow: hidden; padding: 6px 7px;
+  border: 1px solid rgba(32, 208, 240, .28);
+  background: linear-gradient(180deg, rgba(32, 208, 240, .10), rgba(6, 16, 18, .35));
+  box-shadow: inset 0 0 12px rgba(32, 208, 240, .12); }
+.home-secretary h3 { margin: 0 0 3px; font: 600 9px/1.2 var(--mono); letter-spacing: .2em;
+  text-transform: uppercase; color: #20d0f0; }
+.home-secretary h4 { margin: 0 0 3px; font: 600 10px/1.25 var(--mono); color: #d9fbff;
+  text-shadow: 0 0 6px rgba(32, 208, 240, .6); }
+.home-secretary p { margin: 0; font: 400 9.5px/1.35 var(--mono); color: rgba(217, 251, 255, .74); }
+.home-secretary .secretary-empty { color: #ffd9c9;
+  text-shadow: 0 0 6px rgba(248, 136, 104, .55); }
+.home-secretary .secretary-note { margin-top: 4px; color: rgba(185, 244, 255, .55); }
+/* The four workbench menus are four square tiles, two rows of two. The block is
+   kept square by taking the smaller of the cell's width and its height: the menu
+   cell is a size container (see .home-body), so 100cqh is exactly the height it
+   was given. The block centres in the cell instead of stretching, and because it
+   never exceeds either axis it can never overflow or clip a tile — on an extreme
+   viewport the squares simply get smaller. */
+.home-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 6px;
+  min-width: 0; min-height: 0;
+  width: min(100%, 100cqh); aspect-ratio: 1 / 1; max-height: 100%;
+  justify-self: center; align-self: center;
+  /* The block is also a size container, so the type inside follows the tile size
+     rather than the window. The @container rules sit after the .menu-item rules,
+     because a container query adds no specificity of its own. */
+  container-type: size; container-name: homegrid; }
+/* Inside a square the old "cursor | text" row reads wrong, so the marker moves
+   to the top-left corner and the label/note stack at the bottom edge. */
+.menu-item { display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  position: relative;
+  margin: 0; padding: 8px 9px; text-align: left;
+  min-width: 0; min-height: 0; overflow: hidden;
+  border: 1px solid rgba(143, 243, 255, .32); border-radius: 0;
+  color: #e6fdff; background: linear-gradient(160deg, rgba(32, 208, 240, .18), rgba(8, 24, 26, .55));
+  box-shadow: inset 0 0 10px rgba(32, 208, 240, .12), 0 1px 0 rgba(143, 243, 255, .14); }
+.menu-item .menu-cursor { width: 0; height: 0; flex: 0 0 auto;
+  border-left: 6px solid #8ff3ff;
+  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  opacity: .45; }
+.menu-item .menu-text { margin-top: auto; min-width: 0; width: 100%; display: block; }
+/* Line clamps: the label stays legible at tile size and the note can never spill
+   out of the square, in English or in Korean. The note gets a third line where
+   the tile has room for it and gives it back as the tile shrinks (see the size
+   ladder below). */
+.menu-item .menu-label { display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  font: 600 13px/1.2 var(--mono); letter-spacing: .03em; overflow-wrap: anywhere; }
+.menu-item .menu-note { display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden;
+  margin-top: 3px; font: 400 10px/1.3 var(--mono); overflow-wrap: anywhere;
+  color: rgba(185, 244, 255, .62); }
+/* `:focus` as well as `:focus-visible`: arrow-key focus is moved by script, and
+   the highlight must be what the person sees however focus arrived. */
+.menu-item:hover, .menu-item:focus-visible, .menu-item:focus { border-color: #8ff3ff; color: #08110f;
+  background: linear-gradient(160deg, #b9f4ff, #20d0f0 70%, #0f7f96);
+  box-shadow: 0 0 14px rgba(32, 208, 240, .8), inset 0 0 8px rgba(255, 255, 255, .5); }
+.menu-item:hover .menu-note, .menu-item:focus-visible .menu-note, .menu-item:focus .menu-note {
+  color: rgba(8, 17, 15, .78); }
+.menu-item:hover .menu-cursor, .menu-item:focus-visible .menu-cursor, .menu-item:focus .menu-cursor {
+  border-left-color: #08110f; opacity: 1; }
+.menu-item[aria-busy="true"] { border-color: #f88868;
+  box-shadow: 0 0 16px rgba(248, 136, 104, .8); }
+/* Size ladder for the tile block (see `container-name: homegrid`). The type steps
+   down with the squares instead of spilling, and on a genuinely tiny display the
+   note line steps out so the label alone still reads. Placed after the .menu-item
+   rules: a container query adds no specificity. */
+@container homegrid (max-width: 340px) {
+  .menu-item { padding: 6px 7px; }
+  .menu-item .menu-label { font-size: 12px; }
+  .menu-item .menu-note { font-size: 9.5px; } }
+@container homegrid (max-width: 230px) {
+  .menu-item { padding: 5px 6px; }
+  .menu-item .menu-label { font-size: 11px; }
+  .menu-item .menu-note { font-size: 9px; -webkit-line-clamp: 2; line-clamp: 2; } }
+@container homegrid (max-width: 160px) {
+  .menu-item { padding: 4px 5px; }
+  .menu-item .menu-label { font-size: 10px; -webkit-line-clamp: 1; line-clamp: 1; }
+  .menu-item .menu-note { display: none; } }
+/* Far below the window's own minimum size (Electron refuses under 720x480) even
+   one line of type would render as a stray letter. The words stay in the DOM, so
+   the button keeps its accessible name and its keyboard behaviour; only the
+   letters step out and the marker is left. */
+@container homegrid (max-width: 120px) {
+  .menu-item .menu-text { position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+#startup.home .startup-choices, #startup.home .startup-cancel { display: none; }
+#startup.home .startup-kicker { visibility: hidden; }
+
+/* --- The cartridge tray: each pack reads as its own cartridge ----------- */
+/* One button per pack the server offers, so an installed chip is a cartridge
+   like a sample. The name is the chip's own title and the second line its
+   tagline where the chip has one; both come from the server and are shown
+   verbatim, so the line is clamped rather than cut mid-claim. */
+#startup .startup-choice { position: relative; display: flex; flex-direction: column;
+  padding: 6px 10px 7px 15px; border-radius: 0; border: 1px solid rgba(143, 243, 255, .32);
+  color: #e6fdff;
+  background: linear-gradient(180deg, #12212a, #0b1418);
+  box-shadow: inset 0 0 10px rgba(32, 208, 240, .10); }
+#startup .startup-choice::before { content: ""; position: absolute; left: 7px; top: 8px;
+  bottom: 8px; width: 3px; background: rgba(143, 243, 255, .3); }
+#startup .startup-choice .startup-choice-name { display: block; font: 600 11px/1.25 var(--mono);
+  letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* The chip's own picture, when the chip carries one. A fixed 18px square keeps
+   every cartridge the same height whether or not it has art, so the tray does not
+   jump as chips are installed; the name sits beside it on the same row. */
+#startup .startup-choice .startup-choice-art { float: left; width: 18px; height: 18px;
+  margin: 0 6px 2px 0; object-fit: contain; image-rendering: pixelated;
+  border: 1px solid rgba(143, 243, 255, .35); background: rgba(8, 17, 15, .55); }
+#startup .startup-choice:hover .startup-choice-art,
+#startup .startup-choice:focus-visible .startup-choice-art { border-color: rgba(8, 17, 15, .55); }
+#startup .startup-choice .startup-choice-note { display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; margin-top: 3px;
+  font: 400 9px/1.3 var(--mono); color: rgba(185, 244, 255, .62); }
+#startup .startup-choice:hover, #startup .startup-choice:focus-visible { color: #08110f;
+  border-color: #8ff3ff; background: linear-gradient(180deg, #b9f4ff, #20d0f0);
+  box-shadow: 0 0 12px rgba(32, 208, 240, .7); }
+#startup .startup-choice:hover .startup-choice-note,
+#startup .startup-choice:focus-visible .startup-choice-note { color: rgba(8, 17, 15, .72); }
+#startup .startup-choice[aria-pressed="true"] { border-color: #8ff3ff;
+  box-shadow: inset 0 0 10px rgba(32, 208, 240, .35), 0 0 12px rgba(32, 208, 240, .55); }
+#startup .startup-choice[aria-pressed="true"]::before { background: #8ff3ff; }
+
+/* --- The seated cartridge carries the field on its face ---------------- */
+/* The face is drawn with inline SVG generated at runtime (dot grid, no image
+   file). It sits in the top of the cart and is clipped away as the cart sinks
+   into the bay, so the resting sliver stays a sliver. */
+.startup-card { background: linear-gradient(180deg, #26323c, #12181e 60%, #0d1216);
+  overflow: hidden; }
+.card-face { position: absolute; left: 6%; right: 6%; top: 8%; display: flex;
+  flex-direction: column; align-items: center; gap: 3px; }
+.card-face svg { display: block; width: 100%; height: auto; fill: #b9f4ff; }
+.card-face .card-rule { width: 100%; height: 1px; background: #20d0f0;
+  box-shadow: 0 0 6px rgba(32, 208, 240, .9); }
+
+/* --- Settings sheet ----------------------------------------------------- */
+.settings-layer { position: fixed; inset: 0; z-index: 90; display: flex;
+  align-items: center; justify-content: center; padding: var(--space-5);
+  background: rgba(4, 10, 12, .62); }
+.settings-layer[hidden] { display: none; }
+.settings-sheet { width: min(420px, 100%); max-height: 88vh; overflow: auto;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border: 1px solid rgba(143, 243, 255, .38); border-radius: 0;
+  background: linear-gradient(180deg, #12212a, #0b1418);
+  color: #e6fdff; box-shadow: 0 0 34px rgba(32, 208, 240, .35), inset 0 0 18px rgba(32, 208, 240, .12); }
+.settings-head { display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin-bottom: var(--space-3); }
+.settings-head h3 { margin: 0; font: 600 12px/1.2 var(--mono); letter-spacing: .22em;
+  text-transform: uppercase; color: #8ff3ff; }
+.settings-close { width: 26px; min-height: 26px; padding: 0; margin: 0; line-height: 1;
+  font-size: 15px; color: #b9f4ff; background: transparent;
+  border: 1px solid rgba(143, 243, 255, .4); border-radius: 0; }
+.settings-close:hover, .settings-close:focus-visible { background: #20d0f0; color: #08110f; }
+.settings-row { display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin: 0 0 var(--space-3); }
+.settings-row > span { font: 600 10px/1.3 var(--mono); letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(185, 244, 255, .8); }
+.settings-row select { width: auto; min-width: 128px; color: #08110f; }
+.settings-row button { width: auto; color: #08110f;
+  background: linear-gradient(180deg, #b9f4ff, #20d0f0); border-color: #8ff3ff;
+  box-shadow: 0 0 12px rgba(32, 208, 240, .55); }
+.settings-note { margin: 0 0 var(--space-3); font-size: 10px; color: rgba(185, 244, 255, .6); }
+
+/* --- Reduced motion: no steps, no build, no glow pulse ------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .dot-glyph, .boot-pip { animation: none; opacity: 1; }
+  .startup-screen::after { opacity: .06; }
+}
