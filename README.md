@@ -15,10 +15,11 @@ Settings is a separate control for model routes, keys, local runtime and languag
 
 ## Install
 
-Download the macOS DMG from [GitHub Releases (link pending)](#install).
-Open it and drag Research Workbench into Applications. Signing/notarization
-and the release URL remain pending; do not disable system security globally.
-No DMG is included in source control.
+Download the macOS DMG (Apple silicon) from the
+[v1.0.0 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.0.0).
+Open it and drag Research Workbench into Applications. The build is not signed
+or notarized yet: if macOS blocks it, right-click the app and choose Open; do not
+disable system security globally. No DMG is included in source control.
 
 ## Run from source
 
