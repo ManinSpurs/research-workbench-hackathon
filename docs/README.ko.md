@@ -8,6 +8,8 @@
 
 **[Mac용 v1.1.0 다운로드](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0)**
 
+**[데모 영상 보기 (2분 54초, YouTube)](https://www.youtube.com/watch?v=ZjNWzTGzrZw)**
+
 Apple silicon용입니다. [설치 안내](#설치하기) · [개발 일지 칩](#맥락을-담아-옮기기) · [모델 비교](#로컬-qwen과-muse-spark)
 
 ![밝은 테마의 홈 화면. 왼쪽에는 비서 브리핑과 미답변 질문, 오른쪽에는 네 가지 작업 메뉴가 있습니다.](assets/workbench-home.png)

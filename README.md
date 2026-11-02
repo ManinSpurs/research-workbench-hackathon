@@ -8,6 +8,8 @@ A local-first research secretary that remembers the project context, helps check
 
 <a href="https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0"><img src="docs/assets/download-mac.svg" alt="Download for Mac" width="224" height="48"></a>
 
+**[Watch the 2:54 demo on YouTube](https://www.youtube.com/watch?v=ZjNWzTGzrZw)**
+
 Apple silicon, v1.1.0. [First launch](#install-on-macos) · [Quick tour](#quick-tour) · [Try a chip](#take-the-context-with-you) · [Model comparison](#local-qwen-and-muse-spark)
 
 ![The light-theme workbench showing the secretary briefing, pending questions and four work areas.](docs/assets/workbench-home.png)
