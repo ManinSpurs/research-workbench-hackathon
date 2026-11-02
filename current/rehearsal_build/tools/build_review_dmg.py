@@ -32,6 +32,7 @@ import json
 import os
 import platform
 import plistlib
+import re
 import shutil
 import subprocess
 import sys
@@ -513,13 +514,15 @@ LOCAL MODEL (OPTIONAL, NOT BUNDLED)
   has a local model configured for Research Workbench (the owner-only file
   ~/Library/Application Support/ResearchWorkbench/local_runtime.json naming an
   installed llama-server and its weights), the app starts that model as its own
-  child on the loopback port that file configures (9931 in the current setup),
-  verifies the weights against the pinned size and hash, and serves local chat
+  child on the loopback port that file configures. If another program already
+  uses that port, the app chooses a free port for its own model instead. It
+  never takes over or stops the other program and keeps your saved port unchanged.
+  It verifies the weights against the pinned size and hash, and serves local chat
   from it until you quit. The app stops that model when it quits, and a small
   watchdog stops it if the app is force-killed.
   Local mode is unavailable when no model is configured, when the configuration
-  is invalid, when the model file does not match, or when the configured port is
-  already taken. In every one of those cases the app still opens, says why local
+  is invalid, when the model file does not match, or when startup fails.
+  In every one of those cases the app still opens, says why local
   mode is unavailable, and never falls back to a cloud call.
 
 PDF
@@ -552,11 +555,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--skip-tex", action="store_true")
     parser.add_argument("--keep-staging", action="store_true")
+    parser.add_argument("--version", default="1.1.2")
     args = parser.parse_args(argv)
     if platform.machine() != "arm64" or platform.system() != "Darwin":
         raise SystemExit("This builder targets macOS arm64.")
 
-    version = "0.1.0"
+    version = args.version
+    if not re.fullmatch(r'\d+\.\d+\.\d+', version):
+        raise SystemExit("--version must have the form major.minor.patch")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     DELIVERABLES.mkdir(parents=True, exist_ok=True)
     output = DELIVERABLES / f"RESEARCH_WORKBENCH_review_{stamp}_arm64.dmg"

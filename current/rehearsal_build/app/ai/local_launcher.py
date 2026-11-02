@@ -4,8 +4,8 @@ Scope of ownership, precisely
 -----------------------------
 This module starts, watches and stops *one child process it started itself*, and
 nothing else. It never invokes a managed runtime's server, never signals a
-process it did not spawn (a pre-existing listener on the port is reported and the
-start is refused, not adopted or killed), and never installs, downloads or
+process it did not spawn (a pre-existing listener is never adopted or killed;
+the packaged app can choose a free port for its own child), and never installs, downloads or
 repairs anything. The executable and weights paths come from
 :mod:`app.ai.local_config`, which only ever holds operator-supplied absolute
 paths.
@@ -99,6 +99,18 @@ def port_in_use(port):
         return probe.connect_ex(('127.0.0.1', port)) == 0
 
 
+def unused_loopback_port():
+    """Ask the OS for a free port, without contacting an existing listener.
+
+    The runtime cannot inherit this socket, so another process could take the
+    port before spawn. Such a race still fails the authenticated readiness
+    checks; it never permits adoption of the other process.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.bind(('127.0.0.1', 0))
+        return probe.getsockname()[1]
+
+
 def build_argv(config, api_key_file=None):
     """The exact argv for the configured runtime. No shell, no interpolation.
 
@@ -150,8 +162,11 @@ class LocalServer:
     """
 
     def __init__(self, config, log_path=None, app_origin=None, startup_timeout=None,
-                 watch_parent=True):
-        self.config = config
+                 watch_parent=True, allow_port_fallback=False):
+        self.config = dict(config)
+        # A packaging choice only. Saved paths, model identity and preferred
+        # port stay unchanged; the published binding uses this run's port.
+        self.allow_port_fallback = allow_port_fallback
         self.log_path = log_path
         self.app_origin = app_origin
         #: Deadline for this start. ``None`` uses :data:`STARTUP_TIMEOUT`; the
@@ -257,10 +272,17 @@ class LocalServer:
         if not os.path.isfile(config['model_weights']):
             raise LocalLaunchError('Local model weights are missing: %s' % config['model_weights'])
         if port_in_use(config['port']):
-            raise LocalLaunchError(
-                'Port %d is already in use, so the local model was not started. This app only '
-                'stops a server it started itself; close the other program or choose another '
-                'port in the local runtime settings.' % config['port'])
+            if not self.allow_port_fallback:
+                raise LocalLaunchError(
+                    'Port %d is already in use, so the local model was not started. This app only '
+                    'stops a server it started itself; close the other program or choose another '
+                    'port in the local runtime settings.' % config['port'])
+            try:
+                port = unused_loopback_port()
+            except OSError as exc:
+                raise LocalLaunchError('No free loopback port is available for the local model: %s'
+                                       % exc) from None
+            config.update(port=port, base_url='http://127.0.0.1:%d' % port)
         self._verify_weights(deadline)
         key_file = self._make_key_file()
         try:

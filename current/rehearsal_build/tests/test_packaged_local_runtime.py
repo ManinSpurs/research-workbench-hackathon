@@ -179,8 +179,8 @@ class _Process:
 
 class LocalServer:
     def __init__(self, config, log_path=None, app_origin=None,
-                 startup_timeout=None, watch_parent=True):
-        self.config = config
+                 startup_timeout=None, watch_parent=True, allow_port_fallback=False):
+        self.config = dict(config)
         self.log_path = log_path
         self.app_origin = app_origin
         self.startup_timeout = startup_timeout
@@ -194,6 +194,7 @@ class LocalServer:
         _note({"event": "constructed", "app_origin": app_origin,
                "log_path": log_path, "startup_timeout": startup_timeout,
                "watch_parent": watch_parent,
+               "allow_port_fallback": allow_port_fallback,
                "home": os.environ.get("HOME")})
 
     def start(self):
@@ -203,6 +204,8 @@ class LocalServer:
             raise LocalLaunchError("Local runtime did not become ready within 60 seconds.")
         if mode == "interrupt":
             raise KeyboardInterrupt
+        if mode == "fallback":
+            self.config.update(port=49152, base_url="http://127.0.0.1:49152")
         self.process = _Process()
         self.secret = SECRET
         self.run_id = "stub-run-id"
@@ -217,7 +220,7 @@ class LocalServer:
 def binding_environment(server):
     if server is None or server.secret is None:
         return {}
-    return {"WB_LOCAL_BASE_URL": BASE_URL, "WB_LOCAL_MODEL": ALIAS,
+    return {"WB_LOCAL_BASE_URL": server.config["base_url"], "WB_LOCAL_MODEL": ALIAS,
             "WB_LOCAL_CONTEXT": str(CONTEXT), "WB_LOCAL_RUN_ID": server.run_id,
             "WB_LOCAL_SERVER_PID": "4242",
             "WB_LOCAL_WEIGHTS_SHA256": server.weights_sha256,
@@ -566,6 +569,14 @@ def test_no_configuration_starts_no_model_and_says_local_is_unavailable(packaged
 
 # --- 3. invalid configuration: the app still starts -----------------------
 
+def test_fallback_port_is_reported_in_ready_and_session_files(packaged):
+    run = packaged(config_mode="present", launch_mode="fallback")
+    assert run.wait_ready(), run.stderr
+    assert run.ready["identity"]["local_runtime"]["base_url"] == "http://127.0.0.1:49152"
+    assert run.finish() == 0, run.stderr
+    assert run.session["local_runtime"]["base_url"] == "http://127.0.0.1:49152"
+
+
 def test_an_invalid_configuration_still_becomes_ready(packaged):
     run = packaged(config_mode="invalid")
     assert run.wait_ready(), "a broken local config must not stop the app"
@@ -611,6 +622,7 @@ def test_a_verified_launch_publishes_the_binding_without_leaking_the_secret(pack
     assert constructed["app_origin"].startswith("http://127.0.0.1:")
     assert Path(constructed["log_path"]).parent == run.state
     assert constructed["watch_parent"] is True
+    assert constructed["allow_port_fallback"] is True
     # The launch budget fits inside the desktop shell's 90 s ready timeout.
     assert 0 < constructed["startup_timeout"] <= 90
 

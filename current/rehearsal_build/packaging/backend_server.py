@@ -201,7 +201,7 @@ def _start_local_runtime(state, app_origin):
     server = local_launcher.LocalServer(config, log_path=str(log_path),
                                         app_origin=app_origin,
                                         startup_timeout=LOCAL_STARTUP_TIMEOUT,
-                                        watch_parent=True)
+                                        watch_parent=True, allow_port_fallback=True)
     try:
         server.start()
         # Publish what the launch *verified* into this process's own binding
@@ -248,7 +248,7 @@ def _start_local_runtime(state, app_origin):
     status = _local_status(
         "local_model_running",
         binding={"model": config["alias"], "context": config["context"],
-                 "base_url": config["base_url"],
+                 "base_url": server.config["base_url"],
                  "template_overhead_tokens": server.template_overhead_tokens,
                  "weights_sha256": server.weights_sha256},
         log=str(log_path))

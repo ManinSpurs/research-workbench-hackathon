@@ -21,6 +21,7 @@ import hashlib
 import http.server
 import json
 import os
+import socket
 import subprocess
 import sys
 import threading
@@ -390,6 +391,52 @@ def test_secret_never_appears_in_argv(files, monkeypatch):
         server.stop()
     # Removed on stop: a per-run credential must not outlive its run.
     assert not os.path.exists(key_path)
+
+
+def test_packaged_fallback_preserves_listener_config_and_publishes_new_port(files, cfg_path, monkeypatch):
+    exe, weights = files
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as other:
+        other.bind(('127.0.0.1', 0))
+        other.listen()
+        preferred = other.getsockname()[1]
+        local_config.save({'runtime_executable': exe, 'model_weights': weights,
+                           'alias': ALIAS, 'context': 8192, 'port': preferred})
+        saved_bytes = cfg_path.read_bytes()
+        config = local_config.read()
+        real_port_check = local_launcher.port_in_use
+        seen = []
+        server = _start_with(monkeypatch, config, _FakeProcess(), spawn_seen=seen)
+        monkeypatch.setattr(local_launcher, 'port_in_use', real_port_check)
+        server.allow_port_fallback = True
+        server.start()
+        try:
+            selected = server.config['port']
+            assert selected != preferred
+            assert seen[0][seen[0].index('--port') + 1] == str(selected)
+            assert local_launcher.binding_environment(server)['WB_LOCAL_BASE_URL'] == (
+                'http://127.0.0.1:%d' % selected)
+            assert config['port'] == preferred
+            assert cfg_path.read_bytes() == saved_bytes
+        finally:
+            server.stop()
+        # The unrelated listener survives both startup and owned-child cleanup.
+        assert real_port_check(preferred)
+
+
+def test_port_allocation_failure_starts_nothing(files, monkeypatch):
+    exe, weights = files
+    config = local_config._validate({'runtime_executable': exe, 'model_weights': weights,
+                                     'alias': ALIAS, 'context': 8192, 'port': 9931})
+    monkeypatch.setattr(local_launcher, 'port_in_use', lambda port: True)
+    def unavailable():
+        raise OSError('test allocation failed')
+    monkeypatch.setattr(local_launcher, 'unused_loopback_port', unavailable)
+    monkeypatch.setattr(subprocess, 'Popen', lambda *a, **k: pytest.fail('spawned without a port'))
+    server = local_launcher.LocalServer(config, allow_port_fallback=True)
+    with pytest.raises(local_launcher.LocalLaunchError, match='No free loopback port'):
+        server.start()
+    assert server.key_file is None
+    assert config['port'] == 9931
 
 
 def test_key_file_is_removed_when_readiness_fails(files, monkeypatch):
