@@ -93,6 +93,18 @@
           <input type="checkbox" id="settings-sound" data-testid="settings-sound" checked>
         </label>
         <p class="settings-note muted" data-i18n>Applies to this window.</p>
+        <div class="settings-row"><span data-i18n>Secretary conversation</span>
+          <button type="button" onclick="openSecretaryModels()" data-i18n>Conversation model settings</button>
+          <button type="button" onclick="authorizeSecretaryChat()" data-i18n>Authorize local Qwen</button>
+          <button type="button" onclick="revokeSecretaryChat()" data-i18n>Revoke conversation authorization</button>
+        </div>
+        <dialog id="secretary-model-dialog" aria-labelledby="secretary-model-title">
+          <h3 id="secretary-model-title" data-i18n>Secretary conversation model</h3>
+          <label><span data-i18n>Model</span> <select id="secretary-model-choice" onchange="showSecretaryModelConsent()"></select></label>
+          <p id="secretary-model-consent" class="muted"></p>
+          <button type="button" onclick="saveSecretaryModel()" data-i18n>Confirm model choice</button>
+          <button type="button" onclick="document.getElementById('secretary-model-dialog').close()" data-i18n>Cancel</button>
+        </dialog>
         <div class="settings-row"><span data-i18n>Research field</span>
           <button type="button" id="settings-field" data-testid="settings-field" data-i18n>Change research field</button>
         </div>

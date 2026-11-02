@@ -9,7 +9,7 @@
 // review list then shows.
 import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 const require = createRequire(import.meta.url);
@@ -46,6 +46,7 @@ try {
   const questionPosts = [];  // body of every POST /projects/p1/questions
   const responsePosts = [];  // body of every POST /clarifications/{id}/responses
   let turnSerial = 0;
+  const chatPosts = [];
   let failTurnPost = false;
   // The turn POSTs are bookkeeping: they leave after the real action settles, so
   // every count assertion waits for them rather than racing a fixed sleep.
@@ -65,6 +66,18 @@ try {
     const fail = (status, message) => route.fulfill({ status, json: { error: 'fixture', message } });
 
     // --- Secretary-turn routes (the contract under test).
+    if (path === '/secretary-chat/settings') return reply({
+      selected: 'local', budget_usd: 40, options: [{
+        provider: 'baseten', model: 'meta-models/muse-spark-open-1026',
+        budget_usd: 40, consent_hash: 'mock-settings-consent'
+      }]
+    });
+    if (path === '/projects/p1/secretary-chat') {
+      chatPosts.push(body);
+      return reply({text: body.language === 'ko' ? '허가 자료를 함께 검토하면 좋을 것으로 보입니다.' : 'Hello. We can discuss your permit study.',
+        model: 'meta-models/muse-spark-open-1026', provider: 'baseten', cost_usd: .000210,
+        receipt: {billing_status: 'NOT_VERIFIED', calculated_cost_usd: .000210, fixture: true}});
+    }
     if (path === '/projects/p1/secretary-turns' && req.method() === 'POST') {
       turnPosts.push(body);
       if (failTurnPost) return fail(500, 'fixture turn store unavailable');
@@ -127,6 +140,29 @@ try {
   await page.getByTestId('home-menu-research').click();
   await page.getByTestId('open-nyc').click();
   await page.waitForFunction(() => S.project === 'p1' && !S.busy);
+  assert.equal(await page.getByTestId('secretary-mode').inputValue(), 'talk');
+  await page.getByTestId('secretary-input').fill('hello');
+  await page.getByTestId('secretary-send').click();
+  await page.locator('.secretary-chat-reply').filter({hasText: 'Hello. We can discuss your permit study.'}).waitFor();
+  assert.equal(chatPosts.length, 1);
+  assert.equal(questionPosts.length, 0, 'greetings never create research questions');
+  const previews = fileURLToPath(new URL('../../../design/previews/secretary-chat/', import.meta.url));
+  await mkdir(previews, {recursive: true});
+  await page.screenshot({path: previews + 'mock-paid-reply-en.png'});
+  for (const lang of ['en', 'ko']) {
+    await page.evaluate(language => { WB_I18N.set(language); WB_STARTUP.openSettings(); }, lang);
+    await page.evaluate(() => openSecretaryModels());
+    await page.locator('#secretary-model-choice').selectOption('baseten');
+    await page.screenshot({path: previews + `settings-consent-${lang}.png`});
+    await page.evaluate(() => document.getElementById('secretary-model-dialog').close());
+    await page.getByTestId('settings-close').click();
+  }
+  await page.getByTestId('secretary-input').fill('안녕');
+  await page.getByTestId('secretary-send').click();
+  await page.locator('.secretary-chat-reply').filter({hasText: '허가 자료를 함께 검토하면'}).waitFor();
+  await page.screenshot({path: previews + 'mock-paid-reply-ko.png'});
+  await page.evaluate(() => WB_I18N.set('en'));
+  await page.getByTestId('secretary-mode').selectOption('new');
 
   // --- (1) A question told to the secretary records both sides of the exchange.
   const fill = async (text) => {
@@ -238,7 +274,7 @@ try {
   assert.equal(turnPosts.length, beforeDouble.posts + 2, 'one exchange recorded for two submits');
 
   // --- (5) Talking in clarification mode records the answer and its reply.
-  await page.evaluate(() => { S.cq = 'c1'; S.question = 'q3'; syncComposerMode(); });
+  await page.evaluate(() => { S.composerMode = null; S.cq = 'c1'; S.question = 'q3'; syncComposerMode(); });
   assert.match(await page.getByTestId('secretary-compose-hint').innerText(), /Reply to the clarification/);
   const beforeClar = { posts: turnPosts.length, responses: responsePosts.length };
   await page.getByTestId('secretary-input').fill('The permit date is row 4.');

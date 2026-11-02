@@ -1,6 +1,6 @@
 // Local HTTP only. Rehearsal output is not real-model acceptance evidence.
 const API = new URLSearchParams(location.search).get('api') || 'http://localhost:8123';
-// composerMode is the one explicit composer choice: 'reply' | 'new', or null when
+// composerMode is the one explicit composer choice: 'reply' | 'new' | 'talk', or null when
 // no choice was made on this surface yet (automatic routing, see composerMode()).
 const S = { project: null, question: null, questionText: null, briefing: null, cqPrompt: null, turns: [], cq: null, task: null, epoch: 0, busy: false, pending: [], pack: 'social_science', composerMode: null };
 let decisionRequest = null, responseRequest = null;
@@ -1261,11 +1261,8 @@ function resumeClarification(index) {
 // keep moving that single form between the home screen and the panel and the
 // choice travels with it. No second form, no second input id.
 //
-// S.composerMode is the person's own choice ('reply' | 'new'), or null while they
-// have not made one. null keeps the older automatic routing, which an untouched
-// composer and the existing fixtures still use; the control shows whichever mode
-// that automatic routing would take, so what will happen is always on screen.
-const COMPOSER_REPLY = 'reply', COMPOSER_NEW = 'new', COMPOSER_MODE_ID = 'secretary-mode';
+// With no explicit choice, waiting clarifications route to reply; otherwise talk.
+const COMPOSER_REPLY = 'reply', COMPOSER_NEW = 'new', COMPOSER_TALK = 'talk', COMPOSER_MODE_ID = 'secretary-mode';
 // A reply needs a question the app is genuinely waiting on. A pending
 // clarification is the only such state: it is the one place where typed text is
 // an answer rather than a new question.
@@ -1274,7 +1271,8 @@ function composerMode() {
   if (!S.project) return 'no-project';
   if (S.composerMode === COMPOSER_REPLY) return composerQuestionPending() ? 'clarification' : 'reply-unavailable';
   if (S.composerMode === COMPOSER_NEW) return 'question';
-  return composerQuestionPending() ? 'clarification' : 'question';
+  if (S.composerMode === COMPOSER_TALK) return 'talk';
+  return composerQuestionPending() ? 'clarification' : 'talk';
 }
 // The one clarification this composer would answer, or nothing. Selection is by
 // cq_id only: a reply is sent to S.cq, so no other waiting item may stand in for it.
@@ -1315,6 +1313,7 @@ function ensureComposerModeControls() {
     if (select.dataset) select.dataset.testid = 'secretary-mode';
     select.appendChild(new Option('', COMPOSER_REPLY));
     select.appendChild(new Option('', COMPOSER_NEW));
+    select.appendChild(new Option('', COMPOSER_TALK));
     select.setAttribute('aria-describedby', 'secretary-compose-hint secretary-mode-context');
     const context = document.createElement('p');
     context.className = 'muted secretary-mode-context';
@@ -1325,7 +1324,7 @@ function ensureComposerModeControls() {
     // send button stays after them.
     form.insertBefore(wrap, form.firstChild || null);
     select.addEventListener('change', () => {
-      S.composerMode = select.value === COMPOSER_REPLY ? COMPOSER_REPLY : COMPOSER_NEW;
+      S.composerMode = select.value;
       syncComposerMode();
       controls();
     });
@@ -1348,12 +1347,13 @@ function syncComposerMode() {
   if (select) {
     const shown = S.composerMode === COMPOSER_REPLY ? COMPOSER_REPLY
       : S.composerMode === COMPOSER_NEW ? COMPOSER_NEW
-        : (mode === 'clarification' ? COMPOSER_REPLY : COMPOSER_NEW);
+        : (mode === 'clarification' ? COMPOSER_REPLY : COMPOSER_TALK);
     if (select.value !== shown) select.value = shown;
     select.disabled = !!S.busy || !S.project;
     if (select.options && select.options.length >= 2) {
       select.options[0].textContent = t('Answer current question');
       select.options[1].textContent = t('Start new research question');
+      if (select.options[2]) select.options[2].textContent = t('Talk with the secretary');
     }
     select.setAttribute('aria-describedby', 'secretary-compose-hint secretary-mode-context');
   }
@@ -1365,9 +1365,11 @@ function syncComposerMode() {
         ? t('Ask a research question. It is submitted as a new question for this project.')
         : mode === 'reply-unavailable'
           ? t('No question is waiting on an answer here, so a reply has nowhere to go. Choose "Start new research question", or resume a waiting item below.')
+          : mode === 'talk' ? t('Talk with the secretary. Nothing is registered automatically.')
           : t('Open a project to talk to the secretary.');
   }
   if (context) {
+    context.hidden = mode === 'talk';
     context.textContent = mode === 'clarification'
       ? t('Replying to: {question}', {question: wording || t('the question this project is waiting on')})
       : mode === 'question'
@@ -1377,6 +1379,7 @@ function syncComposerMode() {
           : t('Nothing is waiting on an answer, so this text starts a new question.'))
         : mode === 'reply-unavailable'
           ? t('Sending is off in this mode. Nothing was created, and your words stay in the box.')
+          : mode === 'talk' ? t('Talk with the secretary. Nothing is registered automatically.')
           : t('Choose or open a project first.');
   }
   // Reply with nothing to answer: the send is off rather than quietly starting a
@@ -1485,6 +1488,7 @@ async function sendSecretaryTurn(e) {
   if (!text) return;
   if (!S.project) { showError(t('Open a project to talk to the secretary.')); return; }
   const mode = composerMode();
+  if (mode === 'talk') return sendSecretaryChat(text, input);
   // "Answer current question" with nothing waiting: nothing is created and the
   // words stay where they are. Guessing here would either drop the answer or
   // silently start a different question than the one the person chose to answer.
@@ -1517,10 +1521,178 @@ async function sendSecretaryTurn(e) {
     return r;
   });
 }
+let secretaryChatView = null;
+function secretaryChatConversation() {
+  const scope = `${S.project || ''}/${S.pack}/${S.epoch}`;
+  if (!secretaryChatView || secretaryChatView.scope !== scope) {
+    if (secretaryChatView) secretaryChatView.log.remove();
+    const log = document.createElement('div');
+    log.id = 'secretary-chat-history';
+    secretaryChatView = {scope, log, recorded: [], live: []};
+  }
+  const home = $('startup-menu') && !$('startup-menu').hidden;
+  const host = $(home ? 'home-conversation' : 'secretary-log');
+  if (host && secretaryChatView.log.parentNode !== host) host.appendChild(secretaryChatView.log);
+  return secretaryChatView;
+}
+function secretaryChatBubble(text, role) {
+  const node = document.createElement('div');
+  node.className = `secretary-chat-bubble secretary-chat-${role}`;
+  if (role === 'secretary') node.classList.add('secretary-chat-reply');
+  node.textContent = text;
+  return node;
+}
+function renderSecretaryChatHistory(turns) {
+  const view = secretaryChatConversation();
+  if (turns) {
+    const previous = view.recorded.at(-1)?.id;
+    view.recorded = turns.filter(turn => turn.status !== 'discarded').slice().reverse();
+    view.scrollNewest = view.recorded.at(-1)?.id !== previous;
+  }
+  const available = view.recorded.slice(), attached = new Map();
+  // The chat endpoint records both sides but does not return their IDs. Bind
+  // live controls only to new, exact recorded turns, never a previous exchange.
+  for (const live of view.live) {
+    const index = available.findIndex(turn => !live.before.has(turn.id)
+      && turn.role === live.role && secretaryReviewTexts(turn).join('\n') === live.text);
+    if (index >= 0) {
+      const [turn] = available.splice(index, 1);
+      live.id = turn.id;
+      attached.set(turn.id, live.node);
+    }
+  }
+  const nodes = view.recorded.map(turn => {
+    if (attached.has(turn.id)) return attached.get(turn.id);
+    const text = secretaryReviewTexts(turn).join('\n');
+    const marker = text.indexOf('Working question:');
+    const concise = turn.role === 'secretary' && text.startsWith('Pinned pack:') && marker >= 0 ? text.slice(marker) : text;
+    return secretaryChatBubble(concise, turn.role === 'researcher' ? 'researcher' : 'secretary');
+  });
+  for (const live of view.live) if (!live.id) nodes.push(live.node);
+  const host = view.log.parentNode, position = host?.scrollTop;
+  if (nodes.length !== view.log.children.length || nodes.some((node, i) => node !== view.log.children[i]))
+    view.log.replaceChildren(...nodes);
+  if (host && position != null) host.scrollTop = position;
+}
+function scrollSecretaryChat() {
+  const view = secretaryChatConversation();
+  const host = view.log.parentNode;
+  if (host) host.scrollTop = host.scrollHeight;
+}
+async function sendSecretaryChat(text, input) {
+  if (S.chatPending) return;
+  S.chatPending = true;
+  const project = S.project;
+  const view = secretaryChatConversation();
+  const before = new Set(view.recorded.map(turn => turn.id));
+  const researcher = {role: 'researcher', text, before, node: secretaryChatBubble(text, 'researcher')};
+  const live = {role: 'secretary', text: null, before, node: secretaryChatBubble(t('The secretary is thinking…'), 'secretary')};
+  view.live.push(researcher, live);
+  const bubble = live.node;
+  bubble.setAttribute('role', 'status');
+  renderSecretaryChatHistory();
+  scrollSecretaryChat();
+  input.value = '';
+  try {
+    const reply = await call('POST', `/projects/${encodeURIComponent(project)}/secretary-chat`,
+      {text, language: document.documentElement.lang === 'ko' ? 'ko' : 'en', ...(S.pack ? {pack_id: S.pack} : {})});
+    live.text = reply.text;
+    bubble.textContent = t(reply.text);
+    const foot = document.createElement('p');
+    foot.className = 'muted';
+    foot.textContent = reply.provider
+      ? `${reply.model} · ${t('Calculated cost: {cost} USD; not invoice-verified', {cost: reply.cost_usd == null ? t('Unknown') : Number(reply.cost_usd).toFixed(6)})}`
+      : `${reply.model} · ${t('Local compute: zero API cost')}`;
+    bubble.appendChild(foot);
+    if (reply.receipt) {
+      const receipt = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = t('Trust Receipt');
+      receipt.appendChild(summary);
+      const content = document.createElement('pre');
+      content.textContent = JSON.stringify(reply.receipt, null, 2);
+      receipt.appendChild(content);
+      bubble.appendChild(receipt);
+    }
+    const register = document.createElement('button');
+    register.type = 'button';
+    register.textContent = t('Register as research question');
+    register.addEventListener('click', () => {
+      if (S.project !== project || S.busy) return;
+      return submitQuestion(text, $('session-only')?.checked ? 'session_only' : 'remember',
+        $('dataset-select')?.value || '');
+    });
+    bubble.appendChild(register);
+    if (secretaryChatView === view) scrollSecretaryChat();
+    if (typeof refreshHomeSecretary === 'function') refreshHomeSecretary();
+  } catch (error) {
+    bubble.textContent = t('The conversation could not be sent. Your message is back in the composer.');
+    if (!input.value) input.value = text;
+    if (secretaryChatView === view) scrollSecretaryChat();
+  } finally {
+    S.chatPending = false;
+  }
+}
+async function authorizeSecretaryChat() {
+  const settings = await call('GET', '/secretary-chat/settings');
+  if (!settings.ready) {
+    showError(t('The local model is off. Start the local model in Settings first.'));
+    return;
+  }
+  if (!window.confirm(t('Allow recent conversation turns and the project briefing to be sent to this local Qwen runtime? API cost is $0. Authorization lasts until this app session ends or the runtime changes.'))) return;
+  await call('POST', '/secretary-chat/settings', {consent: true, binding: settings.binding});
+}
+async function revokeSecretaryChat() {
+  await call('POST', '/secretary-chat/settings', {consent: false});
+  await call('POST', '/secretary-chat/settings', {provider: 'local'});
+}
+let secretaryModelSettings = null;
+async function openSecretaryModels() {
+  secretaryModelSettings = await call('GET', '/secretary-chat/settings' + (S.project ? `?project_id=${encodeURIComponent(S.project)}` : ''));
+  secretaryModelSettings.project_id = S.project;
+  const select = $('secretary-model-choice');
+  select.replaceChildren(new Option(t('Local Qwen (free)'), 'local'));
+  for (const option of secretaryModelSettings.options) {
+    select.appendChild(new Option(`${option.provider}: ${option.model}`, option.provider));
+  }
+  if (secretaryModelSettings.selected !== 'local' &&
+      !secretaryModelSettings.options.some(o => o.provider === secretaryModelSettings.selected)) {
+    select.appendChild(new Option(t('Selected model unavailable'), secretaryModelSettings.selected));
+  }
+  select.value = secretaryModelSettings.selected;
+  showSecretaryModelConsent();
+  $('secretary-model-dialog').showModal();
+}
+function showSecretaryModelConsent() {
+  const option = secretaryModelSettings.options.find(o => o.provider === $('secretary-model-choice').value);
+  $('secretary-model-consent').textContent = option
+    ? `${option.provider} / ${option.model}. ` + t('Recent conversation turns and the project briefing leave this device. Each reply has a calculated cost, not invoice-verified. Shared spend limit: {budget} USD. Confirm to authorize future conversation messages without per-message prompts. Switching to local revokes this authorization.', {budget: option.budget_usd})
+    : t('Local Qwen is free. Choosing local revokes paid conversation authorization.');
+  if (option) $('secretary-model-consent').textContent += ' ' + t('The compact project descriptor is included.');
+}
+async function saveSecretaryModel() {
+  const provider = $('secretary-model-choice').value;
+  const option = secretaryModelSettings.options.find(o => o.provider === provider);
+  try {
+    await call('POST', '/secretary-chat/settings', {provider, project_id: secretaryModelSettings.project_id,
+      consent: true, consent_nonce: option?.consent_nonce});
+    $('secretary-model-dialog').close();
+  } catch (error) { $('secretary-model-consent').textContent = t('The selected conversation model is unavailable. Switch models in Settings; nothing was sent to another provider.'); }
+}
 async function ask(e) {
   e.preventDefault(); if(!S.project || !$('question').value.trim()) return;
   const text=$('question').value, memory=$('session-only').checked ? 'session_only':'remember', dataset=$('dataset-select').value;
   return submitQuestion(text, memory, dataset);
+}
+function refinementReasonText(reason) {
+  const text = String(reason);
+  const variable = text.match(/^registered variable reference changed: (.*)$/);
+  if (variable) return t('Registered variable reference changed: {name}', {name: variable[1]});
+  const years = text.match(/^kept years changed: original (.*) vs refined (.*)$/);
+  if (years) return t('Kept years changed: original {original} vs refined {refined}', {original: years[1], refined: years[2]});
+  const exclusions = text.match(/^exclusions changed: original (.*) vs refined (.*)$/);
+  if (exclusions) return t('Exclusions changed: original {original} vs refined {refined}', {original: exclusions[1], refined: exclusions[2]});
+  return t(text);
 }
 // The one question-submission path. The ask form and the secretary composer
 // both go through here, so there is a single payload shape and a single run.
@@ -1539,7 +1711,7 @@ async function submitQuestion(text, memory, dataset, capture=null) {
     S.question=q.question_id; S.questionText=text; S.turns=[...priorTurns,{text, note:'your question'}]; badge(q.adapter);
     $("question-entry").open=false;
     if(typeof loadCanvas === "function") await loadCanvas(q.question_id);
-    show('refinement',(q.context ? `<p class="muted">${esc(t('Pinned pack: {pack} {version}', {pack: q.context.pack_id, version: q.context.pack_version}))}</p>` : '') + (q.refinement_status==='ok' ? `<span class="muted">${esc(t('Working question:'))}</span> ${esc(q.working_text)}` : `<span class="flag">${esc(t('Refinement needs review'))}</span>. ${esc(t('Kept your original wording.'))} ${esc((q.refinement_reasons || []).join('; '))}`));
+    show('refinement',(q.context ? `<p class="muted">${esc(t('Pinned pack: {pack} {version}', {pack: q.context.pack_id, version: q.context.pack_version}))}</p>\n` : '') + (q.refinement_status==='ok' ? `<span class="muted">${esc(t('Working question:'))}</span> ${esc(q.working_text)}` : `<span class="flag">${esc(t('Refinement needs review'))}</span>. ${esc(t('Kept your original wording.'))} ${esc((q.refinement_reasons || []).map(refinementReasonText).join('; '))}`));
     if(q.adapter==='offline') {show('result','<p>Question saved locally. Canvas, data profile and saved work are available. Optional cloud tasks are in Secretary.</p>');await loadPending();}
     else if ($('dataset-select').options.length <= 1) { show('result','<p>Question saved locally. This topic workspace has no dataset. No analysis or model execution was run. Register data and explicitly approve any optional cloud task before analysis.</p>'); await loadPending(); }
     else await runQuestion(q.question_id,epoch);

@@ -3,9 +3,8 @@
 The product owner's request: the home menu offers a review list of past secretary
 exchanges, where the person keeps what matters and deletes the rest.
 
-This module is a RECORD, not a chat transcript. Nothing here is read back into a
-prompt, a briefing, a chip overlay or any `app.ai` path: a stored turn is only ever
-shown to the person and triaged by them. The recorded text is immutable — the only
+Secretary chat reads a bounded window of non-discarded project turns as context.
+The recorded text is immutable — the only
 mutable field is `status` (`kept` / `discarded`) — because a log you can rewrite is
 not a record of what the secretary actually said.
 

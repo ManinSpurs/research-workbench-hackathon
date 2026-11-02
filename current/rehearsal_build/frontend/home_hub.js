@@ -38,6 +38,9 @@
     'No research decisions have been recorded yet.': '아직 기록된 연구 결정이 없습니다.'
   });
   const host = byId('home-conversation');
+  const briefingHost = document.createElement('div');
+  briefingHost.className = 'home-conversation-briefing';
+  host.appendChild(briefingHost);
   const selector = byId('home-project');
   const continueNotebook = document.createElement('button');
   continueNotebook.type = 'button'; continueNotebook.hidden = true;
@@ -95,7 +98,8 @@
   async function refresh() {
     const serial = ++request, pid = S.project, pack = S.pack, epoch = S.epoch;
     const scope = `${pid || ''}/${pack}/${epoch}`;
-    if (scope !== displayedScope) { host.replaceChildren(); lastHtml = ''; displayedScope = scope; }
+    if (scope !== displayedScope) { briefingHost.replaceChildren(); lastHtml = ''; displayedScope = scope; }
+    secretaryChatConversation();
     selector.disabled = S.busy || chipOperation;
     function projectLabel(name) {
       return name.startsWith('Imported: ') ? tr('Imported: {title}', {title: name.slice('Imported: '.length)}) : name;
@@ -148,16 +152,7 @@
       try {
         const result = await call('GET', `/projects/${encodeURIComponent(pid)}/secretary-turns?pack_id=${encodeURIComponent(pack)}&limit=50`);
         if (!contextStill(pid, pack, epoch, serial)) return;
-        for (const turn of (result.turns || []).filter(turn => turn.status !== 'discarded').slice(0, 8).reverse()) {
-          const text = secretaryReviewTexts(turn).join('\n');
-          if (text) {
-            // The old recorded acknowledgement includes its technical pack label.
-            // Keep the record intact; present its actual working-question text.
-            const marker = text.indexOf('Working question:');
-            const concise = turn.role === 'secretary' && text.startsWith('Pinned pack:') && marker >= 0 ? text.slice(marker) : text;
-            html += bubble(concise, turn.role === 'researcher' ? 'researcher' : 'secretary');
-          }
-        }
+        renderSecretaryChatHistory(result.turns || []);
         if (S.cqPrompt && S.cqPrompt.gap && !(parts && (parts.waiting_on_you || []).some(item => item.question === S.cqPrompt.gap))) html += bubble(S.cqPrompt.gap + (S.cqPrompt.why_matters ? '\n' + S.cqPrompt.why_matters : ''));
       } catch (_) {
         if (!contextStill(pid, pack, epoch, serial)) return;
@@ -167,8 +162,12 @@
     if (!contextStill(pid, pack, epoch, serial)) return;
     if (html !== lastHtml) {
       const position = host.scrollTop;
-      host.innerHTML = html; lastHtml = html;
+      briefingHost.innerHTML = html; lastHtml = html;
       host.scrollTop = S.question && S.question !== arrivalReply ? host.scrollHeight : position;
+    }
+    if (secretaryChatView && secretaryChatView.scrollNewest) {
+      scrollSecretaryChat();
+      secretaryChatView.scrollNewest = false;
     }
     const error = byId('error');
     byId('home-error').textContent = error ? error.textContent : '';
@@ -196,6 +195,7 @@
   function moveComposer() {
     if (home()) byId('home-composer-slot').appendChild(composer);
     else origin.after(composer);
+    secretaryChatConversation();
     window.refreshHomeSecretary();
   }
   new MutationObserver(moveComposer).observe(byId('startup-menu'), { attributes: true, attributeFilter: ['hidden'] });

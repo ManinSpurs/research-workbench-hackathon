@@ -81,13 +81,13 @@ async function loadApp(overrides = {}) {
   const select = wrap.children.find(c => c.id === 'secretary-mode');
   assert.ok(select, 'the select keeps a stable id');
   assert.equal(select.attributes['data-testid'], 'secretary-mode');
-  assert.deepEqual(select.options.map(o => o.value), ['reply', 'new']);
+  assert.deepEqual(select.options.map(o => o.value), ['reply', 'new', 'talk']);
   assert.equal(select.options[0].textContent, 'Answer current question', 'English by default');
   assert.equal(select.options[1].textContent, 'Start new research question');
   const inputKind = await vm.runInContext('typeof document.getElementById("secretary-input").value', context);
   assert.equal(inputKind, 'string', 'the one real input is untouched, never duplicated');
   assert.equal(created.filter(el => el.tag === 'input').length, 0, 'the control builds no second input');
-  console.log('INTERIOR_MODE_CONTROL_PASS: built inside the single form, stable id/testid, two explicit modes');
+  console.log('INTERIOR_MODE_CONTROL_PASS: built inside the single form, stable id/testid, three explicit modes');
 }
 
 // (2) Reply with nothing waiting is refused, explained and disabled — never

@@ -194,6 +194,45 @@
 #app-shell.wb-dc #project-list > button { border-radius: 8px; }
 
 /* Briefing reuses the existing section labels as tags, with no invented copy. */
+#secretary-chat-history {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.secretary-chat-bubble {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  min-width: 0;
+  max-width: 92%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: 13px/1.55 var(--font);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.secretary-chat-researcher {
+  align-self: flex-end;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--surface);
+  border-right: 2px solid var(--accent);
+}
+.secretary-chat-bubble > .muted { margin: 10px 0 0; font-size: 11px; }
+.secretary-chat-bubble details { min-width: 0; margin: 8px 0; }
+.secretary-chat-bubble pre { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
+.secretary-chat-bubble button {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 8px;
+}
+#secretary-log > * { flex-shrink: 0; min-width: 0; }
 #app-shell aside .secretary-compose {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

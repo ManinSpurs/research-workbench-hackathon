@@ -619,6 +619,49 @@ def create_app(db_path: str | None = None, data_dir: Path | None = None) -> Fast
     # New routes only; no existing route touched. This is a record, not a transcript:
     # nothing here is fed to a prompt, a briefing or any app/ai path.
     secretary_module = secretary_log
+    from . import secretary_chat
+
+    @app.get("/secretary-chat/settings")
+    async def secretary_chat_settings(project_id: str | None = None):
+        from .ai import local_runtime
+        config = local_runtime.read_config()
+        return {**secretary_chat.settings(state["ai"], project_id, issue=True), "model": "local", "ready": config["configured"],
+                "binding": local_runtime.run_fingerprint(config),
+                "authorized": bool(config["configured"] and state.get("secretary_chat_authorization") == local_runtime.run_fingerprint(config))}
+
+    @app.post("/secretary-chat/settings")
+    async def authorize_secretary_chat(body: dict):
+        if "provider" in body:
+            try:
+                return secretary_chat.configure(state["ai"], body)
+            except Conflict as e:
+                return err("conflict", str(e), 409)
+        from .ai import local_runtime
+        config = local_runtime.read_config()
+        binding = local_runtime.run_fingerprint(config)
+        if body.get("consent") is True and config["configured"] and body.get("binding") == binding:
+            state["secretary_chat_authorization"] = binding
+        else:
+            state.pop("secretary_chat_authorization", None)
+        return {"authorized": bool(config["configured"] and state.get("secretary_chat_authorization") == binding)}
+
+    @app.post("/projects/{pid}/secretary-chat")
+    async def secretary_chat_turn(pid: str, body: dict):
+        try:
+            return await secretary_chat.talk(H(), pid, body, state.get("secretary_chat_authorization"), ai=state["ai"])
+        except secretary_module.Invalid as e:
+            return err("invalid_request", str(e), 400)
+        except KeyError as e:
+            return err("not_found", str(e).strip("'"), 404)
+
+    @app.get("/projects/{pid}/secretary-chat/receipts/{rid}")
+    async def secretary_chat_receipt(pid: str, rid: str):
+        secretary_chat.initialize(state["ai"])
+        row = H().db.execute("SELECT result_json FROM secretary_chat_receipts WHERE id=? AND project_id=?",
+                             (rid, pid)).fetchone()
+        if row is None:
+            return err("not_found", "Conversation receipt not found", 404)
+        return json.loads(row["result_json"])
 
     def sguard(fn):
         # Same error shape as guard(), plus 400 for a request the person can fix.
@@ -793,7 +836,9 @@ def create_app(db_path: str | None = None, data_dir: Path | None = None) -> Fast
     async def chips_import(pack_id: str, body: dict):
         from .chip_import import import_notebook
         try:
-            return await import_notebook(H(), pack_id, body)
+            result = await import_notebook(H(), pack_id, body)
+            secretary_chat.configure(state["ai"], {"provider": "local"})
+            return result
         except chips_module.Invalid as e:
             return err("invalid_chip", str(e), 400)
         except Conflict as e:
@@ -900,11 +945,17 @@ def create_app(db_path: str | None = None, data_dir: Path | None = None) -> Fast
 
     @app.post("/chips/install")
     async def chips_install(body: dict):
-        return accept_chip_file(body)
+        result = accept_chip_file(body)
+        if isinstance(result, dict):
+            secretary_chat.configure(state["ai"], {"provider": "local"})
+        return result
 
     @app.post("/chips/open")
     async def chips_open(body: dict):
-        return accept_chip_file(body, open_existing=True)
+        result = accept_chip_file(body, open_existing=True)
+        if isinstance(result, dict):
+            secretary_chat.configure(state["ai"], {"provider": "local"})
+        return result
 
     @app.post("/chips/build")
     async def chips_build(body: dict):

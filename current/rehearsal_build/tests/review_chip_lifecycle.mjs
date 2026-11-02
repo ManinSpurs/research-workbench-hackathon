@@ -28,6 +28,7 @@ const context = {
   localStorage:{removeItem:k=>storage.delete(k),setItem:(k,v)=>storage.set(k,v)},
   esc:String,serverText:String,errorText:String,clearActive(){},showError(x){message=x;},
   syncComposerMode(){},
+  secretaryChatConversation(){},
   loadDomainPacks:async()=>{},loadProjects:async()=>{calls.push('loadProjects');},
   changePack:async()=>{state.pack=get('pack-select').value;state.epoch++;},
   openProject:async(id,name)=>{calls.push('openProject');state.project=id;opened=id;},

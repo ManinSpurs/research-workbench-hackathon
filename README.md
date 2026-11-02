@@ -13,10 +13,16 @@ consent. A chip packages reusable research context, not a model or executable.
 
 Settings is a separate control for model routes, keys, local runtime and language.
 
+You can talk with the Secretary about anything, including the research itself.
+It answers with the open project's briefing and recent conversation as context,
+using local Qwen by default; a paid Baseten model can be enabled in Settings after
+a one-time consent. Conversations are kept in Conversation Review, and a message
+becomes a research question only when you press "Register as research question".
+
 ## Install
 
 Download the macOS DMG (Apple silicon) from the
-[v1.0.0 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.0.0).
+[v1.1.0 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0).
 Open it and drag Research Workbench into Applications. The build is not signed
 or notarized yet, so macOS will block the first launch. Try to open it once, then
 go to System Settings > Privacy & Security, scroll to Security and click
