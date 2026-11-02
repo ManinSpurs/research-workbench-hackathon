@@ -6,11 +6,11 @@ A local-first research secretary that remembers the project context, helps check
 
 ![Pick up where you left off. Your decisions, questions and evidence, in context.](docs/assets/readme-header.svg)
 
-<a href="https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0"><img src="docs/assets/download-mac.svg" alt="Download for Mac" width="224" height="48"></a>
+<a href="https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1"><img src="docs/assets/download-mac.svg" alt="Download for Mac" width="224" height="48"></a>
 
 **[Watch the 2:54 demo on YouTube](https://www.youtube.com/watch?v=ZjNWzTGzrZw)**
 
-Apple silicon, v1.1.0. [First launch](#install-on-macos) · [Quick tour](#quick-tour) · [Try a chip](#take-the-context-with-you) · [Model comparison](#local-qwen-and-muse-spark)
+Apple silicon, v1.1.1. [First launch](#install-on-macos) · [Quick tour](#quick-tour) · [Try a chip](#take-the-context-with-you) · [Model comparison](#local-qwen-and-muse-spark)
 
 ![The light-theme workbench showing the secretary briefing, pending questions and four work areas.](docs/assets/workbench-home.png)
 
@@ -55,8 +55,8 @@ A `.chip` packages reusable research context and, optionally, a saved notebook. 
 
 Download a development log and use **Open Chip** in the app:
 
-- [English development log](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.0/research_workbench_dev_log_en.chip)
-- [한국어 개발 일지](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.0/research_workbench_dev_log_ko.chip)
+- [English development log](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.1/research_workbench_dev_log_en.chip)
+- [한국어 개발 일지](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.1/research_workbench_dev_log_ko.chip)
 
 These authored records show recorded decisions, evidence and unfinished work. For a fictional research example, choose **Try the sample chip**, or open [`sample_permit_notebook.chip`](current/rehearsal_build/chips/builtin/sample_permit_notebook.chip).
 
@@ -64,11 +64,13 @@ Read the [chip format](current/CHIP_FILE_FORMAT_EN.md) to inspect the archive or
 
 ## Install on macOS
 
-1. Download the Apple silicon DMG from the [v1.1.0 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0).
+1. Download the Apple silicon DMG from the [v1.1.1 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1).
 2. Open it and drag Research Workbench into Applications.
 3. Launch the app and open a development-log chip or try the sample.
 
 **This build is not signed or notarized.** If macOS blocks the first launch, try opening it once, then go to **System Settings > Privacy & Security > Security > Open Anyway** and confirm. Only approve a download you trust; keep system security enabled.
+
+The app keeps your projects, conversations, settings and any API key you save in Settings between launches, in `~/Library/Application Support/research-workbench-review/workspace/`. To start over, quit the app and move that folder to the Trash. Cloud models run only on your own key; none ships with the app.
 
 Browsing the app does not require cloud inference. Local inference requires separately configured model weights and a llama.cpp runtime. The packaged DMG's actual Qwen conversation remains unverified; the recorded Qwen conversation was checked in the development environment. LaTeX compilation uses its optional engine.
 
@@ -151,4 +153,4 @@ Browser review harnesses use Playwright (`npx playwright install chromium`). Som
 
 The project's own source uses the [MIT License](LICENSE). Third-party components retain their own licenses, including Python packages, Electron and the TeX distribution in the DMG. Separately downloaded model weights retain their model licenses, including Apache-2.0 for Qwen3-4B.
 
-[Download v1.1.0](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0) · [Report an issue](https://github.com/ManinSpurs/research-workbench-hackathon/issues) · [한국어 안내](docs/README.ko.md)
+[Download v1.1.1](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1) · [Report an issue](https://github.com/ManinSpurs/research-workbench-hackathon/issues) · [한국어 안내](docs/README.ko.md)

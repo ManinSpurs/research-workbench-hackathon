@@ -289,10 +289,10 @@ FRONTEND_INDEX = "<!doctype html><title>Research Workbench</title>\n"
 def _write_stub_tree(tmp_path, *, config_mode, launch_mode, binding_mode="ok"):
     """A throwaway copy of the packaged layout with a stubbed application."""
     packaging = tmp_path / "packaging"
-    packaging.mkdir(parents=True)
+    packaging.mkdir(parents=True, exist_ok=True)
     shutil_copy(BACKEND, packaging / "backend_server.py")
     ai = tmp_path / "app" / "ai"
-    ai.mkdir(parents=True)
+    ai.mkdir(parents=True, exist_ok=True)
     (tmp_path / "app" / "__init__.py").write_text("")
     (ai / "__init__.py").write_text("")
     (ai / "local_config.py").write_text(STUB_LOCAL_CONFIG)
@@ -302,10 +302,10 @@ def _write_stub_tree(tmp_path, *, config_mode, launch_mode, binding_mode="ok"):
     (tmp_path / "app" / "fake_meta.py").write_text(STUB_FAKE_META)
     (tmp_path / "uvicorn.py").write_text(STUB_UVICORN)
     fixture = tmp_path / "data" / "fx"
-    fixture.mkdir(parents=True)
+    fixture.mkdir(parents=True, exist_ok=True)
     (fixture / "permits_2023.csv").write_text("id,value\n1,2\n")
     frontend = tmp_path / "frontend"
-    frontend.mkdir(parents=True)
+    frontend.mkdir(parents=True, exist_ok=True)
     (frontend / "index.html").write_text(FRONTEND_INDEX)
     return packaging / "backend_server.py"
 
@@ -530,6 +530,19 @@ def test_the_session_home_and_pinned_config_are_both_in_force(packaged):
         run.real_home / "Library/Application Support/ResearchWorkbench/local_runtime.json")
     created = [entry for entry in _records(run.record) if entry["event"] == "create_app"]
     assert created and created[0]["home"] == str(run.state / "home")
+
+
+def test_a_second_backend_cannot_open_a_workspace_another_backend_holds(packaged):
+    """A backend orphaned by a force-killed shell must not share the workspace."""
+    first = packaged(config_mode="absent")
+    assert first.wait_ready()
+    gone = subprocess.Popen([sys.executable, "-c", "pass"])
+    gone.wait()
+    second = packaged(config_mode="absent", parent_pid=gone.pid)
+    assert second.wait_for_exit(timeout=30) == 0
+    assert _events(first.record).count("create_app") == 1
+    assert json.loads(first.ready_path.read_text())["identity"]["pid"] == first.ready["identity"]["pid"]
+    assert first.finish() == 0, first.stderr
 
 
 # --- 2. no configuration: the app starts exactly as today ------------------

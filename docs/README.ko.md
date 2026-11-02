@@ -6,7 +6,7 @@
 
 ![이어서 연구할 수 있도록 결정, 질문, 근거를 한곳에 보관합니다.](assets/readme-header.svg)
 
-**[Mac용 v1.1.0 다운로드](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0)**
+**[Mac용 v1.1.1 다운로드](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1)**
 
 **[데모 영상 보기 (2분 54초, YouTube)](https://www.youtube.com/watch?v=ZjNWzTGzrZw)**
 
@@ -55,8 +55,8 @@ Apple silicon용입니다. [설치 안내](#설치하기) · [개발 일지 칩]
 
 개발 일지를 내려받아 앱의 **Open Chip**으로 열어보세요.
 
-- [한국어 개발 일지 칩](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.0/research_workbench_dev_log_ko.chip)
-- [영어 개발 일지 칩](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.0/research_workbench_dev_log_en.chip)
+- [한국어 개발 일지 칩](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.1/research_workbench_dev_log_ko.chip)
+- [영어 개발 일지 칩](https://github.com/ManinSpurs/research-workbench-hackathon/releases/download/v1.1.1/research_workbench_dev_log_en.chip)
 
 두 파일에는 개발 과정에서 작성한 결정, 근거, 미완료 작업이 들어 있습니다. 가상 연구 사례를 보려면 앱에서 **Try the sample chip**을 선택하거나 [`sample_permit_notebook.chip`](../current/rehearsal_build/chips/builtin/sample_permit_notebook.chip)을 열어보세요.
 
@@ -64,11 +64,13 @@ Apple silicon용입니다. [설치 안내](#설치하기) · [개발 일지 칩]
 
 ## 설치하기
 
-1. [v1.1.0 릴리스](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0)에서 Apple silicon용 DMG를 받습니다.
+1. [v1.1.1 릴리스](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1)에서 Apple silicon용 DMG를 받습니다.
 2. DMG를 열고 Research Workbench를 Applications 폴더로 옮깁니다.
 3. 앱을 실행해 개발 일지 칩을 열거나 예제 칩을 체험합니다.
 
 **아직 Apple 서명과 공증이 없는 빌드입니다.** 첫 실행이 차단되면 앱을 한 번 열어본 뒤 **시스템 설정 > 개인정보 보호 및 보안 > 보안 > 확인 없이 열기**에서 승인하세요. 신뢰하는 다운로드만 승인하고 시스템 보안은 켜 두세요.
+
+프로젝트, 대화, 설정, 설정에서 저장한 API 키는 앱을 다시 켜도 `~/Library/Application Support/research-workbench-review/workspace/`에 그대로 남습니다. 처음부터 다시 시작하려면 앱을 끈 뒤 이 폴더를 휴지통으로 옮기세요. 클라우드 모델은 사용자가 직접 넣은 키로만 실행되며, 앱에는 키가 들어 있지 않습니다.
 
 앱을 둘러보는 데 클라우드 모델 호출은 필요하지 않습니다. 로컬 추론에는 별도의 모델 파일과 llama.cpp 실행 환경이 필요합니다. 패키징된 DMG 안에서 실제 Qwen 대화가 되는지는 아직 검증하지 못했습니다. 녹화에 사용한 실제 Qwen 대화는 개발 환경에서 확인했습니다. LaTeX 컴파일에는 선택 구성 요소인 엔진이 필요합니다.
 
@@ -139,4 +141,4 @@ npm ci
 
 프로젝트 자체 소스는 [MIT 라이선스](../LICENSE)로 공개합니다. Python 패키지, Electron, DMG의 TeX 배포본 등 외부 구성 요소는 각각의 라이선스를 따릅니다. 별도로 받는 모델 가중치에도 해당 모델의 라이선스가 적용되며 Qwen3-4B는 Apache-2.0입니다.
 
-[다운로드](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.0) · [문제 제보](https://github.com/ManinSpurs/research-workbench-hackathon/issues) · [English](../README.md)
+[다운로드](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.1.1) · [문제 제보](https://github.com/ManinSpurs/research-workbench-hackathon/issues) · [English](../README.md)

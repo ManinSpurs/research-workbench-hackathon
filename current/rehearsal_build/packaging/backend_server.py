@@ -2,14 +2,17 @@
 
 This is the only process a packaged review build starts from Python. It owns
 three loopback listeners (fake OpenAI-compatible provider, FastAPI backend,
-static frontend), one fresh per-session SQLite database under the state dir it is
-given, and optionally one app-owned local model server. Nothing here reads,
+static frontend), one SQLite database under the persistent state dir it is given
+(kept across launches, like an installed app), and optionally one app-owned
+local model server. Nothing here reads,
 writes or requires the source working tree: every path is derived from this
 file's own location inside the .app.
 
-The app is a REVIEW build: cloud routes use the scripted fake provider, so no
-paid call is possible from it, and the database and fixture copy are freshly
-seeded samples. It never opens the project's local_rehearsal.db.
+Cloud routes start switched off. The legacy Meta adapter uses the scripted fake
+provider; Baseten, OpenAI and Modal Shared are real endpoints that run only after
+the user saves their own key in Settings, switches cloud on and consents to the
+calculated cost. The sample projects are seeded on the first launch only. It
+never opens the project's local_rehearsal.db.
 
 Local model: optional, never bundled
 -----------------------------------
@@ -24,8 +27,8 @@ launch is reported as unavailable, never a crash and never a cloud fallback.
 
 That private file is read from the *real* user's home, resolved once before this
 process moves ``HOME`` into the session (see :func:`_resolve_local_config_path`).
-The session's private ``HOME`` and credential isolation are unchanged: a key
-typed into this build's Settings still lands inside the session.
+The workspace's private ``HOME`` and credential isolation are unchanged: a key
+typed into this build's Settings lands inside the persistent workspace.
 
 The model child is started in its own session, and a small watchdog
 (:mod:`app.ai.local_reaper`) is armed for it, so a crash or ``SIGKILL`` of this
@@ -33,6 +36,7 @@ supervisor cannot leave the model running indefinitely.
 """
 import argparse
 import errno
+import fcntl
 import importlib
 import json
 import os
@@ -486,8 +490,9 @@ def _seed(api_base):
 def _identity(local_status, db_path, data_dir):
     """The session identity. Truthful about both adapters, never about secrets.
 
-    ``live_ai`` and ``cloud_ai`` stay False: no cloud provider is reachable from
-    this build and no paid call can be made. The local entry describes an
+    ``live_ai`` and ``cloud_ai`` stay False: at startup cloud is off and no key
+    ships, so nothing paid is reachable until the user saves a key, switches
+    cloud on and consents in Settings. The local entry describes an
     optional real runtime on this Mac, and says whether it is running now.
     """
     return {
@@ -521,6 +526,16 @@ def _ignore_further_signals():
                 pass
 
 
+def _parent_alive(pid):
+    if not pid:
+        return True
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError as exc:
+        return exc.errno == errno.EPERM
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Research Workbench review backend")
     parser.add_argument("--state-dir", required=True)
@@ -530,6 +545,19 @@ def main(argv=None):
 
     state = Path(args.state_dir).resolve()
     state.mkdir(parents=True, exist_ok=True)
+    # The workspace persists across launches, and Electron's single-instance
+    # lock cannot see a backend orphaned by a force-killed shell. The backend
+    # therefore owns the workspace itself: one exclusive lock, released only when
+    # this process exits. A waiting backend whose own shell has gone gives up.
+    workspace_lock = open(state / "backend.lock", "w")
+    while True:
+        try:
+            fcntl.flock(workspace_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            if not _parent_alive(args.parent_pid):
+                return 0
+            time.sleep(0.25)
     data_dir = state / "data"
     # Resolved BEFORE the session HOME below, then pinned for this process: the
     # real user's own local-runtime file must remain reachable once Path.home()
@@ -538,11 +566,11 @@ def main(argv=None):
     # holds for credentials, and the only owner-owned file read is the one that
     # names the paths of a model the owner installed.
     _resolve_local_config_path()
-    # Review sessions get their own HOME. The provider credential readers use
+    # The workspace has its own HOME. The provider credential readers use
     # fixed paths under Path.home(), so this is what makes "no credential ships
     # and none is inherited" true: a key typed into this build's Settings is
-    # written under this session and nothing the owner already has on the
-    # machine is read. It also keeps any stray cache inside the session.
+    # written under this workspace (kept across launches) and nothing the owner
+    # already has on the machine is read. Stray caches also stay inside it.
     home = state / "home"
     home.mkdir(parents=True, exist_ok=True)
     os.environ["HOME"] = str(home)
@@ -641,14 +669,24 @@ def main(argv=None):
 
         static = _start_static(front_port, FRONTEND)
         api_base = f"http://127.0.0.1:{api_port}"
-        seed = _seed(api_base)
+        # The workspace persists across launches, so the sample projects are added
+        # once: a sample the user deleted must not come back on the next launch.
+        seeded_marker = state / "sample_seeded.json"
+        if seeded_marker.is_file():
+            seed = {"seeded": False, "skipped": "sample projects were added on an earlier launch"}
+        else:
+            seed = _seed(api_base)
+            if "error" not in seed and seed.get("projects"):
+                seeded_marker.write_text(json.dumps(seed, indent=2) + "\n")
 
         app_url = f"{origin}/?api={api_base}&preview=1"
         identity = _identity(local_status, db_path, data_dir)
         (state / "REVIEW_SESSION.json").write_text(json.dumps(identity, indent=2) + "\n")
+        # parent_pid lets the shell accept only its own backend's ready file.
         ready = {"app_url": app_url, "api": api_base,
                  "frontend": origin, "fake_provider": os.environ["FAKE_BASE_URL"],
-                 "state_dir": str(state), "identity": identity, "seed": seed}
+                 "state_dir": str(state), "identity": identity, "seed": seed,
+                 "parent_pid": args.parent_pid}
         # Atomic rendezvous: the Electron shell polls for the complete file only.
         temporary = Path(args.ready_file).with_suffix(".tmp")
         temporary.parent.mkdir(parents=True, exist_ok=True)
@@ -656,16 +694,7 @@ def main(argv=None):
         os.replace(temporary, args.ready_file)
         print(f"[backend] ready: {app_url}", flush=True)
 
-        def parent_alive():
-            if not args.parent_pid:
-                return True
-            try:
-                os.kill(args.parent_pid, 0)
-                return True
-            except OSError as exc:
-                return exc.errno == errno.EPERM
-
-        while parent_alive():
+        while _parent_alive(args.parent_pid):
             time.sleep(0.25)
     except KeyboardInterrupt:
         # SIGTERM from the shell's quit path, or Ctrl+C. Cleanup is below.

@@ -22,6 +22,16 @@ app.setName('Research Workbench Review');
 app.setPath('userData', existingUserData);
 const { buildMenu, openChipDialog, deliverChip, deliverNewChip } = require('./menu');
 
+// The workspace is shared across launches, so a second copy of the app must not
+// start its own backend on the same database: it hands focus to the first.
+const PRIMARY = app.requestSingleInstanceLock();
+if (!PRIMARY) app.quit();
+app.on('second-instance', () => {
+  if (!mainWindow) return;
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus();
+});
+
 const SMOKE = process.argv.includes('--smoke');
 const BUNDLE_ROOT = path.join(path.dirname(app.getAppPath()), 'wb');
 const PYTHON = path.join(BUNDLE_ROOT, 'runtime', 'python', 'bin', 'python3.14');
@@ -73,12 +83,15 @@ function startBackend() {
   if (!fs.existsSync(PYTHON) || !fs.existsSync(BACKEND)) {
     throw new Error('The bundled review backend is missing from this app.');
   }
-  // A fresh session directory per launch: a new sample database, never a
-  // previous session's file and never the source tree's local_rehearsal.db.
-  const session = new Date().toISOString().replace(/[:.]/g, '-');
-  const stateDir = path.join(app.getPath('userData'), 'review-sessions', session);
+  // One persistent workspace, as an installed app keeps: projects, settings and
+  // a key typed into Settings survive a relaunch. It is never the source tree's
+  // local_rehearsal.db, and the single-instance lock keeps a second backend off it.
+  const stateDir = path.join(app.getPath('userData'), 'workspace');
   fs.mkdirSync(stateDir, { recursive: true });
   const readyFile = path.join(stateDir, 'ready.json');
+  // A force-killed previous run can leave its ready file behind; only this
+  // launch's backend may satisfy waitForReady.
+  fs.rmSync(readyFile, { force: true });
 
   const child = spawn(PYTHON, [BACKEND,
     '--state-dir', stateDir,
@@ -121,7 +134,9 @@ function waitForReady(readyFile) {
       if (fs.existsSync(readyFile)) {
         try {
           const info = JSON.parse(fs.readFileSync(readyFile, 'utf8'));
-          if (info && info.app_url) { resolve(info); return; }
+          // A backend orphaned by a force-killed earlier run may still publish
+          // into this workspace; only this shell's own child counts.
+          if (info && info.app_url && info.parent_pid === process.pid) { resolve(info); return; }
         } catch (err) {
           // Mid-write is impossible (the file is renamed into place), so any
           // parse failure is retried only until the deadline.
@@ -356,6 +371,7 @@ ipcMain.on('wb:ignore-pointer', (event, ignore) => {
 });
 
 app.whenReady().then(async () => {
+  if (!PRIMARY) return;
   log('app ready; smoke =', SMOKE);
   let appUrl = null;
   try {

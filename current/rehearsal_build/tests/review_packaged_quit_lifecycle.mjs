@@ -146,6 +146,7 @@ function harness() {
   app.getAppPath = () => APP_ROOT;
   app.whenReady = () => Promise.resolve();
   app.isReady = () => true;
+  app.requestSingleInstanceLock = () => true;
   app.quit = () => {
     const before = preventable();
     events.beforeQuit += 1;
@@ -210,8 +211,9 @@ function harness() {
 
   const fsMock = {
     existsSync: (target) => target === PYTHON || target === BACKEND || /ready\.json$/.test(target),
-    readFileSync: () => JSON.stringify({ app_url: APP_URL, api: API_URL }),
+    readFileSync: () => JSON.stringify({ app_url: APP_URL, api: API_URL, parent_pid: 4242 }),
     mkdirSync() {},
+    rmSync() {},
     writeFileSync() {},
   };
 
@@ -816,17 +818,13 @@ assert.ok(existsSync(executable), 'the packaged executable exists: ' + executabl
 assert.match(mainSource, /app\.on\('quit', stopBackend\);/, 'this source is the one to overlay as Contents/Resources/app/main.js');
 
 async function session(profile, deadlineMs = 150000) {
-  const root = path.join(profile, 'review-sessions');
+  const root = path.join(profile, 'workspace');
   const until = Date.now() + deadlineMs;
   while (Date.now() < until) {
     try {
-      for (const name of await readdir(root)) {
-        try {
-          const ready = JSON.parse(await readFile(path.join(root, name, 'ready.json'), 'utf8'));
-          if (ready && ready.api && ready.identity && ready.identity.pid) return ready;
-        } catch { /* not written yet */ }
-      }
-    } catch { /* session dir not created yet */ }
+      const ready = JSON.parse(await readFile(path.join(root, 'ready.json'), 'utf8'));
+      if (ready && ready.api && ready.identity && ready.identity.pid) return ready;
+    } catch { /* not written yet */ }
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw new Error('the packaged backend never reported a session under ' + root);
@@ -945,6 +943,9 @@ await withOwnedTeardown(async () => {
   // to the very backend this window started.
   const projectsAfterCancel = await api(apiA, '/projects');
   const projectId = projectsAfterCancel.body.projects[0].id;
+  const savedKey = await api(apiA, '/ai/keys', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: 'baseten', key: 'wb-relaunch-test-fake-key-not-a-credential' }) });
+  assert.equal(savedKey.ok && savedKey.body.key_present, true, 'a key typed into Settings is saved');
   const created = await api(apiA, `/projects/${encodeURIComponent(projectId)}/drafts`,
     { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
   assert.equal(created.ok, true, 'a real draft can be created after a cancelled quit');
@@ -973,6 +974,25 @@ await withOwnedTeardown(async () => {
   assert.equal(await pidGone(backendPid), true, 'the accepted quit stopped the owned backend');
   assert.equal(await portClosed(apiA), true, 'the stopped backend released its API port');
   console.log('PASS packaged: accepted quit stopped the owned backend and closed its port');
+
+  // (d) relaunch on the same profile: an installed app keeps its workspace, so
+  // the saved key, the committed draft and the projects are all still there,
+  // and the sample projects are not added a second time.
+  const runD = await launchPackaged(profileA);
+  const projectsD = await api(runD.ready.api, '/projects');
+  assert.deepEqual(projectsD.body.projects.map((p) => p.id).sort(),
+    projectsAfterCancel.body.projects.map((p) => p.id).sort(), 'the relaunch keeps the same projects and seeds none again');
+  const draftD = await api(runD.ready.api, `/drafts/${encodeURIComponent(draftId)}`);
+  assert.deepEqual(draftD.ok && draftD.body.files, [{ path: 'main.tex', text: UNSAVED_TEXT }],
+    'the draft saved before quitting is still there after the relaunch');
+  const registryD = await api(runD.ready.api, '/ai/registry');
+  assert.equal(registryD.body.settings.baseten_key_configured, true, 'the key saved before quitting is still configured');
+  const closedD = new Promise((resolve) => runD.launched.on('close', resolve));
+  await runD.launched.evaluate(({ app }) => app.quit()).catch(() => {});
+  await Promise.race([closedD, new Promise((resolve, reject) =>
+    setTimeout(() => reject(new Error('the relaunched app did not quit')), 30000))]);
+  assert.equal(await pidGone(runD.ready.identity.pid), true, 'the relaunched app stopped its backend');
+  console.log('PASS packaged: relaunch keeps the workspace (projects, draft, saved key) without re-seeding');
 
   // (c) clean quit: no prompt, backend stopped.
   const profileC = await ownProfile('wb-packaged-quit-c-');

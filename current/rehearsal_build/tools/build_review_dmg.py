@@ -235,7 +235,7 @@ def assemble_app(staging, interpreter, tex_included, version):
         "CFBundleIdentifier": BUNDLE_ID,
         "CFBundleShortVersionString": version,
         "CFBundleVersion": version,
-        "NSHumanReadableCopyright": "Review build. Sample data only; mock model adapter.",
+        "NSHumanReadableCopyright": "Research Workbench. Local-first; cloud models run only on your own key.",
     })
     # The integrity record references default_app.asar, which this bundle omits.
     data.pop("ElectronAsarIntegrity", None)
@@ -470,21 +470,43 @@ def sha256(path):
 READ_ME = f"""{APP_NAME} - TEST/REVIEW BUILD (macOS arm64)
 
 What this is
-  A local, self-contained review copy of Research Workbench for inspection.
-  Drag the app anywhere and open it. It runs its own backend, frontend and
-  scripted mock cloud provider on free loopback ports; no project folder,
-  Python installation or Homebrew package is needed.
+  A self-contained copy of Research Workbench for macOS. Drag the app into
+  Applications and open it. It runs its own backend and frontend on free
+  loopback ports; no project folder, Python installation or Homebrew package
+  is needed.
+
+Your workspace is kept
+  Projects, conversations, settings and any key you save in Settings are kept
+  in one workspace and are still there the next time you open the app:
+    ~/Library/Application Support/research-workbench-review/workspace/
+  Two sample projects are added on the first launch only; delete them if you
+  do not need them. To start over, quit the app and move that folder to the
+  Trash. Only one copy of the app runs at a time.
 
 What it is not
-  - Not signed with a developer identity and not notarized: macOS will warn
-    about an unidentified developer the first time. Open it with
-    right-click > Open, or System Settings > Privacy & Security > Open Anyway.
-  - Not a production build and not evidence of model quality. Cloud model
-    answers come from the bundled scripted fake provider (MOCK), which the app
-    labels on screen. No paid call is possible from this build.
-  - Sample data only. Each launch creates a fresh session database under
-    ~/Library/Application Support/Research Workbench Review/review-sessions/.
-    Your real research data is never read or written.
+  - Not signed with a developer identity and not notarized: macOS blocks the
+    first launch. Try to open it once, then go to System Settings > Privacy &
+    Security and click "Open Anyway" for Research Workbench Review.
+  - Not evidence of model quality.
+
+MODELS AND COST
+  The Secretary uses the local model by default (see below); local compute is
+  free and is not metered as spend. Cloud routes are off until you turn them
+  on. Baseten (Muse Spark Open), OpenAI and Modal Shared are real paid
+  endpoints that run on YOUR OWN key: paste it in Settings, where it is saved
+  only in the workspace above as an owner-only file, never shown again and
+  never sent anywhere except that provider. No credential ships with this build
+  and none is read from the Mac it is opened on, including keys another copy of
+  Research Workbench saved or shell environment variables. Before the
+  Secretary sends anything to a paid model, Settings asks once for consent: it
+  names the provider and model, says that recent conversation turns and the
+  project briefing leave the device, that each reply has a calculated cost,
+  and shows the shared spend limit. Each reply then shows its model and
+  calculated cost and keeps a receipt, and nothing is sent once the spend
+  limit would be exceeded. Costs are calculated from published prices, not
+  invoice-verified. The
+  legacy Meta route in this build answers from a bundled scripted fake
+  provider (MOCK), which the app labels on screen.
 
 LOCAL MODEL (OPTIONAL, NOT BUNDLED)
   No model is inside this build and nothing is downloaded. If this Mac already
@@ -498,16 +520,7 @@ LOCAL MODEL (OPTIONAL, NOT BUNDLED)
   Local mode is unavailable when no model is configured, when the configuration
   is invalid, when the model file does not match, or when the configured port is
   already taken. In every one of those cases the app still opens, says why local
-  mode is unavailable, and never falls back to a cloud call. Local compute is
-  not metered as spend; this build still cannot make a paid call.
-
-OPTIONAL REAL ENDPOINT
-  The Modal Shared route (model meta-models/Muse-Spark-Open-816B-A42B) can be
-  enabled in Settings by pasting your own key. The public endpoint metadata is
-  built in; no credential ships with this build and none is inherited from the
-  machine it is opened on. Sessions use a private HOME, so a key you enter stays
-  inside that session. Nothing is called unless you enter a key and approve a
-  scope. All other cloud model traffic in this build is the bundled scripted MOCK.
+  mode is unavailable, and never falls back to a cloud call.
 
 PDF
   A portable TeX Live (TinyTeX) tree is bundled so the PDF tool works offline.
