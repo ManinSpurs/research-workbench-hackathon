@@ -37,7 +37,8 @@ Use the synthetic FX dataset and its registered DD-2023 definitions for the firs
 
 Status correction 2026-10-31: review readback is implemented, superseding the
 historical no-readback statement below. The basic-arm rubric is approved.
-No live paired comparison has completed and nothing is human-scored.
+At that date no live paired comparison had completed; rounds 2 and 3 have
+since run on 2026-11-01 (see the current result above).
 The active comparison uses pinned Baseten Spark Open and local Qwen3-4B;
 Wonder and its second look are blocked because Meta credits are exhausted.
 
@@ -47,7 +48,7 @@ Wonder and its second look are blocked because Meta credits are exhausted.
 | FX-APPROVAL-1 | Does approval_date mean final approval? | Plan-review completion in release 2023; OFF-NOTES-2025 does not establish the 2023 meaning; final approval remains unestablished |
 | NYC-DATE-1 | Can filing_date be used in DOB NOW? | Check the selected DOB NOW file's actual columns; do not borrow BIS filing_date |
 
-Structural checks cover registered IDs, explicit release applicability and dataset-specific columns. They do not prove entailment or research correctness. `app/ai/evaluation.py` requires a named reviewer, declared gold reference, verdicts for claims and citation occurrences, method correctness and task success. `POST /ai/jobs/{jid}/review` stores the record locally, with zero provider calls and zero spend. Review readback and its frontend are implemented. The 2026-11-01 comparison run was scored in two passes: an AI first pass (blind), then a human second-pass review by Author, done after unblinding, which agreed with the AI marks (see the post-run addendum in `HARNESS_COMPARISON_PREREG_EN.md`). Reviewer Author is the author, not an independent reviewer. The packet's own human fields remain `PENDING_HUMAN` and the preregistered aggregates `NOT_SCORED`. Gold-reference identity is researcher supplied, not automatically authenticated.
+Structural checks cover registered IDs, explicit release applicability and dataset-specific columns. They do not prove entailment or research correctness. `app/ai/evaluation.py` requires a named reviewer, declared gold reference, verdicts for claims and citation occurrences, method correctness and task success. `POST /ai/jobs/{jid}/review` stores the record locally, with zero provider calls and zero spend. Review readback and its frontend are implemented. Round 3 (ten cases, later on 2026-11-01) has an AI first pass only; its human second review has not occurred. The earlier round-2 comparison run (2026-11-01, run folder `comparison_20261101T031018Z_tcwj0q4l`, three cases) was scored in two passes: an AI first pass (blind), then a human second-pass review by Author, done after unblinding, which agreed with the AI marks (see the post-run addendum in `HARNESS_COMPARISON_PREREG_EN.md`). Reviewer Author is the author, not an independent reviewer. The packet's own human fields remain `PENDING_HUMAN` and the preregistered aggregates `NOT_SCORED`. Gold-reference identity is researcher supplied, not automatically authenticated.
 
 Metrics use explicit denominators: supported claims / all claims; wrong citations / all citation occurrences when every citation is judged; supported factual linked claims / all claims; reviewer method and task-success judgments; stage latency and returned token usage; published-rate calculated cost. Unknown citation judgments leave the false-citation rate null. Do not replace unknowns with zero or infer quality from valid JSON.
 

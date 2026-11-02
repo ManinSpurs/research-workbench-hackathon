@@ -18,8 +18,11 @@ Settings is a separate control for model routes, keys, local runtime and languag
 Download the macOS DMG (Apple silicon) from the
 [v1.0.0 release](https://github.com/ManinSpurs/research-workbench-hackathon/releases/tag/v1.0.0).
 Open it and drag Research Workbench into Applications. The build is not signed
-or notarized yet: if macOS blocks it, right-click the app and choose Open; do not
-disable system security globally. No DMG is included in source control.
+or notarized yet, so macOS will block the first launch. Try to open it once, then
+go to System Settings > Privacy & Security, scroll to Security and click
+"Open Anyway" for Research Workbench, and confirm. Only do this if you trust the
+download; do not disable system security globally. No DMG is included in source
+control.
 
 ## Run from source
 
